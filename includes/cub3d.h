@@ -38,8 +38,8 @@
 # ifndef FOV
 #  define FOV 60
 # endif
-// # define MOVE_SPEED 
-// # define ROTATE_SPEED
+# define MOVE 1
+# define ROTATE 5
 
 /*===== keysym definition ====================================================*/
 # define ESC 53
