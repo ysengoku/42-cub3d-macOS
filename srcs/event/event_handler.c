@@ -18,7 +18,7 @@ static void	close_window(t_cub3d *data)
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 	free(data->mlx_ptr);
 	// free other things if needed
-	exit(1);
+	exit(0);
 }
 
 int	handle_keyevents(int keysym, t_cub3d *data)
@@ -26,9 +26,19 @@ int	handle_keyevents(int keysym, t_cub3d *data)
 	if (keysym == ESC)
 		close_window(data);
 	if (keysym == RIGHT)
-		printf("TEST: -->\n"); //TEST
+	{
+		if (data->player.dir - ROTATE == 0)
+			data->player.dir = 360 - ROTATE;
+		else
+			data->player.dir -= ROTATE;
+	}
 	if (keysym == LEFT)
-		printf("TEST: <--\n"); //TEST
+	{
+		if (data->player.dir + ROTATE == 360)
+			data->player.dir = 0;
+		else
+			data->player.dir += ROTATE;
+	}
 	if (keysym == KEY_W)
 		data->player.pos_y -= 1; // TEST (to check the direction)
 		// Need to add condition to avid getting out of the map

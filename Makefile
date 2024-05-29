@@ -49,11 +49,11 @@ LIBMLX_DIR = $(LIB_DIR)mlx_macos/
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@printf "$(CYAN)Compiling Minilibx...\n$(DEF)"
+	@printf "$(CYAN)Compiling Minilibx...\n$(RESET)"
 	@$(MAKE) -C $(LIBMLX_DIR)
-	@printf "$(CYAN)Compiling Libft...\n$(DEF)"
+	@printf "$(CYAN)Compiling Libft...\n$(RESET)"
 	@$(MAKE) -C $(LIBFT_DIR)
-	@printf "$(CYAN)Building cub3D...\n$(DEF)"
+	@printf "$(CYAN)Building cub3D...\n$(RESET)"
 	$(CC) $(CCFLAGS) $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME)
 	@printf "$(LIGHT_GREEN)$(BOLD)cub3D is ready to launch\n$(RESET)"
 
@@ -62,11 +62,11 @@ $(OBJS_DIR)%.o: %.c
 	$(CC) $(CFLAGS)  -I$(LIBFT_DIR) -I$(LIBMLX_DIR) -I$(INCLUDE) -c $< -o $@
 
 clean:
-	@printf "$(WHITE)Cleaning Minilibx...\n$(DEF)"
+	@printf "$(WHITE)Cleaning Minilibx...\n$(RESET)"
 	@$(MAKE) clean -C $(LIBMLX_DIR)
-	@printf "$(WHITE)Cleaning Libft...\n$(DEF)"
+	@printf "$(WHITE)Cleaning Libft...\n$(RESET)"
 	@$(MAKE) clean -C $(LIBFT_DIR)
-	@printf "$(WHITE)Cleaning cub3D...\n$(DEF)"
+	@printf "$(WHITE)Cleaning cub3D...\n$(RESET)"
 	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
