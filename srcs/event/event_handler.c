@@ -26,31 +26,26 @@ int	handle_keyevents(int keysym, t_cub3d *data)
 	if (keysym == ESC)
 		close_window(data);
 	if (keysym == RIGHT)
-	{
-		if (data->player.dir - ROTATE == 0)
-			data->player.dir = 360 - ROTATE;
-		else
-			data->player.dir -= ROTATE;
-	}
+		rotate_clockwise(data);
 	if (keysym == LEFT)
+		rotate_counterclockwise(data);
+	if (keysym == KEY_W) //z
+		move_forward(data, data->player.dir, &data->player.pos_x, &data->player.pos_y);
+	if (keysym == KEY_A) //q
 	{
-		if (data->player.dir + ROTATE == 360)
-			data->player.dir = 0;
-		else
-			data->player.dir += ROTATE;
+	 	data->player.pos_x -= 1;  // TEST
+	 	data->player.moved = 1;
 	}
-	if (keysym == KEY_W)
-		data->player.pos_y -= 1; // TEST (to check the direction)
-		// Need to add condition to avid getting out of the map
-	if (keysym == KEY_A)
-		data->player.pos_x -= 1;  // TEST (to check the direction)
-		// Need to add condition to avid getting out of the map
-	if (keysym == KEY_S)
-		data->player.pos_y += 1;  // TEST (to check the direction)
-		// Need to add condition to avid getting out of the map
-	if (keysym == KEY_D)
-		data->player.pos_x += 1;  // TEST (to check the direction)
-		// Need to add condition to avid getting out of the map
+	if (keysym == KEY_S) //s
+	{
+	 	data->player.pos_y += 1;  // TEST
+	 	data->player.moved = 1;
+	}
+	if (keysym == KEY_D) //d
+	{
+	 	data->player.pos_x += 1;  // TEST
+	 	data->player.moved = 1;
+	}
 	return (0);
 }
 

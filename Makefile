@@ -29,14 +29,19 @@ vpath %c srcs \
 		srcs/raycasting	\
 		srcs/rendering \
 		srcs/event \
-		srcs/error
+		srcs/error	\
+		srcs/minimap
 FILES = main	\
 		raycasting	\
 		img_rendering	\
 		draw	\
 		colors	\
 		event_handler	\
-		error_handling
+		move	\
+		move_utils	\
+		rotate	\
+		error_handling	\
+		minimap #bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/
