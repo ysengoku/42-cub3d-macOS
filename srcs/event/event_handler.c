@@ -30,17 +30,16 @@ int	handle_keyevents(int keysym, t_cub3d *data)
 	if (keysym == LEFT)
 		rotate_counterclockwise(data);
 	if (keysym == KEY_W) //z
-		move_forward(data, data->player.dir, &data->player.pos_x, &data->player.pos_y);
+		move_forward(data, data->player.dir, &data->player.pos_x,
+			&data->player.pos_y);
 	if (keysym == KEY_A) //q
 	{
 	 	data->player.pos_x -= 1;  // TEST
 	 	data->player.moved = 1;
 	}
 	if (keysym == KEY_S) //s
-	{
-	 	data->player.pos_y += 1;  // TEST
-	 	data->player.moved = 1;
-	}
+		move_backward(data, data->player.dir, &data->player.pos_x,
+			&data->player.pos_y);
 	if (keysym == KEY_D) //d
 	{
 	 	data->player.pos_x += 1;  // TEST
