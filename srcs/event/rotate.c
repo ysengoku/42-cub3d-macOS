@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   img_rendering.c                                    :+:      :+:    :+:   */
+/*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/23 15:14:25 by yusengok          #+#    #+#             */
-/*   Updated: 2024/05/28 08:57:58 by yusengok         ###   ########.fr       */
+/*   Created: 2024/05/30 08:43:31 by yusengok          #+#    #+#             */
+/*   Updated: 2024/05/30 10:56:55 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	render_image(t_cub3d *data)
+void	rotate_counterclockwise(t_cub3d *data)
 {
-	if (data->win_ptr)
-	{	
-		ft_raycasting(data);
-		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
-			data->img.img, 0, 0);
-		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
-			data->mmap.img.img, 0, 0);
-	}
-	return (0);
+	data->player.dir += ROTATE;
+	if (data->player.dir >= 360)
+		data->player.dir = 0;
+	data->player.moved = 1;
+}
+
+void	rotate_clockwise(t_cub3d *data)
+{
+	data->player.dir -= ROTATE;
+	if (data->player.dir < 0)
+		data->player.dir = 360 - ROTATE;
+	data->player.moved = 1;
 }

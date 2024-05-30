@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 08:30:08 by yusengok          #+#    #+#             */
-/*   Updated: 2024/05/29 16:45:51 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:04:55 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,22 @@ int	ft_raycasting(t_cub3d *data)
 	t_ray	ray;
 
 	x = 0;
-	init_camera(data);
-	while (x < WIN_W)
-	{	
-		set_ray(data, &ray, x);	
-		check_wall_hit(data, &ray);
-		draw_ceiling(data, x,  WIN_H / 2 - ray.wall_height / 2,
-				convert_color(data->ceiling));
-		draw_floor(data, x, WIN_H / 2 + ray.wall_height / 2,
-				convert_color(data->floor));
-		draw_wall(data, x, &ray);
-		x++;
+	if (data->player.moved)
+	{
+		init_camera(data);
+		while (x < WIN_W)
+		{	
+			set_ray(data, &ray, x);	
+			check_wall_hit(data, &ray);
+			draw_ceiling(data, x,  WIN_H / 2 - ray.wall_height / 2,
+					data->ceiling_color);
+			draw_floor(data, x, WIN_H / 2 + ray.wall_height / 2,
+					data->floor_color);
+			draw_wall(data, x, &ray);
+			x++;
+		}
+		set_minimap(data);
+		data->player.moved = 0;
 	}
 	return (0);
 }
@@ -57,14 +62,8 @@ static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 	ray->map_y = data->player.pos_y;
 	ray->sidedist_x = 0;
 	ray->sidedist_y = 0;
-	// if (ray->dir_x == 0)
-	// 	ray->delta_x = 1e30;
-	// else
-		ray->delta_x = fabs(1 / ray->dir_x);
-	// if (ray->dir_y == 0)
-	// 	ray->delta_y = 1e30;
-	// else
-		ray->delta_y = fabs(1 / ray->dir_y);
+	ray->delta_x = fabs(1 / ray->dir_x);
+	ray->delta_y = fabs(1 / ray->dir_y);
 	if (ray->dir_x < 0)
 	{
 		ray->step_x = -1;
@@ -89,17 +88,8 @@ static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 
 static void check_wall_hit(t_cub3d *data, t_ray *ray)
 {	
-	char	test[10][12] = {
-	{"111111111111"},
-	{"100001111101"},
-	{"100000011001"},
-	{"111100000001"},
-	{"111100000001"},
-	{"111100000001"},
-	{"111100000001"},
-	{"111100009001"},
-	{"111100000001"},
-	{"111111111111"}};
+	data->map.maxw = 26;
+	data->map.maxh = 26;
 	
 	int		hit;
 	int		side; // 0 --> x (north or south), 1 --> y (west or east)

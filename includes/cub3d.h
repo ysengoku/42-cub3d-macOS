@@ -36,11 +36,21 @@
 # define TEXTURE_SIZE 64
 
 # ifndef FOV
-#  define FOV 60
+#  define FOV 90
 # endif
 # define MOVE 1
 # define ROTATE 5
 
+# define MMAP_H	180
+# define MMAP_WALL 100
+# define MMAP_FLOOR 13808800
+# define MMAP_P 16711680
+# define MMAP_R 9490256
+# define MMAP_DIR 16776960
+# define TRANSPARENT (int)0xFF000000
+/// TEST /////////////////////////////////////////////////////////////
+extern char	test[26][26];
+//////////////////////////////////////////////////////////////////////
 /*===== keysym definition ====================================================*/
 # define ESC 53
 # define LEFT 123
@@ -80,6 +90,8 @@ typedef struct s_imgdata
 typedef struct s_map
 {
 	char	**mapdata;
+	int		maxh;
+	int		maxw;
 }				t_map;
 
 typedef struct s_player
@@ -94,7 +106,7 @@ typedef struct s_player
 	double				plane_length;
 	double				plane_x;
 	double				plane_y;
-
+	int					moved;
 }				t_player;
 
 typedef struct s_color
@@ -106,8 +118,6 @@ typedef struct s_color
 
 typedef struct s_ray
 {
-	// double	angle_rad; // initialize: player.angle - FOV * M_PI / 180
-	// double			inc_angle; // = FOV / WIN_W
 	double			camera_p;
 	double			dir_x;
 	double			dir_y;
@@ -119,14 +129,20 @@ typedef struct s_ray
 	double			sidedist_y;
 	double			delta_x;
 	double			delta_y;
-	// double			inc_x;
-	// double			inc_y;
-	// double			x_distance;
-	// double			y_distance;
 	double			distance;
 	int				wall_height;
 	enum e_wallside	wall_side;
 }				t_ray;
+
+typedef struct s_minimap
+{
+	t_imgdata	img;
+	// int			height; // in pixel - fixed to MMAP_H
+	// int			width; // in pixel - calculate from scale * height
+	int			scale;
+	int			minimap_x;
+	int			minimap_y;
+}				t_minimap;
 
 typedef struct s_cub3d
 {
@@ -136,11 +152,14 @@ typedef struct s_cub3d
 	t_map		map;
 	t_player	player;
 	t_color		ceiling;
+	int			ceiling_color;
 	t_color		floor;
+	int			floor_color;
 	// textures
 	//--- For TEST -----------
-	t_color			colors[4];
+	int			colors[4];
 	//------------------------
+	t_minimap	mmap;
 }				t_cub3d;
 
 /*===== functions ============================================================*/
@@ -159,9 +178,19 @@ void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 int		handle_keyevents(int keysym, t_cub3d *data);
 int		handle_mouseevents(int mousecode, int x, int y);
 int		handle_closebutton(t_cub3d *data);
+void	move_forward(t_cub3d *data, double dir, int *x, int *y);
+void	move_north_east(t_cub3d *data, int *x, int *y);
+void	move_north_west(t_cub3d *data, int *x, int *y);
+void	move_south_east(t_cub3d *data, int *x, int *y);
+void	move_south_west(t_cub3d *data, int *x, int *y);
+void	rotate_counterclockwise(t_cub3d *data);
+void	rotate_clockwise(t_cub3d *data);
 
 /*----- Error handling -----*/
 void	ft_perror_exit(char *message, int code);
 void	ft_error_exit(char *message, int code);
+
+/*----- Minimap -----*/
+void	set_minimap(t_cub3d *data);
 
 #endif
