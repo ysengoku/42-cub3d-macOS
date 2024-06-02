@@ -34,6 +34,8 @@
 # define WIN_W 960
 # define WIN_H 720
 # define TEX_SIZE 64
+# define DEFAULT_CEILING (int)0xA9A9A9 /////
+# define DEFAULT_FLOOR (int)0x343434 //////
 
 # ifndef FOV
 #  define FOV 90
@@ -106,6 +108,7 @@ typedef struct 	s_xpm_img
 	int			endian;
     int			w;
     int			h;
+	char		*path; //////
 }				t_xpm_img;
 
 typedef struct s_map
@@ -186,7 +189,6 @@ typedef struct s_cub3d
 	int			ceiling_color;
 	t_color		floor;
 	int			floor_color;
-	// t_imgdata	textures[4];
 	t_xpm_img	textures[4];
 	//--- For TEST -----------
 	int			colors[4];
