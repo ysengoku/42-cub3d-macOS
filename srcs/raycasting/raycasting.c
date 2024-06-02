@@ -14,7 +14,6 @@
 
 static void	init_camera(t_cub3d *data);
 static void	set_ray(t_cub3d *data, t_ray *ray, int x);
-static void check_wall_hit(t_cub3d *data, t_ray *ray);
 
 int	ft_raycasting(t_cub3d *data)
 {
@@ -26,17 +25,16 @@ int	ft_raycasting(t_cub3d *data)
 	{
 		init_camera(data);
 		while (x < WIN_W)
-		{	
-			set_ray(data, &ray, x);	
+		{
+			draw_ceiling(data, x, WIN_H / 2, data->ceiling_color);
+			draw_floor(data, x, WIN_H / 2, data->floor_color);
+			set_ray(data, &ray, x);
 			check_wall_hit(data, &ray);
-			draw_ceiling(data, x,  WIN_H / 2 - ray.wall_height / 2,
-					data->ceiling_color);
-			draw_floor(data, x, WIN_H / 2 + ray.wall_height / 2,
-					data->floor_color);
-			draw_wall(data, x, &ray);
+			draw_wall_tmp(data, x, &ray);
 			x++;
 		}
-		set_minimap(data);
+		if (BONUS)
+			set_minimap(data); // bonus
 		data->player.moved = 0;
 	}
 	return (0);
@@ -44,8 +42,8 @@ int	ft_raycasting(t_cub3d *data)
 
 static void	init_camera(t_cub3d *data)
 {
-	double direction_rad;
-	
+	double	direction_rad;
+
 	direction_rad = data->player.dir * M_PI / 180;
 	data->player.dir_x = cos(direction_rad);
 	data->player.dir_y = -sin(direction_rad);
@@ -84,55 +82,4 @@ static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 		ray->step_y = 1;
 		ray->sidedist_y = (ray->map_y + 1.0 - data->player.pos_y) * ray->delta_y;
 	}
-}
-
-static void check_wall_hit(t_cub3d *data, t_ray *ray)
-{	
-	data->map.maxw = 26;
-	data->map.maxh = 26;
-	
-	int		hit;
-	int		side; // 0 --> x (north or south), 1 --> y (west or east)
-	double	distance;
-
-	hit = 0;
-	side = 0;
-	while (!hit)
-	{
-		if (test[ray->map_y][ray->map_x] == '1')
-		// if (data->map.mapdata[ray->map_y][ray->map_x] == '1')
-			hit = 1;
-		else
-		{
-			if (ray->sidedist_x < ray->sidedist_y)
-			{
-				ray->sidedist_x += ray->delta_x;
-				ray->map_x += ray->step_x;
-				side = 0;
-			}
-			else
-			{
-				ray->sidedist_y += ray->delta_y;
-				ray->map_y += ray->step_y;
-				side = 1;
-			}
-		}
-	}
-	if (side == 1)
-	{
-		distance = ray->sidedist_y - ray->delta_y;
-		if (ray->map_y < data->player.pos_y)
-			ray->wall_side = NO;
-		else
-			ray->wall_side = SO;
-	}
-	else
-	{
-		distance = ray->sidedist_x - ray->delta_x;
-		if (ray->map_x < data->player.pos_x)
-			ray->wall_side = WE;
-		else
-			ray->wall_side = EA;
-	}
-	ray->wall_height = (int)(WIN_H / distance);
 }
