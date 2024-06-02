@@ -1,0 +1,15 @@
+/* XPM */
+static char *wall_xpm[] = {
+"8 8 3 1",
+"  c #FFFFFF",
+"a c #006064",
+"b c #004E51",
+"bbbbbbbb",
+"baaaaaab",
+"baaaaaab",
+"baaaaaab",
+"baaaaaab",
+"baaaaaab",
+"baaaaaab",
+"bbbbbbbb"
+};
