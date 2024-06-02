@@ -20,7 +20,8 @@ WHITE = \033[37m
 NAME = cub3D
 INCLUDE = includes
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror
+CCFLAGS = -Wextra -Wall -Werror 
+#-fsanitize=address
 MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
 RM = rm -f
 
@@ -32,14 +33,16 @@ vpath %c srcs \
 		srcs/error	\
 		srcs/minimap
 FILES = main	\
-		raycasting	\
-		img_rendering	\
+		game_loop	\
 		draw	\
 		colors	\
+		raycasting	\
+		check_wall_hit	\
 		event_handler	\
 		move	\
 		move_utils	\
 		rotate	\
+		quit	\
 		error_handling	\
 		minimap #bonus
 
@@ -51,6 +54,8 @@ LIB_DIR = lib/
 LIBFT_DIR = $(LIB_DIR)libft/
 LIBMLX_DIR = $(LIB_DIR)mlx_macos/
 
+BONUS = 0
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
@@ -59,12 +64,12 @@ $(NAME): $(OBJS)
 	@printf "$(CYAN)Compiling Libft...\n$(RESET)"
 	@$(MAKE) -C $(LIBFT_DIR)
 	@printf "$(CYAN)Building cub3D...\n$(RESET)"
-	$(CC) $(CCFLAGS) $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME)
+	$(CC) $(CCFLAGS) -DBONUS=$(BONUS) $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME)
 	@printf "$(LIGHT_GREEN)$(BOLD)cub3D is ready to launch\n$(RESET)"
 
-$(OBJS_DIR)%.o: %.c
+$(OBJS_DIR)%.o: %.c Makefile
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CFLAGS)  -I$(LIBFT_DIR) -I$(LIBMLX_DIR) -I$(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) -DBONUS=$(BONUS) -I$(LIBFT_DIR) -I$(LIBMLX_DIR) -I$(INCLUDE) -c $< -o $@
 
 clean:
 	@printf "$(WHITE)Cleaning Minilibx...\n$(RESET)"
@@ -72,12 +77,17 @@ clean:
 	@printf "$(WHITE)Cleaning Libft...\n$(RESET)"
 	@$(MAKE) clean -C $(LIBFT_DIR)
 	@printf "$(WHITE)Cleaning cub3D...\n$(RESET)"
-	@$(RM) -r $(OBJ_DIR)
+	@$(RM) -r $(OBJS_DIR)
 
 fclean: clean
 	@$(MAKE) fclean -C $(LIBMLX_DIR)
 	@$(MAKE) -s -C $(LIBFT_DIR) fclean
 	@$(RM) $(NAME)
+
+bonus: lib
+	@$(RM) -r $(OBJS_DIR)
+	@$(RM) $(NAME)
+	$(MAKE) all BONUS=1
 
 lib:
 	@$(MAKE) -s -C $(LIBMLX_DIR)
@@ -85,4 +95,4 @@ lib:
 
 re: fclean all
 
-.PHONY: all clean fclean re lib
+.PHONY: all clean fclean bonus lib re

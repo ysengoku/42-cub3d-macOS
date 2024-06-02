@@ -31,9 +31,9 @@
 
 /*===== macro definition =====================================================*/
 # define WINNAME "cub3D"
-# define WIN_W 1280
+# define WIN_W 960
 # define WIN_H 720
-# define TEXTURE_SIZE 64
+# define TEX_SIZE 64
 
 # ifndef FOV
 #  define FOV 90
@@ -41,16 +41,20 @@
 # define MOVE 1
 # define ROTATE 5
 
-# define MMAP_H	180
-# define MMAP_WALL 100
-# define MMAP_FLOOR 13808800
-# define MMAP_P 16711680
-# define MMAP_R 9490256
-# define MMAP_DIR 16776960
-# define TRANSPARENT (int)0xFF000000
-/// TEST /////////////////////////////////////////////////////////////
-extern char	test[26][26];
-//////////////////////////////////////////////////////////////////////
+# define MMAP_SCALE	8
+# define MMAP_WALL (int)0x006064
+# define MMAP_FLOOR (int)0xB0BEC5
+# define MMAP_P (int)0xC51162
+# define MMAP_DIR (int)0xD50000
+# define MMAP_SPACE (int)0xE3F2FD
+# define MMAP_F "./textures/minimap/floor.xpm"
+# define MMAP_PL "./textures/minimap/player.xpm"
+# define MMAP_WL "./textures/minimap/wall.xpm"
+
+# ifndef BONUS
+#  define BONUS 1
+# endif
+
 /*===== keysym definition ====================================================*/
 # define ESC 53
 # define LEFT 123
@@ -59,6 +63,12 @@ extern char	test[26][26];
 # define KEY_D 2
 # define KEY_S 1
 # define KEY_W 13
+# define KeyPress 2
+# define KeyRelease 3
+# define KeyPressMask (1L<<0)
+# define KeyReleaseMask (1L<<1)
+# define DestroyNotify 17
+# define StructureNotifyMask (1L<<17)
 
 /*===== enum definition =====================================================*/
 enum	e_direction
@@ -86,6 +96,17 @@ typedef struct s_imgdata
 	int		line_len;
 	int		endian;
 }				t_imgdata;
+
+typedef struct 	s_xpm_img
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pxl;
+	int			line_len;
+	int			endian;
+    int			w;
+    int			h;
+}				t_xpm_img;
 
 typedef struct s_map
 {
@@ -134,14 +155,24 @@ typedef struct s_ray
 	enum e_wallside	wall_side;
 }				t_ray;
 
+typedef struct s_line
+{
+	int	y;
+	int	y_start;
+	int	y_end;
+	int	tex_x;
+	int	tex_y;
+	int	span;
+}				t_line;
+
 typedef struct s_minimap
 {
 	t_imgdata	img;
-	// int			height; // in pixel - fixed to MMAP_H
-	// int			width; // in pixel - calculate from scale * height
-	int			scale;
 	int			minimap_x;
 	int			minimap_y;
+	t_xpm_img	floor;
+	t_xpm_img	player;
+	t_xpm_img	wall;
 }				t_minimap;
 
 typedef struct s_cub3d
@@ -155,31 +186,41 @@ typedef struct s_cub3d
 	int			ceiling_color;
 	t_color		floor;
 	int			floor_color;
-	// textures
+	// t_imgdata	textures[4];
+	t_xpm_img	textures[4];
 	//--- For TEST -----------
 	int			colors[4];
 	//------------------------
+	int			key_pressed_left;
+	int			key_pressed_right;
 	t_minimap	mmap;
 }				t_cub3d;
 
 /*===== functions ============================================================*/
 /*----- Ray casting -----*/
 int		ft_raycasting(t_cub3d *data);
+void	check_wall_hit(t_cub3d *data, t_ray *ray);
 
 /*----- Image rendering -----*/
-int		render_image(t_cub3d *data);
+int		game_loop(t_cub3d *data);
 void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
-void	draw_wall(t_cub3d *data, int x, t_ray *ray); // Temporary version without texture
+void	draw_wall_tmp(t_cub3d *data, int x, t_ray *ray); // Temporary version without texture
 void	draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
 int		convert_color(t_color color);
 void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 
 /*----- Event handler -----*/
 int		handle_keyevents(int keysym, t_cub3d *data);
-int		handle_mouseevents(int mousecode, int x, int y);
+int		handle_keypress(int keysym, t_cub3d *data);
+int		handle_keyrelease(int keysym, t_cub3d *data);
+// int		handle_mouseevents(int mousecode, int x, int y, t_cub3d *data);
+int 	handle_mousemove(int x, int y, t_cub3d *data);
 int		handle_closebutton(t_cub3d *data);
+void	close_window(t_cub3d *data);
 void	move_forward(t_cub3d *data, double player_dir, int *x, int *y);
 void	move_backward(t_cub3d *data, double player_dir, int *x, int *y);
+void	move_right(t_cub3d *data, double player_dir, int *x, int *y);
+void	move_left(t_cub3d *data, double player_dir, int *x, int *y);
 void	move_north_east(t_cub3d *data, int *x, int *y);
 void	move_north_west(t_cub3d *data, int *x, int *y);
 void	move_south_east(t_cub3d *data, int *x, int *y);
