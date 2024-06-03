@@ -46,7 +46,7 @@ void	draw_wall(t_cub3d *data, int x, t_ray *ray)
 	line.y_start = WIN_H / 2 - ray->wall_height / 2;
 	line.y_end = WIN_H / 2 + ray->wall_height / 2;
 	line.y = line.y_start;
-	if (ray->wall_side == NO || ray->wall_side == SO)
+	if (ray->wall_side == WE || ray->wall_side == EA)
 		wall_x = data->player.pos_y + ray->distance * ray->dir_y;
 	else
 		wall_x = data->player.pos_x + ray->distance * ray->dir_x;
