@@ -229,8 +229,8 @@ int	main(int argc, char **argv)
 	/*========================================================================*/
 	mlx_key_hook(data.win_ptr, handle_keyevents, &data);
 	mlx_hook(data.win_ptr, DestroyNotify, StructureNotifyMask, handle_closebutton, &data);
-//	mlx_hook(data.mlx_ptr, KeyPress, KeyPressMask, handle_keypress, &data);
-//	mlx_hook(data.mlx_ptr, KeyRelease, KeyReleaseMask, handle_keyrelease, &data);
+//	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, handle_keypress, &data);
+//	mlx_hook(data.win_ptr, KeyRelease, KeyReleaseMask, handle_keyrelease, &data);
 	// mlx_mouse_hook(data.win_ptr, &handle_mouseevents, &data); // ---> Doesn't need ??
 	mlx_loop_hook(data.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx_ptr);
