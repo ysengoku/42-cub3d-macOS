@@ -32,20 +32,20 @@ static void init_cub3d_data(t_cub3d *data)
 	int	i;
 
 	i = -1;
-	//void		*mlx_ptr; ?
-	//void		*win_ptr; ?
-	ft_bzero(&data->img, sizeof(data->img));
-	ft_bzero(&data->map, sizeof(data->map));
+	data->mlx_ptr = 0;
+	data->win_ptr = 0;
+ 	ft_memset(&data->img, 0, sizeof(data->img));
+	ft_memset(&data->map, 0, sizeof(data->map));
 	init_player(&data->player);
 	data->ceiling_color = 0;
 	data->floor_color = 0;
 	while (++i < 4)
-		ft_bzero(&data->wall[i], sizeof(data->wall[i]));
-	ft_bzero(&data->mmap, sizeof(data->mmap));
-	ft_bzero(&data->mmap.img, sizeof(data->mmap.img));
-	ft_bzero(&data->mmap.floor, sizeof(data->mmap.floor)); // if we use texture for minimap
-	ft_bzero(&data->mmap.wall, sizeof(data->mmap.wall)); // if we use texture for minimap
-	ft_bzero(&data->mmap.player, sizeof(data->mmap.player)); // if we use texture for minimap
+		ft_memset(&data->wall[i], 0, sizeof(data->wall[i]));
+	ft_memset(&data->mmap, 0, sizeof(data->mmap));
+	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img));
+	ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor)); // if we use texture for minimap
+	ft_memset(&data->mmap.wall, 0, sizeof(data->mmap.wall)); // if we use texture for minimap
+	ft_memset(&data->mmap.player, 0, sizeof(data->mmap.player)); // if we use texture for minimap
 	data->key_pressed_left = 0;
 	data->key_pressed_right = 0;
 	data->key_pressed_w = 0;

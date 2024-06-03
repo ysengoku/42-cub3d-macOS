@@ -30,7 +30,8 @@ int	ft_raycasting(t_cub3d *data)
 			draw_floor(data, x, WIN_H / 2, data->floor_color);
 			set_ray(data, &ray, x);
 			check_wall_hit(data, &ray);
-			draw_wall_tmp(data, x, &ray);
+			draw_wall(data, x, &ray);
+			//draw_wall_tmp(data, x, &ray);
 			x++;
 		}
 		if (BONUS)
