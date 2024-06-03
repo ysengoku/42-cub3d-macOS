@@ -6,15 +6,15 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:59:02 by yusengok          #+#    #+#             */
-/*   Updated: 2024/05/29 15:42:22 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:16:11 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	convert_color(t_color color)
+int	convert_color(int rgb[3])
 {
-	return ((color.r << 16) + (color.g << 8) + color.b);
+	return ((rgb[0] << 16) + (rgb[1] << 8) + rgb[2]);
 }
 
 void	put_pxl_color(t_imgdata *img, int x, int y, int color)
