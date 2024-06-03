@@ -175,12 +175,12 @@ typedef struct s_ray
 
 typedef struct s_line
 {
-	int	y;
-	int	y_start;
-	int	y_end;
-	int	tex_x;
-	int	tex_y;
-	int	span;
+	int		y;
+	int		y_start;
+	int		y_end;
+	int		tex_x;
+	int		tex_y;
+	double	span;
 }				t_line;
 
 typedef struct s_minimap
@@ -238,6 +238,7 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray);
 int		game_loop(t_cub3d *data);
 void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
 void	draw_wall_tmp(t_cub3d *data, int x, t_ray *ray); // Temporary version without texture
+void	draw_wall(t_cub3d *data, int x, t_ray *ray);
 void	draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
 // int		convert_color(t_color color);
 int		convert_color(int rgb[3]);
