@@ -21,8 +21,19 @@
 # include <string.h>
 # include <math.h>
 # include <errno.h>
+# include <stdbool.h>
 # include "libft.h"
 # include "mlx.h"
+
+/*===== paths sprits ======================================================*/
+# define SPRITE_NO "./path_to_the_north_texture"
+# define SPRITE_SO "./path_to_the_south_texture"
+# define SPRITE_WE "./path_to_the_west_texture"
+# define SPRITE_EA "./path_to_the_east_texture"
+
+/*===== colors ======================================================*/
+# define RGB_F "220,100,0"
+# define RGB_C "225,30,0"
 
 /*===== math definition ======================================================*/
 # ifndef M_PI
@@ -58,13 +69,13 @@
 # endif
 
 /*===== keysym definition ====================================================*/
-# define ESC 53
-# define LEFT 123
-# define RIGHT 124
-# define KEY_A 0
-# define KEY_D 2
-# define KEY_S 1
-# define KEY_W 13
+# define XK_Escape 53
+# define XK_Left 123
+# define XK_Right 124
+# define XK_a 0
+# define XK_d 2
+# define XK_s 1
+# define XK_w 13
 # define KeyPress 2
 # define KeyRelease 3
 # define KeyPressMask (1L<<0)
@@ -103,19 +114,30 @@ typedef struct 	s_xpm_img
 {
 	void		*img;
 	char		*addr;
-	int			bits_per_pxl;
+	int			bpp;
 	int			line_len;
 	int			endian;
     int			w;
     int			h;
-	char		*path; //////
+	char		*path;
 }				t_xpm_img;
 
 typedef struct s_map
 {
-	char	**mapdata;
-	int		maxh;
-	int		maxw;
+	char				**data_map;
+	char				**map;
+	char				**dup_map;
+	char				*sprite_no;
+	char				*sprite_so;
+	char				*sprite_we;
+	char				*sprite_ea;
+	int					f_rgb[3];
+	int					c_rgb[3];
+	int					map_len_x;
+	int					map_len_y;
+	int					pos_x;
+	int					pos_y;
+	enum e_direction	p_dir;
 }				t_map;
 
 typedef struct s_player
@@ -132,13 +154,6 @@ typedef struct s_player
 	double				plane_y;
 	int					moved;
 }				t_player;
-
-typedef struct s_color
-{
-	int	r;
-	int	g;
-	int	b;
-}				t_color;
 
 typedef struct s_ray
 {
@@ -185,20 +200,36 @@ typedef struct s_cub3d
 	t_imgdata	img;
 	t_map		map;
 	t_player	player;
-	t_color		ceiling;
 	int			ceiling_color;
-	t_color		floor;
 	int			floor_color;
-	t_xpm_img	textures[4];
+	t_xpm_img	wall[4];
 	//--- For TEST -----------
 	int			colors[4];
 	//------------------------
 	int			key_pressed_left;
 	int			key_pressed_right;
+	int			key_pressed_w;
+	int			key_pressed_s;
+	int			key_pressed_a;
+	int			key_pressed_d;
 	t_minimap	mmap;
 }				t_cub3d;
 
 /*===== functions ============================================================*/
+/*----- Parsing -----*/
+int		parsing(char *file, t_map *data_map);
+char	**get_file(char *file);
+int		get_data(t_map *data_map);
+int		get_sprites_path(t_map *data_map);
+int		get_colors_rgb(t_map *data_map);
+int		get_maps(t_map *data_map);
+int		check_map(t_map *data_map);
+void	free_split(char **map);
+void	free_data_map(t_map *data_map);
+void	ft_exit_parsing(t_map *data_map, char *message);
+void	set_data(t_cub3d *data, t_player *player, t_map *map);
+int		set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
+
 /*----- Ray casting -----*/
 int		ft_raycasting(t_cub3d *data);
 void	check_wall_hit(t_cub3d *data, t_ray *ray);
@@ -208,11 +239,11 @@ int		game_loop(t_cub3d *data);
 void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
 void	draw_wall_tmp(t_cub3d *data, int x, t_ray *ray); // Temporary version without texture
 void	draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
-int		convert_color(t_color color);
+// int		convert_color(t_color color);
+int		convert_color(int rgb[3]);
 void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 
 /*----- Event handler -----*/
-int		handle_keyevents(int keysym, t_cub3d *data);
 int		handle_keypress(int keysym, t_cub3d *data);
 int		handle_keyrelease(int keysym, t_cub3d *data);
 // int		handle_mouseevents(int mousecode, int x, int y, t_cub3d *data);
@@ -233,8 +264,11 @@ void	rotate_clockwise(t_cub3d *data);
 /*----- Error handling -----*/
 void	ft_perror_exit(char *message, int code);
 void	ft_error_exit(char *message, int code);
+void	free_mapdata(t_map *map);
+int		free_all(t_cub3d *data, int status);
 
 /*----- Minimap -----*/
+int		create_minimap_img(t_cub3d *data, t_minimap *mmap);
 void	set_minimap(t_cub3d *data);
 
 #endif

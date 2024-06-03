@@ -33,6 +33,15 @@ vpath %c srcs \
 		srcs/error	\
 		srcs/minimap
 FILES = main	\
+		parsing \
+		get_file \
+		get_data \
+		get_sprites_path \
+		get_color_rgb \
+		get_maps \
+		check_map \
+		handle_errors	\
+		set_data	\
 		game_loop	\
 		draw	\
 		colors	\
@@ -44,7 +53,9 @@ FILES = main	\
 		rotate	\
 		quit	\
 		error_handling	\
-		minimap #bonus
+		ft_free	\
+		minimap_bonus	\
+		minimap_img_bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/
