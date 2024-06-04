@@ -34,11 +34,8 @@ void	close_window(t_cub3d *data)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.wall.img);
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 	free(data->mlx_ptr);
-	/*== To check =============================*/
-	free_mapdata(&data->map);
+	free_mapdata(&data->map); // To check
 	// free_data_map(&data->map);
-	/*=========================================*/
-	// free other things if needed
+	//------ free other things if needed -----
 	exit(0);
 }
-
