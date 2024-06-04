@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 08:07:02 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/03 16:14:16 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/04 08:20:59 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 {
 	int		hit;
 	int		is_east_or_west;
-	double	distance;
 
 	hit = 0;
 	is_east_or_west = 0;
@@ -31,11 +30,11 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 			next_step(ray, &is_east_or_west);
 	}
 	if (is_east_or_west == 1)
-		distance = ray->sidedist_y - ray->delta_y;
+		ray->distance = ray->sidedist_y - ray->delta_y;
 	else
-		distance = ray->sidedist_x - ray->delta_x;
+		ray->distance = ray->sidedist_x - ray->delta_x;
 	ray->wall_side = get_wall_side(ray, &data->player, is_east_or_west);
-	ray->wall_height = (int)(WIN_H / distance);
+	ray->wall_height = (int)(WIN_H / ray->distance);
 }
 
 static void	next_step(t_ray *ray, int *is_east_or_west)

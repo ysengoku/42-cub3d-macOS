@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 08:57:21 by yusengok          #+#    #+#             */
-/*   Updated: 2024/05/31 17:02:19 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/04 08:21:19 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ void	draw_wall(t_cub3d *data, int x, t_ray *ray)
 	else
 		line.span = 0;
 	line.tex_x = (int)(wall_x * (double)TEX_SIZE);
-//	printf("line.tex_x: %d\n", line.tex_x);
 	line.tex_y = 0;
-	while (line.y <= line.y_end)
+	while (line.y < line.y_end)
 	{
 		line.tex_y = (int)(((double)line.y - (double)line.y_start) * line.span);
 		put_pxl_color(&data->img, x, line.y,
@@ -73,6 +72,5 @@ static unsigned int get_tex_color(t_xpm_img *texture, int x, int y)
     char	*pxl;
 
     pxl = texture->addr + (y * texture->line_len + x * (texture->bpp / 8));
-//	printf("color: %d\n", *(unsigned int *)pxl);
 	return (*(unsigned int *)pxl);
 }
