@@ -16,8 +16,11 @@ void	set_data(t_cub3d *data, t_player *player, t_map *map)
 {
 	player->pos_x = map->pos_x;
 	player->pos_y = map->pos_y;
-	player->initial_dir = N; // get from map ---------> Need to change
+	/*=== To change ================================*/
+	player->initial_dir = N; // get from map
 	player->dir = (double)player->initial_dir;
+	// player->dir = (double)map->p_dir; // To use this one
+	/*==============================================*/
 	data->ceiling_color = convert_color(data->map.c_rgb);
 	data->floor_color = convert_color(data->map.f_rgb);
 }
@@ -46,7 +49,7 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img wall[4])
 			mlx_destroy_image(data->mlx_ptr, data->img.img);
 			mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 			free(data->mlx_ptr);
- 			free_mapdata(&data->map); // to check
+ 			free_mapdata(&data->map);	// to check
 			return (1);
 		}
 		wall[i].addr = mlx_get_data_addr(wall[i].img,

@@ -55,7 +55,7 @@ int	handle_closebutton(t_cub3d *data)
 }
 
 // For bonus
-int handle_mousemove(int x, int y, t_cub3d *data)
+int	handle_mousemove(int x, int y, t_cub3d *data)
 {
 	// to code
 	if (BONUS)
