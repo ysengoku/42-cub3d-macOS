@@ -12,9 +12,9 @@
 
 #include "cub3d.h"
 
-int	get_data(t_map *data_map)
+int	get_data(t_cub3d *data)
 {
-	get_sprites_path(data_map);
-	get_colors_rgb(data_map);
+	get_sprites_path(data);
+	get_colors_rgb(&data->map);
 	return (EXIT_SUCCESS);
 }

@@ -78,7 +78,6 @@ static int	create_main_image(t_cub3d *data)
 	if (data->img.img == NULL)
 	{
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-		mlx_destroy_display(data->mlx_ptr);
 		free(data->mlx_ptr);
 		free_data_map(&data->map);
 		return (1);

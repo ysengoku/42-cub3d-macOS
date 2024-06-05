@@ -38,9 +38,7 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img wall[4])
 				free(wall[i++].path);
 			mlx_destroy_image(data->mlx_ptr, data->img.img);
 			mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-			mlx_destroy_display(data->mlx_ptr);
 			free(data->mlx_ptr);
- 			// free_mapdata(&data->map);	// to check
 			free_data_map(&data->map);
 			return (1);
 		}
