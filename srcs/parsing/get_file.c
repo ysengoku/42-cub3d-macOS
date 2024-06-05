@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_file.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:38:40 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/01 17:27:18 by jmougel          ###   ########.fr       */
+/*   Updated: 2024/06/05 16:15:48 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	creat_file(char *file)
 	if (fd == -1)
 		return (EXIT_FAILURE);
 	write_data_map(fd);
-	while(1)
+	while (1)
 	{
 		line_tmp = get_next_line(0);
 		if (!line_tmp)
@@ -66,7 +66,7 @@ static char	**split_file(int fd)
 	char	**map;
 
 	line = ft_strdup("");
-	while(1)
+	while (1)
 	{
 		if (!line)
 			return (NULL);
@@ -91,10 +91,8 @@ char	**get_file(char *file)
 {
 	char	**map;
 	int		fd;
-	int		i;
 
 	map = NULL;
-	i = 0;
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{

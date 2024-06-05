@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 08:09:43 by yusengok          #+#    #+#             */
-/*   Updated: 2024/05/29 15:49:58 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:11:23 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 # define SPRITE_EA "./path_to_the_east_texture"
 
 /*===== colors ======================================================*/
-# define RGB_F "220,100,0"
-# define RGB_C "225,30,0"
+# define RGB_F "169,169,169"
+# define RGB_C "52,52,52"
 
 /*===== math definition ======================================================*/
 # ifndef M_PI
@@ -52,6 +52,8 @@
 # define MOVE 0.1
 # define ROTATE 5
 
+# define MINI_MAP_W 100
+# define MINI_MAP_H 100
 # define MMAP_SCALE	8
 # define MMAP_WALL 24676 //(int)0x006064
 # define MMAP_FLOOR 11583173 //(int)0xB0BEC5
@@ -125,10 +127,7 @@ typedef struct s_map
 	char				**data_map;
 	char				**map;
 	char				**dup_map;
-	char				*sprite_no;
-	char				*sprite_so;
-	char				*sprite_we;
-	char				*sprite_ea;
+	char				player;
 	int					f_rgb[3];
 	int					c_rgb[3];
 	int					map_len_x;
@@ -140,17 +139,17 @@ typedef struct s_map
 
 typedef struct s_player
 {
-	double				fov; // FOV in radians
+	double				fov;
 	double				pos_x;
 	double				pos_y;
-	enum e_direction	initial_dir;
-	double				dir; //direction in degree
+	double				dir;
 	double				dir_x;
 	double				dir_y;
 	double				plane_length;
 	double				plane_x;
 	double				plane_y;
 	int					moved;
+
 }				t_player;
 
 typedef struct s_ray
@@ -201,9 +200,6 @@ typedef struct s_cub3d
 	int			ceiling_color;
 	int			floor_color;
 	t_xpm_img	wall[4];
-	//--- For TEST -----------
-	int			colors[4];
-	//------------------------
 	int			key_pressed_left;
 	int			key_pressed_right;
 	int			key_pressed_w;
@@ -215,16 +211,18 @@ typedef struct s_cub3d
 
 /*===== functions ============================================================*/
 /*----- Parsing -----*/
-int		parsing(char *file, t_map *data_map);
+int		parsing(char *file, t_cub3d *map);
 char	**get_file(char *file);
-int		get_data(t_map *data_map);
-int		get_sprites_path(t_map *data_map);
+int		get_data(t_cub3d *data);
+int		get_sprites_path(t_cub3d *map);
 int		get_colors_rgb(t_map *data_map);
 int		get_maps(t_map *data_map);
 int		check_map(t_map *data_map);
+int		algo_flood_fill(t_map *data_map);
+void	flood_fill(char **dup_map, int pos_x, int pos_y, bool *valid);
 void	free_split(char **map);
 void	free_data_map(t_map *data_map);
-void	ft_exit_parsing(t_map *data_map, char *message);
+void	exit_parsing(t_map *data_map, char *message);
 void	set_data(t_cub3d *data, t_player *player, t_map *map);
 int		set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
 
@@ -234,11 +232,9 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray);
 
 /*----- Image rendering -----*/
 int		game_loop(t_cub3d *data);
-void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
-void	draw_wall_tmp(t_cub3d *data, int x, t_ray *ray); // Temporary version without texture
 void	draw_wall(t_cub3d *data, int x, t_ray *ray);
 void	draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
-// int		convert_color(t_color color);
+void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
 int		convert_color(int rgb[3]);
 void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 
@@ -259,7 +255,6 @@ void	rotate_clockwise(t_cub3d *data);
 /*----- Error handling -----*/
 void	ft_perror_exit(char *message, int code);
 void	ft_error_exit(char *message, int code);
-void	free_mapdata(t_map *map);
 int		free_all(t_cub3d *data, int status);
 
 /*----- Minimap -----*/
