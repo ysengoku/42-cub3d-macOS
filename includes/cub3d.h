@@ -214,7 +214,7 @@ typedef struct s_cub3d
 int		parsing(char *file, t_cub3d *map);
 char	**get_file(char *file);
 int		get_data(t_cub3d *data);
-int		get_sprites_path(t_cub3d *map);
+int		get_sprites_path(t_cub3d *data);
 int		get_colors_rgb(t_map *data_map);
 int		get_maps(t_map *data_map);
 int		check_map(t_map *data_map);
