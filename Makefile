@@ -6,7 +6,7 @@
 #    By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/23 08:07:54 by yusengok          #+#    #+#              #
-#    Updated: 2024/05/28 08:57:43 by yusengok         ###   ########.fr        #
+#    Updated: 2024/06/05 16:20:30 by yusengok         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,11 +27,11 @@ RM = rm -f
 
 vpath %c srcs \
 		srcs/parsing \
-		srcs/raycasting	\
 		srcs/rendering \
 		srcs/event \
 		srcs/error	\
-		srcs/minimap
+		srcs_bonus	\
+		srcs_bonus/minimap
 FILES = main	\
 		parsing \
 		get_file \
@@ -40,6 +40,7 @@ FILES = main	\
 		get_color_rgb \
 		get_maps \
 		check_map \
+		algo_flood_fill \
 		handle_errors	\
 		set_data	\
 		game_loop	\

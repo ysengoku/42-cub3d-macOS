@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 13:08:42 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/03 15:59:02 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:19:30 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,12 @@ static void	draw_player(t_cub3d *data)
 	int	j;
 	int	color;
 
-	y = data->player.pos_y * MMAP_SCALE;
+	y = (int)data->player.pos_y * MMAP_SCALE;
 	i = 0;
 	while (i < MMAP_SCALE)
 	{
 		j = -1;
-		x = data->player.pos_x * MMAP_SCALE;
+		x = (int)data->player.pos_x * MMAP_SCALE;
 		while (++j < MMAP_SCALE)
 		{
 			color = *(int *)(data->mmap.player.addr
@@ -129,8 +129,8 @@ static void	draw_player_dir(t_cub3d *data)
 	double	dir_y;
 	int		steps;
 
-	dir_x = (double)data->player.pos_x * MMAP_SCALE + MMAP_SCALE / 2 - 1;
-	dir_y = (double)data->player.pos_y * MMAP_SCALE + MMAP_SCALE / 2 - 1;
+	dir_x = (int)data->player.pos_x * MMAP_SCALE + MMAP_SCALE / 2 - 1;
+	dir_y = (int)data->player.pos_y * MMAP_SCALE + MMAP_SCALE / 2 - 1;
 	steps = (int)MMAP_SCALE * 1.5;
 	while (steps > 0)
 	{

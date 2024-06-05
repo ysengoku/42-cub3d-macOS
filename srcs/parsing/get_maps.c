@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_maps.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:57:09 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/01 17:14:20 by jmougel          ###   ########.fr       */
+/*   Updated: 2024/06/05 16:16:09 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,19 @@ static int	get_start_map(char **data_map)
 {
 	int	i;
 	int	j;
-	int	index_start_map;
 
 	i = 0;
 	j = 0;
-	index_start_map = 0;
 	while (data_map[i])
 	{
-		if (data_map[i][0] == ' ' || data_map[i][0] == '1' || data_map[i][0] == '0')
+		if (data_map[i][0] == ' '
+			|| data_map[i][0] == '1'
+			|| data_map[i][0] == '0')
 		{
 			while (data_map[i][j])
 			{
-				if (data_map[i][j] == '1' || data_map[i][j] == '0')
-				{
-					index_start_map = i;
-					return (index_start_map);
-				}
-				j++;
+				if (data_map[i][j] == '1' || data_map[i][j++] == '0')
+					return (i);
 			}
 		}
 		j = 0;
@@ -72,13 +68,13 @@ static char	**get_map(t_map *data_map)
 	int		index_start_map;
 	int		i;
 
-	i = 0;
 	index_start_map = get_start_map(data_map->data_map);
 	if (index_start_map == -1)
-		return (ft_exit_parsing(data_map, "Error\nCub3D: map not found"), NULL);
+		return (exit_parsing(data_map, "Error\nCub3D: map not found"), NULL);
+	i = index_start_map;
 	while (data_map->data_map[i])
 		i++;
-	map = (char **)malloc(sizeof(char *) * (i - index_start_map) + 1);
+	map = ft_calloc(i + 1, sizeof(char *));
 	if (!map)
 		return (NULL);
 	i = 0;
