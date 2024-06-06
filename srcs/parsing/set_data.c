@@ -32,6 +32,8 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img wall[4])
 			&wall[i].w, &wall[i].h);
 		if (wall[i].img == NULL)
 		{
+			ft_putendl_fd("Texture file read error", 2);
+			--i;
 			while (i > 0)
 				mlx_destroy_image(data->mlx_ptr, wall[i--].img);
 			while (i < 4)
