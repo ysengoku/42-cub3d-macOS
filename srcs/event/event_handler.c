@@ -53,27 +53,3 @@ int	handle_closebutton(t_cub3d *data)
 	close_window(data);
 	return (0);
 }
-
-// For bonus
-int	handle_mousemove(int x, int y, t_cub3d *data)
-{
-	// to code
-	if (BONUS)
-	{
-		(void)x;
-		(void)y;
-		(void)data;
-	}
-	return (0);
-}
-
-// int	handle_mouseevents(int mousecode, int x, int y, t_cub3d *data)
-// {
-// 	(void)y;
-// 	(void)x;
-// 	if (mousecode == 4) //scroll up
-// 		rotate_counterclockwise(data);
-// 	if (mousecode == 5) //scroll down
-// 		rotate_clockwise(data);
-// 	return (0);
-// }

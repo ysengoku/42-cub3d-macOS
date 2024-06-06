@@ -51,6 +51,7 @@
 # endif
 # define MOVE 0.1
 # define ROTATE 5
+# define PITCH 1
 
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
@@ -82,6 +83,8 @@
 # define KeyReleaseMask (1L<<1)
 # define DestroyNotify 17
 # define StructureNotifyMask (1L<<17)
+# define MOUSE_DOWN 4
+# define MOUSE_UP 5
 
 /*===== enum definition =====================================================*/
 enum	e_direction
@@ -149,7 +152,7 @@ typedef struct s_player
 	double				plane_x;
 	double				plane_y;
 	int					moved;
-
+	int					pitch;
 }				t_player;
 
 typedef struct s_ray
@@ -206,10 +209,12 @@ typedef struct s_cub3d
 	int			key_pressed_s;
 	int			key_pressed_a;
 	int			key_pressed_d;
+	int			previous_mouse_x;
 	t_minimap	mmap;
 }				t_cub3d;
 
 /*===== functions ============================================================*/
+
 /*----- Parsing -----*/
 int		parsing(char *file, t_cub3d *map);
 char	**get_file(char *file);
@@ -241,8 +246,6 @@ void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 /*----- Event handler -----*/
 int		handle_keypress(int keysym, t_cub3d *data);
 int		handle_keyrelease(int keysym, t_cub3d *data);
-// int		handle_mouseevents(int mousecode, int x, int y, t_cub3d *data);
-int 	handle_mousemove(int x, int y, t_cub3d *data);
 int		handle_closebutton(t_cub3d *data);
 void	close_window(t_cub3d *data);
 void	move_forward(t_cub3d *data, t_player *player, t_map *map);
@@ -257,8 +260,14 @@ void	ft_perror_exit(char *message, int code);
 void	ft_error_exit(char *message, int code);
 int		free_all(t_cub3d *data, int status);
 
+/*===== bonus part functions =================================================*/
+
 /*----- Minimap -----*/
 int		create_minimap_img(t_cub3d *data, t_minimap *mmap);
 void	set_minimap(t_cub3d *data);
+
+/*----- Mouse move -----*/
+int		mousemove(int x, int y, t_cub3d *data);
+int		mousescroll(int event, int x, int y, t_cub3d *data);
 
 #endif

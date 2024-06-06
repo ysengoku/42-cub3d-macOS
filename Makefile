@@ -25,13 +25,18 @@ CCFLAGS = -Wextra -Wall -Werror
 MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
 RM = rm -f
 
-vpath %c srcs \
-		srcs/parsing \
-		srcs/rendering \
-		srcs/event \
-		srcs/error	\
-		srcs_bonus	\
-		srcs_bonus/minimap
+SRCS_DIR = srcs/
+SRCS_DIR_B = srcs_bonus/
+
+vpath %c $(SRCS_DIR) \
+		$(SRCS_DIR)parsing \
+		$(SRCS_DIR)rendering \
+		$(SRCS_DIR)event \
+		$(SRCS_DIR)error	\
+		$(SRCS_DIR_B)	\
+		$(SRCS_DIR_B)minimap	\
+		$(SRCS_DIR_B)event_bonus
+		
 FILES = main	\
 		parsing \
 		get_file \
@@ -55,7 +60,8 @@ FILES = main	\
 		error_handling	\
 		ft_free	\
 		minimap_bonus	\
-		minimap_img_bonus
+		minimap_img_bonus	\
+		mouse_move_bonus	\
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/
