@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-void	rotate_counterclockwise(t_cub3d *data)
+void	rotate_clockwise(t_cub3d *data) /////
 {
 	data->player.dir += ROTATE;
 	if (data->player.dir >= 360)
@@ -20,7 +20,7 @@ void	rotate_counterclockwise(t_cub3d *data)
 	data->player.moved = 1;
 }
 
-void	rotate_clockwise(t_cub3d *data)
+void	rotate_counterclockwise(t_cub3d *data) /////
 {
 	data->player.dir -= ROTATE;
 	if (data->player.dir < 0)

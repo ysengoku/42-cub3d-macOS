@@ -48,11 +48,10 @@ static void	init_camera(t_cub3d *data)
 
 	direction_rad = data->player.dir * M_PI / 180;
 	data->player.dir_x = cos(direction_rad);
-	data->player.dir_y = -sin(direction_rad);
-	data->player.plane_x = data->player.dir_y * data->player.plane_length;
+	data->player.dir_y = sin(direction_rad); /////
+	data->player.plane_x = -data->player.dir_y * data->player.plane_length; /////
 	data->player.plane_y = data->player.dir_x * data->player.plane_length;
 }
-
 
 static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 {
