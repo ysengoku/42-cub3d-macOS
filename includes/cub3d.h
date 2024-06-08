@@ -44,7 +44,7 @@
 # define WINNAME "cub3D"
 # define WIN_W 960
 # define WIN_H 720
-# define TEX_SIZE 64
+//# define TEX_SIZE 64 /////
 
 # ifndef FOV
 #  define FOV 90
