@@ -41,10 +41,10 @@ void	draw_wall(t_cub3d *data, int x, t_ray *ray)
     line.y = line.y_start;
 	wall_x = get_wall_x(data, ray);
     if (ray->wall_height != 0)
-        line.span = (double)TEX_SIZE / ray->wall_height;
+		line.span = (double)data->wall[ray->wall_side].h / ray->wall_height; /////
     else
         line.span = 0;
-    line.tex_x = (int)(wall_x * (double)TEX_SIZE);
+	line.tex_x = (int)(wall_x * data->wall[ray->wall_side].w); /////
     line.tex_y = 0;
 	while (line.y < line.y_end)
 	{
