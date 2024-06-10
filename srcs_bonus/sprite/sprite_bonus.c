@@ -12,15 +12,15 @@
 
 #include "cub3d.h"
 
-int	set_sprite_texture(t_cub3d *data, t_xpm_img *sprite)
+int	set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex)
 {
 	int		i;
 
 	if (!BONUS)
 		return (0);
-	sprite->img = mlx_xpm_file_to_image(data->mlx_ptr, SPRITE_TEX,
-			&sprite->w, &sprite->h);
-	if (sprite->img == NULL)
+	sprite_tex->img = mlx_xpm_file_to_image(data->mlx_ptr, SPRITE_TEX,
+			&sprite_tex->w, &sprite_tex->h);
+	if (sprite_tex->img == NULL)
 	{
 		i = -1;
 		while (++i > 4)
@@ -34,22 +34,12 @@ int	set_sprite_texture(t_cub3d *data, t_xpm_img *sprite)
 		free_data_map(&data->map);
 		ft_perror_exit("MLX", 1);
 	}
-	sprite->addr = mlx_get_data_addr(sprite->img,
-				&sprite->bpp, &sprite->line_len, &sprite->endian);
+	sprite_tex->addr = mlx_get_data_addr(sprite_tex->img,
+				&sprite_tex->bpp, &sprite_tex->line_len, &sprite_tex->endian);
 	return (0);
 }
 
 void	draw_sprite(t_cub3d *data)
 {
-	t_sprite	sprite_draw;
-	double		inv_det;
-
-	(void)data;
-	ft_memset(&sprite_draw, 0, sizeof(sprite_draw));
-	sprite_draw.relative_x = 0;
-	sprite_draw.relative_y = 0;
-
-	inv_det = 1.0 / (data->player.plane_x * data->player.dir_y - data->player.dir_x * data->player.plane_y);
-	// *transform_x = inv_det * (game->player.dir.y * normalized_sprite.x - game->player.dir.x * normalized_sprite.y);
-	// *transform_y = inv_det * (-game->player.plane.y * normalized_sprite.x + game->player.plane.x * normalized_sprite.y);
+	set_sprite_data(data, &data->sprites);
 }
