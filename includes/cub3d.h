@@ -165,11 +165,12 @@ typedef struct s_sprite
 	double	map_y;
 	double	relative_x;
 	double	relative_y;
+	double	inverse_matrix_factor;
 	double	camera_x;
 	double	camera_y;
 	int		screen_x;
-	int		height_on_screen;
-	int		width_on_screen;
+	int		draw_height;
+	int		draw_width;
 	int		start_x;
 	int		end_x;
 	int		start_y;
@@ -232,7 +233,7 @@ typedef struct s_cub3d
 	int			key_pressed_d;
 	int			previous_mouse_x; // bonus
 	t_minimap	mmap;
-	t_xpm_img	sprite; // bonus
+	t_xpm_img	sprite_tex; // bonus
 	double		zbuffer[WIN_W]; // bonus
 	int			sprite_count; // bonus
 	t_sprite	*sprites; // bonus
@@ -298,7 +299,8 @@ int		mousemove(int x, int y, t_cub3d *data);
 int		mousescroll(int event, int x, int y, t_cub3d *data);
 
 /*----- Animated sprite -----*/
-int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite);
-// void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
+int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex);
+void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
+void	set_sprite_data(t_cub3d *data, t_sprite *sprites);
 
 #endif

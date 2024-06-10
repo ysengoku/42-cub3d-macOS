@@ -39,8 +39,8 @@ static void init_cub3d_data(t_cub3d *data)
 	data->ceiling_color = 0;
 	data->floor_color = 0;
 	//=== BONUS ================================================
-	ft_memset(&data->sprite, 0, sizeof(data->sprite));
-	ft_memset(&data->sprite.img, 0, sizeof(data->sprite.img));
+	ft_memset(&data->sprite_tex, 0, sizeof(data->sprite_tex));
+	ft_memset(&data->sprite_tex.img, 0, sizeof(data->sprite_tex.img));
 	ft_memset(&data->mmap, 0, sizeof(data->mmap));
 	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img));
 	//------ if we use texture for minimap ----------------------
@@ -104,7 +104,7 @@ int	main(int argc, char **argv)
 	ft_init_mlx(&data);
 	create_main_image(&data);
 	set_wall_texture(&data, data.wall);
-	set_sprite_texture(&data, &data.sprite); // bonus
+	set_sprite_texture(&data, &data.sprite_tex); // bonus
 	if (create_minimap_img(&data, &data.mmap) == 1) //bonus
 		return (1);
 	if (set_wall_texture(&data, data.wall) == 1)
