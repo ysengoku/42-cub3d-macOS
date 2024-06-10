@@ -53,6 +53,8 @@
 # define ROTATE 5
 # define PITCH 1
 
+# define SPRITE_TEX "./textures/sprite_barrel.xpm" // bonus temporary def
+
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
 # define MMAP_SCALE	8
@@ -60,7 +62,9 @@
 # define MMAP_FLOOR 11583173 //(int)0xB0BEC5
 # define MMAP_P 12915042 //(int)0xC51162
 # define MMAP_DIR 13959168 //(int)0xD50000
+# define MMAP_RAY 16776623 //(int)0xfffdaf
 # define MMAP_SPACE 11977418 //(int)0xB6C2CA
+# define MMAP_SPRITE 16765696 //(int)0xffd300
 # define MMAP_F "./textures/minimap/floor.xpm"
 # define MMAP_PL "./textures/minimap/player.xpm"
 # define MMAP_WL "./textures/minimap/wall.xpm"
@@ -89,9 +93,9 @@
 /*===== enum definition =====================================================*/
 enum	e_direction
 {
-	N = 270, /////
+	N = 270,
 	E = 0,
-	S = 90, /////
+	S = 90,
 	W = 180
 };
 
@@ -155,6 +159,23 @@ typedef struct s_player
 	int					pitch;
 }				t_player;
 
+typedef struct s_sprite
+{
+	double	map_x;
+	double	map_y;
+	double	relative_x;
+	double	relative_y;
+	double	camera_x;
+	double	camera_y;
+	int		screen_x;
+	int		height_on_screen;
+	int		width_on_screen;
+	int		start_x;
+	int		end_x;
+	int		start_y;
+	int		end_y;
+}				t_sprite;
+
 typedef struct s_ray
 {
 	double			camera_p;
@@ -189,7 +210,7 @@ typedef struct s_minimap
 	int			minimap_x;
 	int			minimap_y;
 	t_xpm_img	floor;
-	t_xpm_img	player;
+	//t_xpm_img	player;
 	t_xpm_img	wall;
 }				t_minimap;
 
@@ -209,8 +230,12 @@ typedef struct s_cub3d
 	int			key_pressed_s;
 	int			key_pressed_a;
 	int			key_pressed_d;
-	int			previous_mouse_x;
+	int			previous_mouse_x; // bonus
 	t_minimap	mmap;
+	t_xpm_img	sprite; // bonus
+	double		zbuffer[WIN_W]; // bonus
+	int			sprite_count; // bonus
+	t_sprite	*sprites; // bonus
 }				t_cub3d;
 
 /*===== functions ============================================================*/
@@ -233,7 +258,7 @@ int		set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
 
 /*----- Ray casting -----*/
 int		ft_raycasting(t_cub3d *data);
-void	check_wall_hit(t_cub3d *data, t_ray *ray);
+void	check_wall_hit(t_cub3d *data, t_ray *ray, int x);
 
 /*----- Image rendering -----*/
 int		game_loop(t_cub3d *data);
@@ -244,9 +269,9 @@ int		convert_color(int rgb[3]);
 void	put_pxl_color(t_imgdata *img, int x, int y, int color);
 
 /*----- Event handler -----*/
-int		handle_keypress(int keysym, t_cub3d *data);
-int		handle_keyrelease(int keysym, t_cub3d *data);
-int		handle_closebutton(t_cub3d *data);
+int		keypress(int keysym, t_cub3d *data);
+int		keyrelease(int keysym, t_cub3d *data);
+int		closebutton(t_cub3d *data);
 void	close_window(t_cub3d *data);
 void	move_forward(t_cub3d *data, t_player *player, t_map *map);
 void	move_backward(t_cub3d *data, t_player *player, t_map *map);
@@ -265,9 +290,15 @@ int		free_all(t_cub3d *data, int status);
 /*----- Minimap -----*/
 int		create_minimap_img(t_cub3d *data, t_minimap *mmap);
 void	set_minimap(t_cub3d *data);
+void	draw_player(t_cub3d *data);
+void	draw_ray_mmap(t_cub3d *data, t_ray *ray);
 
 /*----- Mouse move -----*/
 int		mousemove(int x, int y, t_cub3d *data);
 int		mousescroll(int event, int x, int y, t_cub3d *data);
+
+/*----- Animated sprite -----*/
+int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite);
+// void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
 
 #endif

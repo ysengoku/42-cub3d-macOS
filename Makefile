@@ -35,7 +35,8 @@ vpath %c $(SRCS_DIR) \
 		$(SRCS_DIR)error	\
 		$(SRCS_DIR_B)	\
 		$(SRCS_DIR_B)minimap	\
-		$(SRCS_DIR_B)event_bonus
+		$(SRCS_DIR_B)event_bonus	\
+		$(SRCS_DIR_B)sprite
 		
 FILES = main	\
 		parsing \
@@ -62,6 +63,8 @@ FILES = main	\
 		minimap_bonus	\
 		minimap_img_bonus	\
 		mouse_move_bonus	\
+		sprite_bonus	\
+		set_sprite_data_bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/

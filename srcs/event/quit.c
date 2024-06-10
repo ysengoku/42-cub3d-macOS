@@ -28,8 +28,6 @@ void	close_window(t_cub3d *data)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.img.img);
 	if (data->mmap.floor.img)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.floor.img);
-	if (data->mmap.player.img)
-		mlx_destroy_image(data->mlx_ptr, data->mmap.player.img);
 	if (data->mmap.wall.img)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.wall.img);
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);

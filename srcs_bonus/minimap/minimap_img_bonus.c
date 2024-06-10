@@ -27,16 +27,12 @@ int	create_minimap_img(t_cub3d *data, t_minimap *mmap)
 	/*===== If minimap with texture ==========================================*/
 	mmap->floor.img = mlx_xpm_file_to_image(data->mlx_ptr, MMAP_F,
 			&mmap->floor.w, &mmap->floor.h);
-	mmap->player.img = mlx_xpm_file_to_image(data->mlx_ptr, MMAP_PL,
-			&mmap->player.w, &mmap->player.h);
 	mmap->wall.img = mlx_xpm_file_to_image(data->mlx_ptr, MMAP_WL,
 			&mmap->wall.w, &mmap->wall.h);
-	if (!mmap->floor.img || !mmap->player.img || !mmap->wall.img)
+	if (!mmap->floor.img || !mmap->wall.img)
 		return (free_all(data, 1));
 	mmap->floor.addr = mlx_get_data_addr(mmap->floor.img,
 			&mmap->floor.bpp, &mmap->floor.line_len, &mmap->floor.endian);
-	mmap->player.addr = mlx_get_data_addr(mmap->player.img,
-			&mmap->player.bpp, &mmap->player.line_len, &mmap->player.endian);
 	mmap->wall.addr = mlx_get_data_addr(mmap->wall.img,
 			&mmap->wall.bpp, &mmap->wall.line_len, &mmap->wall.endian);
 	/*========================================================================*/
