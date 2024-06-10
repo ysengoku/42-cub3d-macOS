@@ -27,44 +27,44 @@ void	draw_floor(t_cub3d *data, int x, int start, int floor_color)
 		put_pxl_color(&data->img, x, start++, floor_color);
 }
 
-void	draw_wall(t_cub3d *data, int x, t_ray *ray)
+void	draw_wall(t_cub3d *data, int screen_x, t_ray *ray)
 {
-    t_line	line;
-    double	wall_x;
+	t_line	line;
+	double	wall_x;
 
-    line.y_start = WIN_H / 2 - ray->wall_height / 2;
-    if (line.y_start < 0)
-        line.y_start = 0;
-    line.y_end = WIN_H / 2 + ray->wall_height / 2;
-    if (line.y_end >= WIN_H)
-        line.y_end = WIN_H - 1;
-    line.y = line.y_start;
+	line.y_start = WIN_H / 2 - ray->wall_height / 2 + data->player.pitch;
+	if (line.y_start < 0)
+		line.y_start = 0;
+	line.y_end = WIN_H / 2 + ray->wall_height / 2 + data->player.pitch;
+	if (line.y_end > WIN_H)
+		line.y_end = WIN_H -1;
+	line.y = line.y_start;
 	wall_x = get_wall_x(data, ray);
-    if (ray->wall_height != 0)
-		line.span = (double)data->wall[ray->wall_side].h / ray->wall_height; /////
-    else
-        line.span = 0;
-	line.tex_x = (int)(wall_x * data->wall[ray->wall_side].w); /////
-    line.tex_y = 0;
+	if (ray->wall_height != 0)
+		line.span = (double)data->wall[ray->wall_side].h / ray->wall_height;
+	else
+		line.span = 0;
+	line.tex_x = (int)(wall_x * (double)data->wall[ray->wall_side].w);
+	line.tex_y = 0;
 	while (line.y < line.y_end)
 	{
 		line.tex_y = (int)(((double)line.y - (double)line.y_start) * line.span);
-		put_pxl_color(&data->img, x, line.y,
+		put_pxl_color(&data->img, screen_x, line.y,
 			get_tex_color(&data->wall[ray->wall_side], line.tex_x, line.tex_y));
 		line.y++;
 	}
 }
 
-static double	get_wall_x(t_cub3d *data, t_ray *ray) /////
+static double	get_wall_x(t_cub3d *data, t_ray *ray)
 {
 	double	wall_x;
 
-    if (ray->wall_side == WE || ray->wall_side == EA)
-        wall_x = data->player.pos_y + ray->distance * ray->dir_y;
-    else
-        wall_x = data->player.pos_x + ray->distance * ray->dir_x;
-	if ((ray->wall_side == SO && ray->dir_y > 0) 
-			|| (ray->wall_side == WE && ray->dir_x < 0))
+	if (ray->wall_side == WE || ray->wall_side == EA)
+		wall_x = data->player.pos_y + ray->distance * ray->dir_y;
+	else
+		wall_x = data->player.pos_x + ray->distance * ray->dir_x;
+	if ((ray->wall_side == SO && ray->dir_y > 0)
+		|| (ray->wall_side == WE && ray->dir_x < 0))
 		wall_x = 1 - wall_x;
 	wall_x -= floor(wall_x);
 	return (wall_x);

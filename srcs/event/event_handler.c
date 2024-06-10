@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-int	handle_keypress(int keysym, t_cub3d *data)
+int	keypress(int keysym, t_cub3d *data)
 {
 	if (keysym == XK_Escape)
 		close_window(data);
@@ -31,7 +31,7 @@ int	handle_keypress(int keysym, t_cub3d *data)
 	return (0);
 }
 
-int	handle_keyrelease(int keysym, t_cub3d *data)
+int	keyrelease(int keysym, t_cub3d *data)
 {
 	if (keysym == XK_Right)
 		data->key_pressed_right = 0;
@@ -48,7 +48,7 @@ int	handle_keyrelease(int keysym, t_cub3d *data)
 	return (0);
 }
 
-int	handle_closebutton(t_cub3d *data)
+int	closebutton(t_cub3d *data)
 {
 	close_window(data);
 	return (0);

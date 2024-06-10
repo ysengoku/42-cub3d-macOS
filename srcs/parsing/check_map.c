@@ -27,10 +27,9 @@ static int	check(int *player, int *i, int j, t_map *data_map)
 	}
 	else if (data_map->dup_map[j][*i] == '1'
 		|| data_map->dup_map[j][*i] == '0'
-		|| data_map->dup_map[j][*i] == 32)
-	{
+		|| data_map->dup_map[j][*i] == 32
+		|| data_map->dup_map[j][*i] == '2') // temporary code just for test of sprite
 		*i += 1;
-	}
 	else
 	{
 		exit_parsing(data_map, "Error\nCub3D: invalid map");
@@ -71,6 +70,6 @@ int	check_valid_char(t_map *data_map)
 int	check_map(t_map *data_map)
 {
 	check_valid_char(data_map);
-	algo_flood_fill(data_map);
+	// algo_flood_fill(data_map); // comented temporarily just for test of sprite
 	return (EXIT_SUCCESS);
 }

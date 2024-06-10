@@ -24,6 +24,7 @@ static void	init_player(t_player *player)
 	player->plane_x = 0;
 	player->plane_y = 0;
 	player->moved = 1;
+	player->pitch = 0;
 }
 
 static void init_cub3d_data(t_cub3d *data)
@@ -33,23 +34,28 @@ static void init_cub3d_data(t_cub3d *data)
 	i = -1;
 	data->mlx_ptr = 0;
 	data->win_ptr = 0;
- 	ft_memset(&data->img, 0, sizeof(data->img));
+	ft_memset(&data->img, 0, sizeof(data->img));
 	init_player(&data->player);
 	data->ceiling_color = 0;
 	data->floor_color = 0;
+	//=== BONUS ================================================
+	ft_memset(&data->sprite, 0, sizeof(data->sprite));
+	ft_memset(&data->sprite.img, 0, sizeof(data->sprite.img));
 	ft_memset(&data->mmap, 0, sizeof(data->mmap));
 	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img));
 	//------ if we use texture for minimap ----------------------
-	ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor)); 
+	ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor));
 	ft_memset(&data->mmap.wall, 0, sizeof(data->mmap.wall));
-	ft_memset(&data->mmap.player, 0, sizeof(data->mmap.player));
+	// ft_memset(&data->mmap.player, 0, sizeof(data->mmap.player));
 	//-----------------------------------------------------------
+	//===========================================================
 	data->key_pressed_left = 0;
 	data->key_pressed_right = 0;
 	data->key_pressed_w = 0;
 	data->key_pressed_s = 0;
 	data->key_pressed_a = 0;
 	data->key_pressed_d = 0;
+	data->previous_mouse_x = 0; // bonus
 }
 
 static int	ft_init_mlx(t_cub3d *data)
@@ -57,17 +63,15 @@ static int	ft_init_mlx(t_cub3d *data)
 	data->mlx_ptr = mlx_init();
 	if (!(data->mlx_ptr))
 	{
-		ft_putendl_fd("MLX: Initialization failed", 2);
 		free_data_map(&data->map);
-		return (1);
+		ft_perror_exit("MLX", 1);
 	}
 	data->win_ptr = mlx_new_window(data->mlx_ptr, WIN_W, WIN_H, WINNAME);
 	if (!(data->win_ptr))
 	{
-		perror("MLX");
 		free(data->mlx_ptr);
 		free_data_map(&data->map);
-		return (1);
+		ft_perror_exit("MLX", 1);
 	}
 	return (0);
 }
@@ -90,25 +94,27 @@ static int	create_main_image(t_cub3d *data)
 int	main(int argc, char **argv)
 {
 	t_cub3d	data;
-	
+
 	if (argc != 2 || ft_strnstr_r(argv[1], ".cub") != 0)
 		ft_error_exit("Usage: ./cub3D <path/map_name.cub>", 1);
-	if (parsing(argv[1], &data) == 1)
+	if (parsing(argv[1], &data) == EXIT_FAILURE)
 		return (2);
 	init_cub3d_data(&data);
 	set_data(&data, &data.player, &data.map);
-	if (ft_init_mlx(&data) == 1)
-		return(1);
-	if (create_main_image(&data) == 1)
+	ft_init_mlx(&data);
+	create_main_image(&data);
+	set_wall_texture(&data, data.wall);
+	set_sprite_texture(&data, &data.sprite); // bonus
+	if (create_minimap_img(&data, &data.mmap) == 1) //bonus
 		return (1);
 	if (set_wall_texture(&data, data.wall) == 1)
 		return (1);
 	if (create_minimap_img(&data, &data.mmap) == 1)
 		return (1);
-	mlx_hook(data.win_ptr, DestroyNotify, StructureNotifyMask, handle_closebutton, &data);
-	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, handle_keypress, &data);
-	mlx_hook(data.win_ptr, KeyRelease, KeyReleaseMask, handle_keyrelease, &data);
-	// mlx_mouse_hook(data.win_ptr, &handle_mouseevents, &data); // ---> Doesn't need ??
+	mlx_hook(data.win_ptr, DestroyNotify, StructureNotifyMask, closebutton, &data);
+	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, keypress, &data);
+	mlx_hook(data.win_ptr, KeyRelease, KeyReleaseMask, keyrelease, &data);
+	mlx_mouse_hook(data.win_ptr, mousescroll, &data); // bonus
 	mlx_loop_hook(data.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx_ptr);
 	return (0);

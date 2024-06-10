@@ -15,7 +15,7 @@
 static void	next_step(t_ray *ray, int *is_east_or_west);
 static int	get_wall_side(t_ray *ray, t_player *player, int is_east_or_west);
 
-void	check_wall_hit(t_cub3d *data, t_ray *ray)
+void	check_wall_hit(t_cub3d *data, t_ray *ray, int x)
 {
 	int		hit;
 	int		is_east_or_west;
@@ -33,6 +33,12 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 		ray->distance = ray->sidedist_y - ray->delta_y;
 	else
 		ray->distance = ray->sidedist_x - ray->delta_x;
+	/*=== Euclidean distance (more accurate but more expensive to calculate) ===*/
+	// if (is_east_or_west == 1)
+    // 	ray->distance = sqrt(pow(ray->sidedist_y, 2) + pow(ray->delta_y, 2));
+	// else
+    // 	ray->distance = sqrt(pow(ray->sidedist_x, 2) + pow(ray->delta_x, 2));
+	data->zbuffer[x] = ray->distance;
 	ray->wall_side = get_wall_side(ray, &data->player, is_east_or_west);
 	ray->wall_height = (int)(WIN_H / ray->distance);
 }
