@@ -1,5 +1,19 @@
 # 42-cub3d
 
+ドアの座標を配列にストック
+しまってるドア=D
+空いてるドア=C
+keypress:
+D->C
+C->D
+
+typeef struct s_door
+{
+int map_x;
+int map_y;
+char status; or enum (D or C)
+}
+
 ## Structure
 
 ### Player
