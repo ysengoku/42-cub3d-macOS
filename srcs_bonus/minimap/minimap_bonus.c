@@ -33,6 +33,8 @@ void	set_minimap(t_cub3d *data)
 				draw_tile(data, &data->mmap, &data->mmap.wall);
 			else if (data->map.map[map_y][map_x] == '2')
 				draw_tile_color(&data->mmap, MMAP_SPRITE);
+			else if (data->map.map[map_y][map_x] == 'D')
+				draw_tile_color(&data->mmap, MMAP_DOOR);
 			else if (data->map.map[map_y][map_x] == ' ')
 				draw_tile_color(&data->mmap, MMAP_SPACE);
 			else

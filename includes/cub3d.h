@@ -54,6 +54,7 @@
 # define PITCH 1
 
 # define SPRITE_TEX "./textures/sprite_barrel.xpm" // bonus temporary def
+# define DOOR_TEX "./textures/pikachuhd.xpm" // bonus temporary def
 
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
@@ -65,6 +66,7 @@
 # define MMAP_RAY 16776623 //(int)0xfffdaf
 # define MMAP_SPACE 11977418 //(int)0xB6C2CA
 # define MMAP_SPRITE 16765696 //(int)0xffd300
+# define MMAP_DOOR 4770532 //(int)0x48cae4
 # define MMAP_F "./textures/minimap/floor.xpm"
 # define MMAP_PL "./textures/minimap/player.xpm"
 # define MMAP_WL "./textures/minimap/wall.xpm"
@@ -104,7 +106,21 @@ enum	e_wallside
 	NO = 0,
 	SO = 1,
 	WE = 2,
-	EA = 3
+	EA = 3,
+	DR = 4
+};
+
+enum	e_door_status
+{
+	OPEN = 'O',
+	CLOSED = 'D'
+};
+
+enum	e_hit
+{
+	WALL = 1,
+	DOOR = 2,
+	NOTHING = 0
 };
 
 /*===== structures ===========================================================*/
@@ -177,8 +193,16 @@ typedef struct s_sprite
 	int		end_y;
 }				t_sprite;
 
+typedef struct s_door
+{
+	int 	map_x;
+	int 	map_y;
+	enum 	e_door_status	status;
+}			t_door;
+
 typedef struct s_ray
 {
+	enum e_hit		hit;
 	double			camera_p;
 	double			dir_x;
 	double			dir_y;
@@ -224,7 +248,7 @@ typedef struct s_cub3d
 	t_player	player;
 	int			ceiling_color;
 	int			floor_color;
-	t_xpm_img	wall[4];
+	t_xpm_img	wall[5];
 	int			key_pressed_left;
 	int			key_pressed_right;
 	int			key_pressed_w;
@@ -234,9 +258,11 @@ typedef struct s_cub3d
 	int			previous_mouse_x; // bonus
 	t_minimap	mmap;
 	t_xpm_img	sprite_tex; // bonus
-	double		zbuffer[WIN_W]; // bonus
+	double		wall_zbuffer[WIN_W]; // bonus
 	int			sprite_count; // bonus
 	t_sprite	*sprites; // bonus
+//	t_xpm_img	door_tex; // bonus
+	t_door		*doors; // bonus
 }				t_cub3d;
 
 /*===== functions ============================================================*/
@@ -299,8 +325,11 @@ int		mousemove(int x, int y, t_cub3d *data);
 int		mousescroll(int event, int x, int y, t_cub3d *data);
 
 /*----- Animated sprite -----*/
-int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex);
-void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
-void	set_sprite_data(t_cub3d *data, t_sprite *sprites);
+//int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex);
+//void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
+//void	set_sprite_data(t_cub3d *data, t_sprite *sprites);
+
+/*----- Doors -----*/
+void	set_door_texture(t_cub3d *data);
 
 #endif

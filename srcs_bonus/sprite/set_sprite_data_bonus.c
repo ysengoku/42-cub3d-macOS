@@ -12,6 +12,7 @@
 
 #include "cub3d.h"
 
+/*
 static void	get_sprite_count(t_cub3d *data)
 {
 	int	x;
@@ -75,11 +76,11 @@ void	set_sprite_data(t_cub3d *data, t_sprite *sprites)
 
 	while (i < data->sprite_count)
 	{
-		/*=== プレイヤーの位置に対するスプライトの相対位置を計算 ===*/
+		//=== プレイヤーの位置に対するスプライトの相対位置を計算 ===
 		sprites[i].relative_x = sprites[i].map_x - data->player.pos_x;
 		sprites[i].relative_y = sprites[i].map_y - data->player.pos_y;
 
-		/*=== プレイヤーの視野（カメラ平面）とスプライトとの位置との関係を計算 ===*/
+		//=== プレイヤーの視野（カメラ平面）とスプライトとの位置との関係を計算 ===
 		// 逆行列を使ってスプライトの位置をカメラ平面に投影
 		// スプライトがプレイヤーの視野の中心から左右どちらにどれだけ離れているかを計算
 		sprites[i].camera_x = inverse_matrix_factor * (data->player.dir_y
@@ -114,3 +115,4 @@ void	set_sprite_data(t_cub3d *data, t_sprite *sprites)
 		i++;
 	}
 }
+*/
