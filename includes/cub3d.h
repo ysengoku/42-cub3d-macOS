@@ -54,7 +54,7 @@
 # define PITCH 1
 
 # define SPRITE_TEX "./textures/sprite_barrel.xpm" // bonus temporary def
-# define DOOR_TEX "./textures/pikachuhd.xpm" // bonus temporary def
+# define DOOR_TEX "./textures/door.xpm" // bonus temporary def
 
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
