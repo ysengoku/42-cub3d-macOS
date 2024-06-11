@@ -17,15 +17,17 @@ static int	get_wall_side(t_ray *ray, t_player *player, int is_east_or_west);
 
 void	check_wall_hit(t_cub3d *data, t_ray *ray, int x)
 {
-	int		hit;
+//	int		hit;
 	int		is_east_or_west;
 
-	hit = 0;
+	ray->hit = NOTHING;
 	is_east_or_west = 0;
-	while (!hit)
+	while (ray->hit == NOTHING)
 	{
 		if (data->map.map[ray->map_y][ray->map_x] == '1')
-			hit = 1;
+			ray->hit = WALL;
+		else if (data->map.map[ray->map_y][ray->map_x] == 'D')
+			ray->hit = DOOR;
 		else
 			next_step(ray, &is_east_or_west);
 	}
@@ -38,7 +40,7 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray, int x)
     // 	ray->distance = sqrt(pow(ray->sidedist_y, 2) + pow(ray->delta_y, 2));
 	// else
     // 	ray->distance = sqrt(pow(ray->sidedist_x, 2) + pow(ray->delta_x, 2));
-	data->zbuffer[x] = ray->distance;
+	data->wall_zbuffer[x] = ray->distance;
 	ray->wall_side = get_wall_side(ray, &data->player, is_east_or_west);
 	ray->wall_height = (int)(WIN_H / ray->distance);
 }
@@ -61,6 +63,8 @@ static void	next_step(t_ray *ray, int *is_east_or_west)
 
 static int	get_wall_side(t_ray *ray, t_player *player, int is_east_or_west)
 {
+	if (ray->hit == DOOR)
+		return (DR);
 	if (is_east_or_west == 1)
 	{
 		if (ray->map_y < player->pos_y)

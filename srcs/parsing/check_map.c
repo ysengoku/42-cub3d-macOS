@@ -28,7 +28,8 @@ static int	check(int *player, int *i, int j, t_map *data_map)
 	else if (data_map->dup_map[j][*i] == '1'
 		|| data_map->dup_map[j][*i] == '0'
 		|| data_map->dup_map[j][*i] == 32
-		|| data_map->dup_map[j][*i] == '2') // temporary code just for test of sprite
+		|| data_map->dup_map[j][*i] == '2'
+		|| data_map->dup_map[j][*i] == 'D') // temporary code just for test of sprite
 		*i += 1;
 	else
 	{

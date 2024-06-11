@@ -12,6 +12,7 @@
 
 #include "cub3d.h"
 
+/*
 int	set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex)
 {
 	int		i;
@@ -43,3 +44,4 @@ void	draw_sprite(t_cub3d *data)
 {
 	set_sprite_data(data, &data->sprites);
 }
+*/
