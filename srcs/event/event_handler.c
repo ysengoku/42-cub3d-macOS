@@ -28,6 +28,12 @@ int	keypress(int keysym, t_cub3d *data)
 		data->key_pressed_s = 1;
 	if (keysym == XK_d)
 		data->key_pressed_d = 1;
+	/*=== bonus ===============*/
+	if (keysym == XK_o)
+		open_door(data);
+	if (keysym == XK_c)
+		close_door(data);
+	/*=========================*/
 	return (0);
 }
 

@@ -18,36 +18,37 @@ static void	set_sidedist(t_ray *ray, t_player *player);
 
 int	ft_raycasting(t_cub3d *data)
 {
-	int		screen_x;
+	int		x;
 	t_ray	ray;
 
-	screen_x = 0;
+	x = 0;
 	ft_memset(&ray, 0, sizeof(ray));
 	if (data->player.moved)
 	{
 		init_camera(data);
 		if (BONUS)
 			set_minimap(data);
-		while (screen_x < WIN_W)
+		while (x < WIN_W)
 		{
-			set_ray(data, &ray, screen_x);
-			check_wall_hit(data, &ray, screen_x);
-			// check_hit(data, &ray); // bonus
-			draw_ceiling(data, screen_x, WIN_H / 2 + data->player.pitch,
+			draw_ceiling(data, x, WIN_HALFH + data->player.pitch,
 				data->ceiling_color);
-			draw_floor(data, screen_x, WIN_H / 2 + data->player.pitch,
+			draw_floor(data, x, WIN_HALFH + data->player.pitch,
 				data->floor_color);
-			draw_wall(data, screen_x, &ray);
+			set_ray(data, &ray, x);
+			check_wall_hit(data, &ray);
+			draw_wall(data, x, &ray);
+			set_ray(data, &ray, x); //
+			check_door_hit(data, &ray); //
+			if (ray.hit == DOOR) //
+				draw_door(data, x, &ray); //
 			if (BONUS)
 				draw_ray_mmap(data, &ray);
-			screen_x++;
+			x++;
 		}
 		data->player.moved = 0;
 		if (BONUS)
 			draw_player(data);
 	}
-	// if (BONUS)
-	// 	draw_sprite(data);
 	return (0);
 }
 
@@ -64,6 +65,7 @@ static void	init_camera(t_cub3d *data)
 
 static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 {
+	ray->hit = NOTHING;
 	ray->camera_p = 2 * x / (double)WIN_W - 1;
 	ray->dir_x = data->player.dir_x + data->player.plane_x * ray->camera_p;
 	ray->dir_y = data->player.dir_y + data->player.plane_y * ray->camera_p;

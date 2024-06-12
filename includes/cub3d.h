@@ -44,20 +44,22 @@
 # define WINNAME "cub3D"
 # define WIN_W 960
 # define WIN_H 720
-//# define TEX_SIZE 64 /////
+# define WIN_HALFW 480
+# define WIN_HALFH 360
 
 # ifndef FOV
 #  define FOV 90
 # endif
 # define MOVE 0.1
 # define ROTATE 5
-# define PITCH 1
-
-# define SPRITE_TEX "./textures/sprite_barrel.xpm" // bonus temporary def
-# define DOOR_TEX "./textures/door.xpm" // bonus temporary def
-
+/*+++++ BONUS ++++++++++++++++++++++++++++++++++++++++++++++*/
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
+
+# define MOUSE_DOWN 4
+# define MOUSE_UP 5
+# define PITCH 1
+
 # define MMAP_SCALE	8
 # define MMAP_WALL 24676 //(int)0x006064
 # define MMAP_FLOOR 11583173 //(int)0xB0BEC5
@@ -65,11 +67,14 @@
 # define MMAP_DIR 13959168 //(int)0xD50000
 # define MMAP_RAY 16776623 //(int)0xfffdaf
 # define MMAP_SPACE 11977418 //(int)0xB6C2CA
-# define MMAP_SPRITE 16765696 //(int)0xffd300
 # define MMAP_DOOR 4770532 //(int)0x48cae4
-# define MMAP_F "./textures/minimap/floor.xpm"
-# define MMAP_PL "./textures/minimap/player.xpm"
-# define MMAP_WL "./textures/minimap/wall.xpm"
+
+// # define DOOR_TEX "./textures/door/door.xpm"
+# define DOOR_TEX "./textures/door/fence1.xpm"
+# define DOOR_TEX1 "./textures/door/fence2.xpm"
+# define DOOR_TEX2 "./textures/door/fence3.xpm"
+# define DOOR_TEX3 "./textures/door/fence4.xpm"
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 # ifndef BONUS
 #  define BONUS 1
@@ -83,6 +88,8 @@
 # define XK_d 2
 # define XK_s 1
 # define XK_w 13
+# define XK_o (int)0x006f
+# define XK_c (int) 0x0062
 # define KeyPress 2
 # define KeyRelease 3
 # define KeyPressMask (1L<<0)
@@ -107,7 +114,10 @@ enum	e_wallside
 	SO = 1,
 	WE = 2,
 	EA = 3,
-	DR = 4
+	DR = 4,
+	DR1 = 5,
+	DR2 = 6,
+	DR3 = 7
 };
 
 enum	e_door_status
@@ -197,7 +207,7 @@ typedef struct s_door
 {
 	int 	map_x;
 	int 	map_y;
-	enum 	e_door_status	status;
+	//enum 	e_door_status	status;
 }			t_door;
 
 typedef struct s_ray
@@ -216,7 +226,7 @@ typedef struct s_ray
 	double			delta_y;
 	double			distance;
 	int				wall_height;
-	enum e_wallside	wall_side;
+	enum e_wallside	w_side;
 }				t_ray;
 
 typedef struct s_line
@@ -227,6 +237,7 @@ typedef struct s_line
 	int		tex_x;
 	int		tex_y;
 	double	span;
+	int		color;
 }				t_line;
 
 typedef struct s_minimap
@@ -234,9 +245,6 @@ typedef struct s_minimap
 	t_imgdata	img;
 	int			minimap_x;
 	int			minimap_y;
-	t_xpm_img	floor;
-	//t_xpm_img	player;
-	t_xpm_img	wall;
 }				t_minimap;
 
 typedef struct s_cub3d
@@ -248,88 +256,98 @@ typedef struct s_cub3d
 	t_player	player;
 	int			ceiling_color;
 	int			floor_color;
-	t_xpm_img	wall[5];
+	t_xpm_img	wall[8];
 	int			key_pressed_left;
 	int			key_pressed_right;
 	int			key_pressed_w;
 	int			key_pressed_s;
 	int			key_pressed_a;
 	int			key_pressed_d;
-	int			previous_mouse_x; // bonus
+	/*++++++ Bonus +++++++++++++++++++*/
+	int			previous_mouse_x;
 	t_minimap	mmap;
-	t_xpm_img	sprite_tex; // bonus
-	double		wall_zbuffer[WIN_W]; // bonus
-	int			sprite_count; // bonus
-	t_sprite	*sprites; // bonus
-//	t_xpm_img	door_tex; // bonus
-	t_door		*doors; // bonus
+	int			door_count;
+	t_door		*doors;
+	t_xpm_img	sprite_tex;
+	double		wall_zbuffer[WIN_W];
+	int			sprite_count;
+	t_sprite	*sprites;
+	/*+++++++++++++++++++++++++++++++++*/
 }				t_cub3d;
 
 /*===== functions ============================================================*/
 
 /*----- Parsing -----*/
-int		parsing(char *file, t_cub3d *map);
-char	**get_file(char *file);
-int		get_data(t_cub3d *data);
-int		get_sprites_path(t_cub3d *data);
-int		get_colors_rgb(t_map *data_map);
-int		get_maps(t_map *data_map);
-int		check_map(t_map *data_map);
-int		algo_flood_fill(t_map *data_map);
-void	flood_fill(char **dup_map, int pos_x, int pos_y, bool *valid);
-void	free_split(char **map);
-void	free_data_map(t_map *data_map);
-void	exit_parsing(t_map *data_map, char *message);
-void	set_data(t_cub3d *data, t_player *player, t_map *map);
-int		set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
+int				parsing(char *file, t_cub3d *map);
+char			**get_file(char *file);
+int				get_data(t_cub3d *data);
+int				get_sprites_path(t_cub3d *map);
+int				get_colors_rgb(t_map *data_map);
+int				get_maps(t_map *data_map);
+int				check_map(t_map *data_map);
+int				algo_flood_fill(t_map *data_map);
+void			flood_fill(char **dup_map, int pos_x, int pos_y, bool *valid);
+void			free_split(char **map);
+void			free_data_map(t_map *data_map);
+void			exit_parsing(t_map *data_map, char *message);
+void			set_data(t_cub3d *data, t_player *player, t_map *map);
+int				set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
 
 /*----- Ray casting -----*/
-int		ft_raycasting(t_cub3d *data);
-void	check_wall_hit(t_cub3d *data, t_ray *ray, int x);
+int				ft_raycasting(t_cub3d *data);
+void			check_wall_hit(t_cub3d *data, t_ray *ray);
 
 /*----- Image rendering -----*/
-int		game_loop(t_cub3d *data);
-void	draw_wall(t_cub3d *data, int x, t_ray *ray);
-void	draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
-void	draw_floor(t_cub3d *data, int start, int end, int floor_color);
-int		convert_color(int rgb[3]);
-void	put_pxl_color(t_imgdata *img, int x, int y, int color);
+int				game_loop(t_cub3d *data);
+void			draw_wall(t_cub3d *data, int x, t_ray *ray);
+void			draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
+void			draw_floor(t_cub3d *data, int start, int end, int floor_color);
+int				convert_color(int rgb[3]);
+unsigned int	get_tex_color(t_xpm_img *texture, int x, int y);
+void			put_pxl_color(t_imgdata *img, int x, int y, int color);
 
 /*----- Event handler -----*/
-int		keypress(int keysym, t_cub3d *data);
-int		keyrelease(int keysym, t_cub3d *data);
-int		closebutton(t_cub3d *data);
-void	close_window(t_cub3d *data);
-void	move_forward(t_cub3d *data, t_player *player, t_map *map);
-void	move_backward(t_cub3d *data, t_player *player, t_map *map);
-void	move_right(t_cub3d *data, t_player *player, t_map *map);
-void	move_left(t_cub3d *data, t_player *player, t_map *map);
-void	rotate_counterclockwise(t_cub3d *data);
-void	rotate_clockwise(t_cub3d *data);
+int				keypress(int keysym, t_cub3d *data);
+int				keyrelease(int keysym, t_cub3d *data);
+int				closebutton(t_cub3d *data);
+void			close_window(t_cub3d *data);
+void			move_forward(t_cub3d *data, t_player *player, t_map *map);
+void			move_backward(t_cub3d *data, t_player *player, t_map *map);
+void			move_right(t_cub3d *data, t_player *player, t_map *map);
+void			move_left(t_cub3d *data, t_player *player, t_map *map);
+void			rotate_counterclockwise(t_cub3d *data);
+void			rotate_clockwise(t_cub3d *data);
 
 /*----- Error handling -----*/
-void	ft_perror_exit(char *message, int code);
-void	ft_error_exit(char *message, int code);
-int		free_all(t_cub3d *data, int status);
+void			ft_perror_exit(char *message, int code);
+void			ft_error_exit(char *message, int code);
+int				free_all(t_cub3d *data, int status);
+void			free_texture_paths(t_xpm_img *wall, int size);
 
 /*===== bonus part functions =================================================*/
 
 /*----- Minimap -----*/
-int		create_minimap_img(t_cub3d *data, t_minimap *mmap);
-void	set_minimap(t_cub3d *data);
-void	draw_player(t_cub3d *data);
-void	draw_ray_mmap(t_cub3d *data, t_ray *ray);
+int				create_minimap_img(t_cub3d *data, t_minimap *mmap);
+void			set_minimap(t_cub3d *data);
+void			draw_player(t_cub3d *data);
+void			draw_player_dir(t_cub3d *data);
+void			draw_ray_mmap(t_cub3d *data, t_ray *ray);
 
 /*----- Mouse move -----*/
-int		mousemove(int x, int y, t_cub3d *data);
-int		mousescroll(int event, int x, int y, t_cub3d *data);
+int				mousemove(int x, int y, t_cub3d *data);
+int				mousescroll(int event, int x, int y, t_cub3d *data);
+
+/*----- Doors -----*/
+int				get_door_texture_paths(t_cub3d *data);
+void			store_doors_coordinates(t_cub3d *data);
+void			open_door(t_cub3d *data);
+void			close_door(t_cub3d *data);
+void			check_door_hit(t_cub3d *data, t_ray *ray);
+void			draw_door(t_cub3d *data, int x, t_ray *ray);
 
 /*----- Animated sprite -----*/
 //int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex);
 //void	draw_sprite(t_cub3d *data, int x, t_ray *ray);
 //void	set_sprite_data(t_cub3d *data, t_sprite *sprites);
-
-/*----- Doors -----*/
-void	set_door_texture(t_cub3d *data);
 
 #endif

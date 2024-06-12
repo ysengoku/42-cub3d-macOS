@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quit.c                                             :+:      :+:    :+:   */
+/*   door_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 08:02:02 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/05 16:13:16 by yusengok         ###   ########.fr       */
+/*   Created: 2024/06/12 09:14:18 by yusengok          #+#    #+#             */
+/*   Updated: 2024/06/12 14:54:35 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	close_window(t_cub3d *data)
+void	open_door(t_cub3d *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < 5) // if not bonus, while (i < 4)
+	while (i < data->door_count)
 	{
-		mlx_destroy_image(data->mlx_ptr, data->wall[i].img);
-		free(data->wall[i].path);
+		data->map.map[data->doors[i].map_y][data->doors[i].map_x] = 'O';
 		i++;
 	}
-	if (data->mmap.img.img)
-		mlx_destroy_image(data->mlx_ptr, data->mmap.img.img);
-	free(data->doors);
-	mlx_destroy_image(data->mlx_ptr, data->img.img);
-	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	free(data->mlx_ptr);
-	free_data_map(&data->map);
-	exit(0);
+	data->player.moved = 1;
+}
+
+void	close_door(t_cub3d *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->door_count)
+	{
+		data->map.map[data->doors[i].map_y][data->doors[i].map_x] = 'D';
+		i++;
+	}
+	data->player.moved = 1;
 }

@@ -66,7 +66,8 @@ FILES = main	\
 		mouse_move_bonus	\
 		sprite_bonus	\
 		set_sprite_data_bonus	\
-		set_door_data_bonus	\
+		door_bonus	\
+		door_parsing_bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/

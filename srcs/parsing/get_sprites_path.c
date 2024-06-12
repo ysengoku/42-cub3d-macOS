@@ -66,5 +66,14 @@ int	get_sprites_path(t_cub3d *data)
 		exit_parsing(&data->map, "Error\nCub3D: invalid sprite");
 		return (EXIT_FAILURE);
 	}
+	/*=== Bonus =================================================*/
+	data->wall[DR].path = ft_strdup(DOOR_TEX);
+	if (!data->wall[DR].path)
+	{
+		free_texture_paths(data->wall, 4);
+		exit_parsing(&data->map, "Error\nCub3D: malloc failed");
+		return (EXIT_FAILURE);
+	}
+	/*=============================================================*/
 	return (EXIT_SUCCESS);
 }
