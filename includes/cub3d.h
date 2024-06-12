@@ -88,12 +88,14 @@
 # define XK_d 2
 # define XK_s 1
 # define XK_w 13
-# define XK_o (int)0x006f
-# define XK_c (int) 0x0062
+# define XK_o 31
+# define XK_c 8
 # define KeyPress 2
 # define KeyRelease 3
 # define KeyPressMask (1L<<0)
 # define KeyReleaseMask (1L<<1)
+# define MotionNotify 6
+# define PointerMotionMask (1L<<6)
 # define DestroyNotify 17
 # define StructureNotifyMask (1L<<17)
 # define MOUSE_DOWN 4
