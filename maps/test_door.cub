@@ -1,7 +1,7 @@
-NO ./textures/wood.xpm
-SO ./textures/chocolate.xpm
-WE ./textures/stone.xpm
-EA ./textures/chocolate_white.xpm
+NO ./textures/walls/wood.xpm
+SO ./textures/walls/chocolate.xpm
+WE ./textures/walls/stone.xpm
+EA ./textures/walls/chocolate_white.xpm
 
 F 169,169,169
 C 52,52,52

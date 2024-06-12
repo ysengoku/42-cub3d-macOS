@@ -27,3 +27,11 @@ void	put_pxl_color(t_imgdata *img, int x, int y, int color)
 		*(int *)pxl = color;
 	}
 }
+
+unsigned int	get_tex_color(t_xpm_img *texture, int x, int y)
+{
+	char	*pxl;
+
+	pxl = texture->addr + (y * texture->line_len + x * (texture->bpp / 8));
+	return (*(unsigned int *)pxl);
+}

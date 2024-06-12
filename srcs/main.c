@@ -20,14 +20,14 @@ static void	init_player(t_player *player)
 	player->dir = 0.0;
 	player->dir_x = 0;
 	player->dir_y = 0;
-	player->plane_length = tan(player->fov / 2);
+	player->plane_length = tan(player->fov * 0.5);
 	player->plane_x = 0;
 	player->plane_y = 0;
 	player->moved = 1;
 	player->pitch = 0;
 }
 
-static void init_cub3d_data(t_cub3d *data)
+static void	init_cub3d_data(t_cub3d *data)
 {
 	int	i;
 
@@ -38,17 +38,13 @@ static void init_cub3d_data(t_cub3d *data)
 	init_player(&data->player);
 	data->ceiling_color = 0;
 	data->floor_color = 0;
-	//=== BONUS ================================================
-	ft_memset(&data->sprite_tex, 0, sizeof(data->sprite_tex));
-	ft_memset(&data->sprite_tex.img, 0, sizeof(data->sprite_tex.img));
-	ft_memset(&data->mmap, 0, sizeof(data->mmap));
-	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img));
+	ft_memset(&data->mmap, 0, sizeof(data->mmap)); // bonus
+	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img)); // bonus
 	//------ if we use texture for minimap ----------------------
-	ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor));
-	ft_memset(&data->mmap.wall, 0, sizeof(data->mmap.wall));
+	// ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor));
+	// ft_memset(&data->mmap.wall, 0, sizeof(data->mmap.wall));
 	// ft_memset(&data->mmap.player, 0, sizeof(data->mmap.player));
 	//-----------------------------------------------------------
-	//===========================================================
 	data->key_pressed_left = 0;
 	data->key_pressed_right = 0;
 	data->key_pressed_w = 0;
@@ -84,7 +80,7 @@ static int	create_main_image(t_cub3d *data)
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 		free(data->mlx_ptr);
 		free_data_map(&data->map);
-		return (1);
+		ft_perror_exit("MLX", 1);
 	}
 	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pxl,
 			&data->img.line_len, &data->img.endian);
@@ -104,17 +100,14 @@ int	main(int argc, char **argv)
 	ft_init_mlx(&data);
 	create_main_image(&data);
 	set_wall_texture(&data, data.wall);
-	set_door_texture(&data); // bonus
-//	set_sprite_texture(&data, &data.sprite_tex); // bonus
 	if (create_minimap_img(&data, &data.mmap) == 1) //bonus
 		return (1);
-	if (set_wall_texture(&data, data.wall) == 1)
-		return (1);
-	if (create_minimap_img(&data, &data.mmap) == 1)
-		return (1);
-	mlx_hook(data.win_ptr, DestroyNotify, StructureNotifyMask, closebutton, &data);
+	mlx_hook(data.win_ptr, DestroyNotify, StructureNotifyMask,
+		closebutton, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, keypress, &data);
 	mlx_hook(data.win_ptr, KeyRelease, KeyReleaseMask, keyrelease, &data);
+	//mlx_hook(data.win_ptr, MotionNotify, PointerMotionMask,
+	//	mousemove, &data); // bonus
 	mlx_mouse_hook(data.win_ptr, mousescroll, &data); // bonus
 	mlx_loop_hook(data.mlx_ptr, game_loop, &data);
 	mlx_loop(data.mlx_ptr);

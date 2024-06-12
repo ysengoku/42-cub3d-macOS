@@ -54,11 +54,7 @@ int	parsing(char *file, t_cub3d *data)
 	get_data(data);
 	get_maps(&data->map);
 	check_map(&data->map);
-	/* Test */
-	
+	store_doors_coordinates(data); // For test
 	display_data(data);
-	//free_data_map(&data->map);
-	
-	/********/
 	return (EXIT_SUCCESS);
 }

@@ -26,26 +26,25 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img wall[4])
 	int		i;
 
 	i = -1;
-	while (++i < 4)
+	while (++i < 5)
 	{
 		wall[i].img = mlx_xpm_file_to_image(data->mlx_ptr, wall[i].path,
-			&wall[i].w, &wall[i].h);
+				&wall[i].w, &wall[i].h);
 		if (wall[i].img == NULL)
 		{
-			ft_putendl_fd("Texture file read error", 2);
-			--i;
-			while (i > 0)
-				mlx_destroy_image(data->mlx_ptr, wall[i--].img);
-			while (i < 4)
-				free(wall[i++].path);
+			while (i-- > 0)
+				mlx_destroy_image(data->mlx_ptr, wall[i].img);
+			while (++i < 5) // if mandatory, i < 4
+				free(wall[i].path);
+			free(data->doors);
 			mlx_destroy_image(data->mlx_ptr, data->img.img);
 			mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 			free(data->mlx_ptr);
 			free_data_map(&data->map);
-			return (1);
+			ft_perror_exit("MLX", 1);
 		}
 		wall[i].addr = mlx_get_data_addr(wall[i].img,
-			&wall[i].bpp, &wall[i].line_len, &wall[i].endian);
+				&wall[i].bpp, &wall[i].line_len, &wall[i].endian);
 	}
 	return (0);
 }

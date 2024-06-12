@@ -29,7 +29,7 @@ static int	check(int *player, int *i, int j, t_map *data_map)
 		|| data_map->dup_map[j][*i] == '0'
 		|| data_map->dup_map[j][*i] == 32
 		|| data_map->dup_map[j][*i] == '2'
-		|| data_map->dup_map[j][*i] == 'D') // temporary code just for test of sprite
+		|| data_map->dup_map[j][*i] == 'D')
 		*i += 1;
 	else
 	{
@@ -71,6 +71,6 @@ int	check_valid_char(t_map *data_map)
 int	check_map(t_map *data_map)
 {
 	check_valid_char(data_map);
-	// algo_flood_fill(data_map); // comented temporarily just for test of sprite
+	algo_flood_fill(data_map);
 	return (EXIT_SUCCESS);
 }
