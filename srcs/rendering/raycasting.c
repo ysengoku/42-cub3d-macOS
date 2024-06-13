@@ -12,11 +12,12 @@
 
 #include "cub3d.h"
 
+static void	raycasting(t_cub3d *data, t_ray *ray, int x);
 static void	init_camera(t_cub3d *data);
 static void	set_ray(t_cub3d *data, t_ray *ray, int x);
 static void	set_sidedist(t_ray *ray, t_player *player);
 
-int	ft_raycasting(t_cub3d *data)
+int	img_rendering(t_cub3d *data)
 {
 	int		x;
 	t_ray	ray;
@@ -28,23 +29,28 @@ int	ft_raycasting(t_cub3d *data)
 		init_camera(data);
 		if (BONUS)
 			set_minimap(data);
-		while (x < WIN_W)
+		while (x++ < WIN_W)
+			raycasting(data, &ray, x);
+		/*
 		{
+			set_ray(data, &ray, x);
 			draw_ceiling(data, x, WIN_HALFH + data->player.pitch,
 				data->ceiling_color);
 			draw_floor(data, x, WIN_HALFH + data->player.pitch,
 				data->floor_color);
-			set_ray(data, &ray, x);
 			check_wall_hit(data, &ray);
 			draw_wall(data, x, &ray);
-			set_ray(data, &ray, x); //
-			check_door_hit(data, &ray); //
-			if (ray.hit == DOOR) //
-				draw_door(data, x, &ray); //
 			if (BONUS)
+			{
+				set_ray(data, &ray, x);
+				check_door_hit(data, &ray);
+				if (ray.hit == DOOR)
+					draw_door(data, x, &ray, data->wall[DR]);
 				draw_ray_mmap(data, &ray);
+			}
 			x++;
 		}
+		*/
 		data->player.moved = 0;
 		if (BONUS)
 			draw_player(data);
@@ -52,6 +58,24 @@ int	ft_raycasting(t_cub3d *data)
 	return (0);
 }
 
+static void	raycasting(t_cub3d *data, t_ray *ray, int x)
+{
+	set_ray(data, ray, x);
+	draw_ceiling(data, x, WIN_HALFH + data->player.pitch,
+		data->ceiling_color);
+	draw_floor(data, x, WIN_HALFH + data->player.pitch,
+		data->floor_color);
+	check_wall_hit(data, ray);
+	draw_wall(data, x, ray);
+	if (BONUS)
+	{
+		set_ray(data, ray, x);
+		check_door_hit(data, ray);
+		if (ray->hit == DOOR)
+			draw_door(data, x, ray, data->wall[DR]);
+		draw_ray_mmap(data, ray);
+	}
+}
 static void	init_camera(t_cub3d *data)
 {
 	double	direction_rad;
@@ -66,6 +90,7 @@ static void	init_camera(t_cub3d *data)
 static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 {
 	ray->hit = NOTHING;
+	ray->w_dist = 0;
 	ray->camera_p = 2 * x / (double)WIN_W - 1;
 	ray->dir_x = data->player.dir_x + data->player.plane_x * ray->camera_p;
 	ray->dir_y = data->player.dir_y + data->player.plane_y * ray->camera_p;
@@ -99,3 +124,4 @@ static void	set_sidedist(t_ray *ray, t_player *player)
 		ray->sidedist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_y;
 	}
 }
+

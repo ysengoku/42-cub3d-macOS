@@ -36,7 +36,6 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img wall[4])
 				mlx_destroy_image(data->mlx_ptr, wall[i].img);
 			while (++i < 5) // if mandatory, i < 4
 				free(wall[i].path);
-			free(data->doors);
 			mlx_destroy_image(data->mlx_ptr, data->img.img);
 			mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 			free(data->mlx_ptr);

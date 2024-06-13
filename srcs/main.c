@@ -34,24 +34,24 @@ static void	init_cub3d_data(t_cub3d *data)
 	i = -1;
 	data->mlx_ptr = 0;
 	data->win_ptr = 0;
+	data->win_half_w = WIN_W * 0.5;
+	data->win_half_h = WIN_H * 0.5;
 	ft_memset(&data->img, 0, sizeof(data->img));
 	init_player(&data->player);
 	data->ceiling_color = 0;
 	data->floor_color = 0;
-	ft_memset(&data->mmap, 0, sizeof(data->mmap)); // bonus
-	ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img)); // bonus
-	//------ if we use texture for minimap ----------------------
-	// ft_memset(&data->mmap.floor, 0, sizeof(data->mmap.floor));
-	// ft_memset(&data->mmap.wall, 0, sizeof(data->mmap.wall));
-	// ft_memset(&data->mmap.player, 0, sizeof(data->mmap.player));
-	//-----------------------------------------------------------
 	data->key_pressed_left = 0;
 	data->key_pressed_right = 0;
 	data->key_pressed_w = 0;
 	data->key_pressed_s = 0;
 	data->key_pressed_a = 0;
 	data->key_pressed_d = 0;
-	data->previous_mouse_x = 0; // bonus
+	if (BONUS)
+	{
+		ft_memset(&data->mmap, 0, sizeof(data->mmap)); // bonus
+		ft_memset(&data->mmap.img, 0, sizeof(data->mmap.img)); // bonus
+		data->previous_mouse_x = 0; // bonus
+	}
 }
 
 static int	ft_init_mlx(t_cub3d *data)

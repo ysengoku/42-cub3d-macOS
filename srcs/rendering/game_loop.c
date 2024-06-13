@@ -14,7 +14,7 @@
 
 int	game_loop(t_cub3d *data)
 {
-	ft_raycasting(data);
+	img_rendering(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 		data->img.img, 0, 0);
 	if (BONUS)
