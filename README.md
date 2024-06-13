@@ -110,9 +110,9 @@ player.dir_y = sin(dir_rad);
 // In the exemple,  
 // dir_x = 0, dir_y = -1
 ```
-<img width="385" alt="Capture d’écran 2024-06-13 à 23 07 40" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4">
+<img width="385" alt="sin cos" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4">
 
-<img width="808" alt="Capture d’écran 2024-06-13 à 23 06 18" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02010dc1-7cd5-46c0-a5cc-9077a2689e5b">
+<img width="808" alt="player's direction vector" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02010dc1-7cd5-46c0-a5cc-9077a2689e5b">
 
 
 
@@ -134,8 +134,7 @@ plane_length = tan(fov / 2) = 1.000000
 plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
 plane_y = dir_x * plane_length = 0 * 1.000000 = 0
 ```
-![Camera plane](https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138)
-
+<img width="385" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138">
 
 ### < Ray >
 In raycasting, each vertical stripe on the screen corresponds to a ray cast.   
