@@ -1,4 +1,6 @@
-# 42-cub3d
+# cub3d
+This project aims to create a game similar to Wolfenstein 3D using the raycasting technique.  
+Raycasting is used to create a 3D effect by casting rays from the player's position to detect sprites(walls, doors, objects, etc.). It allows the game to render a first-person perspective in a 2D game world, making it appear three-dimensional.
 
 ## Usage
 ```bash
@@ -24,7 +26,7 @@ typedef struct s_cub3d
 	t_player	player;
 	int		ceiling_color;
 	int		floor_color;
-	t_xpm_img	wall[4]; // wall textures
+	t_xpm_img	wall[8]; // 4 wall textures & 4 door textures
 	int		key_pressed_left; // flag for key event (press & release)
 	int		key_pressed_right; // flag for key event (press & release)
 	int		key_pressed_w; // flag for key event (press & release)
@@ -41,8 +43,8 @@ typedef struct s_cub3d
 typedef struct s_map
 {
 	char			**data_map;
-	char			**map; // will be used to check wall collision
-	char			**dup_map;
+	char			**map; // used to check wall collision
+	char			**dup_map; // used to blood fill
 	char			player;
 	int			f_rgb[3]; // floor color
 	int			c_rgb[3]; // ceiling color
@@ -70,14 +72,14 @@ typedef struct s_map
 
 ### < Player >
 ```c
-#define FOV 60
+#define FOV 90
 #define M_PI 3.14159265358979323846
 
 ypedef struct s_player
 {
 	double	fov; // FOV in radians (calculate with FOV° * M_PI / 180.0)
-	double	pos_x; // X coordinate on the map
-	double	pos_y; // Y coordinate on the map
+	double	pos_x; // player's X-coordinate on the map
+	double	pos_y; // player's Y-coordinate on the map
 	double	dir; // direction in degree
 	double	dir_x; // direction vector of player
 	double	dir_y; // direction vector of player
@@ -85,7 +87,7 @@ ypedef struct s_player
 	double	plane_x;
 	double	plane_y;
 	int	moved; // Flag to signal player's movement
-
+	int	pitch; // Used for look up/down with mouse scroll
 }		t_player;
 ```
 
@@ -105,20 +107,23 @@ player.dir_y = sin(dir_rad);
 
 #### Camera plane
 1. Plane length   
-   Plane length determinates the field of view of the camera.   
+   Plane length represents the length of projection plane. The projection plane is where the 3D world is projected onto to create a 2D image. This length affects the field of view.   
   `plane_length = tan(fov_radians / 2)`
 2. Plane vector (plane_x, plane_y)   
-   It is a vector perpendicular to the direction vector (dir_x, dir_y).   
-  `plane_x = dir_y * plane_length`   
+   It is a vector perpendicular to the direction vector (dir_x, dir_y). This is used to calculate the direction of the rays cast.
+   It can be obtained by rotating the player's direction 90 degrees. This rotation can be done by swapping th x and y and changing the sign of new y. So, (x, y) becomes (-y, x) and we need to multiplie it by plane length.  
+  `plane_x = -dir_y * plane_length`   
   `plane_y = dir_x * plane_length`
 ```c
 // In the example,
 plane_length = tan(fov / 2) = 1.000000
 
 // The plane_x and plane_y for the initial player's position (dir_x = 0, dir_y = -1) is:
-plane_x = -dir_y * plane_length = -1 * 1.000000 = -1.000000
+plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
 plane_y = dir_x * plane_length = 0 * 1.000000 = 0
 ```
+![Camera plane](https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138)
+
 
 ### < Ray >
 In raycasting, each vertical stripe on the screen corresponds to a ray cast.   
@@ -212,6 +217,9 @@ ray.delta_x = fabs(1 / ray->dir_x);
 ray.delta_y = fabs(1 / ray->dir_y);
 ```   
 
+## Raycasting
+
+
 ## References
 ### Tutorials
 * [Lode's Computer Graphics Tutorial - Raycasting](https://lodev.org/cgtutor/raycasting.html)
@@ -219,6 +227,7 @@ ray.delta_y = fabs(1 / ray->dir_y);
 * [Cub3D Tutorial - Using angles](https://medium.com/@afatir.ahmedfatir/cub3d-tutorial-af5dd31d2fcf)
 * [42 Docs - cub3d](https://harm-smits.github.io/42docs/projects/cub3d)
 * [Algorithme_Cub3D](https://github.com/Qpupier/Cub3D/blob/master/Algorithme_Cub3D.pdf)
+* [Raycasting in Cub3d 42 Network Project : A Practical Tutorial Using Vectors LODEV Documentation](https://medium.com/@rtailidounia/raycasting-in-cub3d-42-network-project-a-practical-tutorial-using-vectors-68eeb16b3de2)
 
 ### Videos
 * [Make Your Own Raycaster Part 1](https://youtu.be/gYRrGTC7GtA?si=7KRnt_PSqn4lz4DD)
