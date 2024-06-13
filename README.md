@@ -1,5 +1,5 @@
 # cub3d
-This project aims to create a game similar to Wolfenstein 3D using the raycasting technique.  
+This project aims to create a game similar to Wolfenstein 3D using the __raycasting__ technique.  
 Raycasting is used to create a 3D effect by casting rays from the player's position to detect sprites(walls, doors, objects, etc.). It allows the game to render a first-person perspective in a 2D game world, making it appear three-dimensional.
 
 ## Usage
@@ -77,7 +77,7 @@ typedef struct s_map
 
 ypedef struct s_player
 {
-	double	fov; // FOV in radians (calculate with FOV° * M_PI / 180.0)
+	double	fov; // FOV in radians (FOV° * M_PI / 180.0)
 	double	pos_x; // player's X-coordinate on the map
 	double	pos_y; // player's Y-coordinate on the map
 	double	dir; // direction in degree
@@ -95,9 +95,9 @@ ypedef struct s_player
 Player's direction is converted in a vector (x, y).  
 It can be used for things like moving the player in the direction they're facing or casting rays in the direction the player is looking.
 
-1. `data->player.dir_x = cos(direction_rad);`: This line is setting the x-component of the player's direction vector. It's using the cosine of the angle `direction_rad`. In a unit circle, the cosine of an angle gives the x-coordinate of a point on the circle, which corresponds to the x-component of a unit vector in the direction of the angle.
+1. `data->player.dir_x = cos(direction_rad);`: In a unit circle, the cosine of an angle gives the x-coordinate of a point on the circle.
 
-2. `data->player.dir_y = sin(direction_rad);`: This line is setting the y-component of the player's direction vector. It's using the sine of the angle `direction_rad`. In a unit circle, the sine of an angle gives the y-coordinate of a point on the circle, which corresponds to the y-component of a unit vector in the direction of the angle.
+2. `data->player.dir_y = sin(direction_rad);`: In a unit circle, the sine of an angle gives the y-coordinate of a point on the circle.
 
 ```c
 t_player	player;
@@ -110,6 +110,12 @@ player.dir_y = sin(dir_rad);
 // In the exemple,  
 // dir_x = 0, dir_y = -1
 ```
+<img width="385" alt="Capture d’écran 2024-06-13 à 23 07 40" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4">
+
+<img width="808" alt="Capture d’écran 2024-06-13 à 23 06 18" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02010dc1-7cd5-46c0-a5cc-9077a2689e5b">
+
+
+
 
 #### Camera plane
 1. Plane length   
