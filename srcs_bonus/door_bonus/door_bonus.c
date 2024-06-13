@@ -12,28 +12,46 @@
 
 #include "cub3d.h"
 
-void	open_door(t_cub3d *data)
+int	get_door_texture_paths(t_cub3d *data)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->door_count)
+	data->wall[DR].path = ft_strdup(DOOR_TEX);
+	data->wall[DR1].path = ft_strdup(DOOR_TEX1);
+	data->wall[DR2].path = ft_strdup(DOOR_TEX2);
+	data->wall[DR3].path = ft_strdup(DOOR_TEX3);
+	if (!data->wall[DR].path)
 	{
-		data->map.map[data->doors[i].map_y][data->doors[i].map_x] = 'O';
-		i++;
+		free_texture_paths(data->wall, 8);
+		exit_parsing(&data->map, "Error\nCub3D: malloc failed");
+		return (1);
 	}
-	data->player.moved = 1;
+	return (0);
 }
 
-void	close_door(t_cub3d *data)
+void	switch_door_status(t_cub3d *data)
 {
-	int	i;
+	int	target_x;
+	int	target_y;
 
-	i = 0;
-	while (i < data->door_count)
+	target_x = (int)data->player.pos_x;
+	target_y = (int)data->player.pos_y;
+	if (data->player.dir_x > 0)
+		target_x += round(data->player.dir_x);
+	else if (data->player.dir_x < 0)
+		target_x -= round(-data->player.dir_x);
+	if (data->player.dir_y > 0)
+		target_y += round(data->player.dir_y);
+	else if (data->player.dir_y < 0)
+		target_y -= round(-data->player.dir_y);
+	if (data->map.map[target_y][target_x] == 'D')
 	{
-		data->map.map[data->doors[i].map_y][data->doors[i].map_x] = 'D';
-		i++;
+		// anim_open_door();
+		data->map.map[target_y][target_x] = 'O';
+		data->player.moved = 1;
 	}
-	data->player.moved = 1;
+	else if (data->map.map[target_y][target_x] == 'O')
+	{
+		// anim_close_door();
+		data->map.map[target_y][target_x] = 'D';
+		data->player.moved = 1;
+	}
 }

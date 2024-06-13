@@ -28,7 +28,7 @@ void	put_pxl_color(t_imgdata *img, int x, int y, int color)
 	}
 }
 
-unsigned int	get_tex_color(t_xpm_img *texture, int x, int y)
+unsigned int	get_txcolor(t_xpm_img *texture, int x, int y)
 {
 	char	*pxl;
 

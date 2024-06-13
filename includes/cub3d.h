@@ -88,8 +88,7 @@
 # define XK_d 2
 # define XK_s 1
 # define XK_w 13
-# define XK_o 31
-# define XK_c 8
+# define XK_e 14
 # define KeyPress 2
 # define KeyRelease 3
 # define KeyPressMask (1L<<0)
@@ -122,11 +121,13 @@ enum	e_wallside
 	DR3 = 7
 };
 
+/*
 enum	e_door_status
 {
 	OPEN = 'O',
 	CLOSED = 'D'
 };
+*/
 
 enum	e_hit
 {
@@ -209,7 +210,6 @@ typedef struct s_door
 {
 	int 	map_x;
 	int 	map_y;
-	//enum 	e_door_status	status;
 }			t_door;
 
 typedef struct s_ray
@@ -226,7 +226,7 @@ typedef struct s_ray
 	double			sidedist_y;
 	double			delta_x;
 	double			delta_y;
-	double			distance;
+	double			w_dist;
 	int				wall_height;
 	enum e_wallside	w_side;
 }				t_ray;
@@ -236,8 +236,9 @@ typedef struct s_line
 	int		y;
 	int		y_start;
 	int		y_end;
-	int		tex_x;
-	int		tex_y;
+	int		tx_x;
+	int		tx_y;
+	double	tx_start_y;
 	double	span;
 	int		color;
 }				t_line;
@@ -253,6 +254,8 @@ typedef struct s_cub3d
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
+	int			win_half_w;
+	int			win_half_h;
 	t_imgdata	img;
 	t_map		map;
 	t_player	player;
@@ -268,8 +271,8 @@ typedef struct s_cub3d
 	/*++++++ Bonus +++++++++++++++++++*/
 	int			previous_mouse_x;
 	t_minimap	mmap;
-	int			door_count;
-	t_door		*doors;
+	//int			door_count;
+	//t_door		*doors;
 	t_xpm_img	sprite_tex;
 	double		wall_zbuffer[WIN_W];
 	int			sprite_count;
@@ -295,17 +298,15 @@ void			exit_parsing(t_map *data_map, char *message);
 void			set_data(t_cub3d *data, t_player *player, t_map *map);
 int				set_wall_texture(t_cub3d *data, t_xpm_img wall[4]);
 
-/*----- Ray casting -----*/
-int				ft_raycasting(t_cub3d *data);
-void			check_wall_hit(t_cub3d *data, t_ray *ray);
-
 /*----- Image rendering -----*/
+int				img_rendering(t_cub3d *data);
+void			check_wall_hit(t_cub3d *data, t_ray *ray);
 int				game_loop(t_cub3d *data);
 void			draw_wall(t_cub3d *data, int x, t_ray *ray);
 void			draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
 void			draw_floor(t_cub3d *data, int start, int end, int floor_color);
 int				convert_color(int rgb[3]);
-unsigned int	get_tex_color(t_xpm_img *texture, int x, int y);
+unsigned int	get_txcolor(t_xpm_img *texture, int x, int y);
 void			put_pxl_color(t_imgdata *img, int x, int y, int color);
 
 /*----- Event handler -----*/
@@ -341,11 +342,10 @@ int				mousescroll(int event, int x, int y, t_cub3d *data);
 
 /*----- Doors -----*/
 int				get_door_texture_paths(t_cub3d *data);
-void			store_doors_coordinates(t_cub3d *data);
-void			open_door(t_cub3d *data);
-void			close_door(t_cub3d *data);
+//void			store_doors_coordinates(t_cub3d *data);
+void			switch_door_status(t_cub3d *data);
 void			check_door_hit(t_cub3d *data, t_ray *ray);
-void			draw_door(t_cub3d *data, int x, t_ray *ray);
+void			draw_door(t_cub3d *data, int x, t_ray *r, t_xpm_img tex);
 
 /*----- Animated sprite -----*/
 //int		set_sprite_texture(t_cub3d *data, t_xpm_img *sprite_tex);

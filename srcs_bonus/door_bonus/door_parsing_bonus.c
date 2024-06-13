@@ -9,7 +9,7 @@
 /*   Updated: 2024/06/12 16:57:35 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/*
 #include "cub3d.h"
 
 static void	get_door_count(t_cub3d *data)
@@ -62,18 +62,4 @@ void	store_doors_coordinates(t_cub3d *data)
 		y++;
 	}
 }
-
-int	get_door_texture_paths(t_cub3d *data)
-{
-	data->wall[DR].path = ft_strdup(DOOR_TEX);
-	data->wall[DR1].path = ft_strdup(DOOR_TEX1);
-	data->wall[DR2].path = ft_strdup(DOOR_TEX2);
-	data->wall[DR3].path = ft_strdup(DOOR_TEX3);
-	if (!data->wall[DR].path)
-	{
-		free_texture_paths(data->wall, 8);
-		exit_parsing(&data->map, "Error\nCub3D: malloc failed");
-		return (1);
-	}
-	return (0);
-}
+*/

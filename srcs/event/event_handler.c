@@ -29,10 +29,8 @@ int	keypress(int keysym, t_cub3d *data)
 	if (keysym == XK_d)
 		data->key_pressed_d = 1;
 	/*=== bonus ===============*/
-	if (keysym == XK_o)
-		open_door(data);
-	if (keysym == XK_c)
-		close_door(data);
+	if (keysym == XK_e)
+		switch_door_status(data);
 	/*=========================*/
 	return (0);
 }

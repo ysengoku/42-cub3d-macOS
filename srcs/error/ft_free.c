@@ -26,8 +26,6 @@ int	free_all(t_cub3d *data, int status)
 	}
 	if (data->mmap.img.img)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.img.img);
-	if (data->doors)
-		free(data->doors);
 	mlx_destroy_image(data->mlx_ptr, data->img.img);
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
 	free(data->mlx_ptr);
