@@ -92,6 +92,12 @@ ypedef struct s_player
 ```
 
 #### Direction vector (dir_x, dir_y)
+Player's direction is converted in a vector (x, y).  
+It can be used for things like moving the player in the direction they're facing or casting rays in the direction the player is looking.
+
+1. `data->player.dir_x = cos(direction_rad);`: This line is setting the x-component of the player's direction vector. It's using the cosine of the angle `direction_rad`. In a unit circle, the cosine of an angle gives the x-coordinate of a point on the circle, which corresponds to the x-component of a unit vector in the direction of the angle.
+
+2. `data->player.dir_y = sin(direction_rad);`: This line is setting the y-component of the player's direction vector. It's using the sine of the angle `direction_rad`. In a unit circle, the sine of an angle gives the y-coordinate of a point on the circle, which corresponds to the y-component of a unit vector in the direction of the angle.
 
 ```c
 t_player	player;
