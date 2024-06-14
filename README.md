@@ -110,12 +110,9 @@ player.dir_y = sin(dir_rad);
 // In the exemple,  
 // dir_x = 0, dir_y = -1
 ```
-<img width="385" alt="sin cos" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4">
+<p align="center"><img style="width: 40%" alt="sin cos" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4"></p>
 
-<img width="808" alt="player's direction vector" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02010dc1-7cd5-46c0-a5cc-9077a2689e5b">
-
-
-
+<p align="center"><img style="width: 80%" alt="player's direction vector" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5c611b99-584d-4f14-ae39-8da2563c577d"</p>
 
 #### Camera plane
 1. Plane length   
@@ -134,7 +131,7 @@ plane_length = tan(fov / 2) = 1.000000
 plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
 plane_y = dir_x * plane_length = 0 * 1.000000 = 0
 ```
-<img width="385" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138">
+<p align="center"><img style="width: 50%" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138"></p>
 
 ### < Ray >
 In raycasting, each vertical stripe on the screen corresponds to a ray cast.   
@@ -166,10 +163,14 @@ typedef struct s_ray
 }	t_ray;
 ```
 #### camera_p   
-X-coordinate of the current ray position, ranging from `0 (left most pixel)` to `WINDOW_WIDTH - 1 (right most pixel)`.  
+X-coordinate of the current ray position on camera plane, ranging from `0 (left most pixel)` to `WINDOW_WIDTH - 1 (right most pixel)`.  
 ```
 ray.camera_p = 2 * x / (double)WIN_W - 1
-```   
+
+// x is current x-coordinate on window ranging from 0 to window width - 1.  
+``` 
+
+<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/72806dad-5230-4ad9-ba1e-1280c5f361da"></p>
 
 #### dir_x, dir_y
 Direction vector of ray   
@@ -177,6 +178,7 @@ Direction vector of ray
 ray.dir_x = player.dir_x + player.plane_x * ray.camera_p;   
 ray.dir_y = player.dir_y + player.plane_y * ray.camera_p;   
 ```
+<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/79001c76-6af3-462e-8d76-a02cf1a47e9f"></p>
 
 #### map_x, map_y
 Current coordinate of ray on the map   
