@@ -178,7 +178,9 @@ Direction vector of ray
 ray.dir_x = player.dir_x + player.plane_x * ray.camera_p;   
 ray.dir_y = player.dir_y + player.plane_y * ray.camera_p;   
 ```
-<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/79001c76-6af3-462e-8d76-a02cf1a47e9f"></p>
+
+<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/1155958a-688a-4e74-b631-3b9c68810aa6"></p>
+
 
 #### map_x, map_y
 Current coordinate of ray on the map   
