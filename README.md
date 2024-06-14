@@ -23,8 +23,14 @@ The interval at which rays are cast depends on the screen's width in pixels (we 
 When casting rays, randomly casting them won't determine which wall they hit.   
 Therefore, we use a method called DDA (Digital Differential Analysis) to advance the rays one cell at a time and check at each step whether they have hit a wall.
    
+move the ray incrementally through the grid, one cell at a time, in both x and y directions.
+
 Since the player may not initially be positioned exactly at the edge of a cell, we handle the first step separately by moving the ray a distance (sidedist_x, sidedist_y) to reach the edge of the current cell.   
    
+At each step, check if the ray has hit a wall or sprite in the grid.   
+When a wall is hit, record the intersection point and stop the ray.   
+
+
 Initial Step:   
 Determine the distance from the player's position to the next edge of the current cell in both the x and y directions. These distances are stored in sidedist_x and sidedist_y.   
    
@@ -33,6 +39,7 @@ For each step, move the ray from the edge of the current cell to the edge of the
 The distances moved in each step along the x and y axes are deltaDistX and deltaDistY, respectively.   
 After moving the ray, check if it has hit a wall.   
 If a wall is hit, stop the ray and record the intersection.   
+
 
 
 ## Structures
