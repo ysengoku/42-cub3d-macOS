@@ -13,6 +13,28 @@ Raycasting is used to create a 3D effect by casting rays from the player's posit
 > ./cub3D_bonus <path to map in .xpm format>
 ```
 
+## Raycasting
+
+We will cast rays from the player's current position in the direction ranging from (player.dir - plane) to (player.dir + plane) as shown in the diagram.   
+The interval at which rays are cast depends on the screen's width in pixels (we cast the same number of rays as the screen's width).
+
+[Add diagram]
+
+When casting rays, randomly casting them won't determine which wall they hit.   
+Therefore, we use a method called DDA (Digital Differential Analysis) to advance the rays one cell at a time and check at each step whether they have hit a wall.
+   
+Since the player may not initially be positioned exactly at the edge of a cell, we handle the first step separately by moving the ray a distance (sidedist_x, sidedist_y) to reach the edge of the current cell.   
+   
+Initial Step:   
+Determine the distance from the player's position to the next edge of the current cell in both the x and y directions. These distances are stored in sidedist_x and sidedist_y.   
+   
+Subsequent Steps:   
+For each step, move the ray from the edge of the current cell to the edge of the next cell.   
+The distances moved in each step along the x and y axes are deltaDistX and deltaDistY, respectively.   
+After moving the ray, check if it has hit a wall.   
+If a wall is hit, stop the ray and record the intersection.   
+
+
 ## Structures
 
 ### < Data >
