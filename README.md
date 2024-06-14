@@ -193,7 +193,7 @@ ray.map_y = (int)player.pos_y;
 Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
    
 * sidedist_x, sidedist_y   
-Distance the ray travals on x-axis or y-axis.   
+Distance the ray travels on x-axis or y-axis.   
 Before starting raycasting loop, it is initially the distance from its start position to the first x-side and the first y-side.   
 It will be incremented until the ray hits to wall.
 
