@@ -13,34 +13,39 @@ Raycasting is used to create a 3D effect by casting rays from the player's posit
 > ./cub3D_bonus <path to map in .xpm format>
 ```
 
-## Raycasting
+## Raycasting & rendering
 
-We will cast rays from the player's current position in the direction ranging from (player.dir - plane) to (player.dir + plane) as shown in the diagram.   
-The interval at which rays are cast depends on the screen's width in pixels (we cast the same number of rays as the screen's width).
+We will cast rays from the player's current position in the direction ranging from (player.dir - plane) to (player.dir + plane). The interval at which rays are cast depends on the screen's width in pixels (we cast the same number of rays as the screen's width).
 
-[Add diagram]
-
+### Raycasting steps:   
+1. Ray Initialization
+Start from the player's position and determine the direction the ray is cast based on the player's view.   
+   
+2. Grid Traversal:
 When casting rays, randomly casting them won't determine which wall they hit.   
-Therefore, we use a method called DDA (Digital Differential Analysis) to advance the rays one cell at a time and check at each step whether they have hit a wall.
-   
-move the ray incrementally through the grid, one cell at a time, in both x and y directions.
+Therefore, we use a method called DDA (Digital Differential Analysis) to advance the ray incrementally through the grid, one cell at a time, in both x and y directions.   
 
-Since the player may not initially be positioned exactly at the edge of a cell, we handle the first step separately by moving the ray a distance (sidedist_x, sidedist_y) to reach the edge of the current cell.   
-   
-At each step, check if the ray has hit a wall or sprite in the grid.   
+3. Intersection Check:   
+At each step, check if the ray has hit a wall or sprite in the grid.
+
+4. Stop on Collision:   
 When a wall is hit, record the intersection point and stop the ray.   
+Calculate the perpendicular distance from the player to the wall. This information is used for rendering.  (If we use the actual distance (euclidean distance), we'll get the fish-eye effect.)   
 
+### Rendering steps:
 
-Initial Step:   
-Determine the distance from the player's position to the next edge of the current cell in both the x and y directions. These distances are stored in sidedist_x and sidedist_y.   
+1. Determine Wall Height:   
+Based on the distance to the wall, calculate the height of the wall slice to be drawn on the screen. Closer walls will appear taller, and farther walls will appear shorter.   
+
+2. Render Wall Slice:   
+Draw the corresponding vertical slice of the wall at the appropriate position on the screen, using the calculated height.   
+
+3. Texture Mapping:   
+If we use textures, calculate which part of the wall texture to display on the slice. This involves determining the exact texture coordinate based on the intersection point.   
+
    
-Subsequent Steps:   
-For each step, move the ray from the edge of the current cell to the edge of the next cell.   
-The distances moved in each step along the x and y axes are deltaDistX and deltaDistY, respectively.   
-After moving the ray, check if it has hit a wall.   
-If a wall is hit, stop the ray and record the intersection.   
-
-
+Repeat the entire process for each ray cast from the player's position.   
+After rendering all walls, render additional elements like sprites.
 
 ## Structures
 
