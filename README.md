@@ -13,7 +13,7 @@ Raycasting is used to create a 3D effect by casting rays from the player's posit
 > ./cub3D_bonus <path to map in .xpm format>
 ```
 
-## Raycasting & rendering
+## Raycasting & rendering overview
 
 We will cast rays from the player's current position in the direction ranging from (player.dir - plane) to (player.dir + plane). The interval at which rays are cast depends on the screen's width in pixels (we cast the same number of rays as the screen's width).
 
@@ -125,47 +125,7 @@ ypedef struct s_player
 }		t_player;
 ```
 
-#### Direction vector (dir_x, dir_y)
-Player's direction is converted in a vector (x, y).  
-It can be used for things like moving the player in the direction they're facing or casting rays in the direction the player is looking.
 
-1. `data->player.dir_x = cos(direction_rad);`: In a unit circle, the cosine of an angle gives the x-coordinate of a point on the circle.
-
-2. `data->player.dir_y = sin(direction_rad);`: In a unit circle, the sine of an angle gives the y-coordinate of a point on the circle.
-
-```c
-t_player	player;
-double 		dir_rad;
-
-dir_rad = player.dir * M_PI / 180;
-player.dir_x = cos(dir_rad);
-player.dir_y = sin(dir_rad);
-
-// In the exemple,  
-// dir_x = 0, dir_y = -1
-```
-<p align="center"><img style="width: 40%" alt="sin cos" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4"></p>
-
-<p align="center"><img style="width: 80%" alt="player's direction vector" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5c611b99-584d-4f14-ae39-8da2563c577d"</p>
-
-#### Camera plane
-1. Plane length   
-   Plane length represents the length of projection plane. The projection plane is where the 3D world is projected onto to create a 2D image. This length affects the field of view.   
-  `plane_length = tan(fov_radians / 2)`
-2. Plane vector (plane_x, plane_y)   
-   It is a vector perpendicular to the direction vector (dir_x, dir_y). This is used to calculate the direction of the rays cast.
-   It can be obtained by rotating the player's direction 90 degrees. This rotation can be done by swapping th x and y and changing the sign of new y. So, (x, y) becomes (-y, x) and we need to multiplie it by plane length.  
-  `plane_x = -dir_y * plane_length`   
-  `plane_y = dir_x * plane_length`
-```c
-// In the example,
-plane_length = tan(fov / 2) = 1.000000
-
-// The plane_x and plane_y for the initial player's position (dir_x = 0, dir_y = -1) is:
-plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
-plane_y = dir_x * plane_length = 0 * 1.000000 = 0
-```
-<p align="center"><img style="width: 50%" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138"></p>
 
 ### < Ray >
 In raycasting, each vertical stripe on the screen corresponds to a ray cast.   
@@ -196,17 +156,117 @@ typedef struct s_ray
 	enum e_wallside	wall_side; // wall side to which the ray hits (the player sees)
 }	t_ray;
 ```
-#### camera_p   
+
+## Detailed explanation 
+```c
+int	display(t_cub3d *data, int i)
+{
+	int	x = 0;
+
+	init_camera(data);
+	while (x < WIN_W)
+	{
+		ft_memset(&ray, 0, sizeof(ray));
+		set_ray(data, &ray, x);
+		draw_ceiling(data, x, data->win_half_h + data->player.pitch, data->ceiling_color);
+		draw_floor(data, x, data->win_half_h + data->player.pitch, data->floor_color);
+		check_wall_hit(data, &ray);
+		draw_wall(data, x, &ray);
+	}
+	return (0);
+}
+```
+
+### Camera initialization
+```c
+static void	init_camera(t_cub3d *data)
+{
+	double	direction_rad;
+
+	direction_rad = data->player.dir * M_PI / 180;
+	data->player.dir_x = cos(direction_rad);
+	data->player.dir_y = sin(direction_rad);
+	data->player.plane_x = -data->player.dir_y * data->player.plane_length;
+	data->player.plane_y = data->player.dir_x * data->player.plane_length;
+}
+```
+#### 1. Direction vector (dir_x, dir_y)
+Player's direction is converted in a vector (x, y).  
+It can be used for things like moving the player in the direction they're facing or casting rays in the direction the player is looking.
+
+1. `data->player.dir_x = cos(direction_rad);`:　In a unit circle, the cosine of an angle gives the x-coordinate of a point on the circle.
+
+2. `data->player.dir_y = sin(direction_rad);`:　In a unit circle, the sine of an angle gives the y-coordinate of a point on the circle.
+
+```c
+t_player	player;
+double 		dir_rad;
+
+dir_rad = player.dir * M_PI / 180;
+player.dir_x = cos(dir_rad);
+player.dir_y = sin(dir_rad);
+
+// If the player's direction is North (270°)   
+// dir_x = 0, dir_y = -1
+```
+<p align="center"><img style="width: 40%" alt="sin cos" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5377d587-8097-4f47-8efa-259bbd638dd4"></p>
+
+<p align="center"><img style="width: 80%" alt="player's direction vector" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/5c611b99-584d-4f14-ae39-8da2563c577d"</p>
+
+#### 2. Camera plane
+1. Plane length   
+   Plane length represents the length of projection plane. The projection plane is where the 3D world is projected onto to create a 2D image. This length affects the field of view.   
+  `plane_length = tan(fov_radians / 2)`
+2. Plane vector (plane_x, plane_y)   
+   It is a vector perpendicular to the direction vector (dir_x, dir_y). This is used to calculate the direction of the rays cast.
+   It can be obtained by rotating the player's direction 90 degrees. This rotation can be done by swapping th x and y and changing the sign of new y. So, (x, y) becomes (-y, x) and we need to multiplie it by plane length.  
+  `plane_x = -dir_y * plane_length`   
+  `plane_y = dir_x * plane_length`
+```c
+// If FOV is 90°
+plane_length = tan(fov / 2) = 1.000000
+
+// If player's direction is　dir_x = 0, dir_y = -1
+plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
+plane_y = dir_x * plane_length = 0 * 1.000000 = 0
+```
+<p align="center"><img style="width: 50%" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138"></p>
+
+### Ray casting & Drawing loop
+#### 1. Ray initialization
+```c
+enum	e_hit
+{
+	WALL = 1,
+	DOOR = 2,
+	NOTHING = 0
+};
+
+static void	set_ray(t_cub3d *data, t_ray *ray, int x)
+{
+	ray->hit = NOTHING;
+	ray->w_dist = 0;
+	ray->camera_x = 2 * x / (double)WIN_W - 1;
+	ray->dir_x = data->player.dir_x + data->player.plane_x * ray->camera_p;
+	ray->dir_y = data->player.dir_y + data->player.plane_y * ray->camera_p;
+	ray->map_x = (int)data->player.pos_x;
+	ray->map_y = (int)data->player.pos_y;
+	ray->delta_x = fabs(1 / ray->dir_x);
+	ray->delta_y = fabs(1 / ray->dir_y);
+	set_sidedist(ray, &data->player);
+}
+```
+##### a. camera_x   
 X-coordinate of the current ray position on camera plane, ranging from `0 (left most pixel)` to `WINDOW_WIDTH - 1 (right most pixel)`.  
 ```
-ray.camera_p = 2 * x / (double)WIN_W - 1
+ray.camera_x = 2 * x / (double)WIN_W - 1
 
 // x is current x-coordinate on window ranging from 0 to window width - 1.  
 ``` 
 
 <p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/72806dad-5230-4ad9-ba1e-1280c5f361da"></p>
 
-#### dir_x, dir_y
+##### b. dir_x, dir_y
 Direction vector of ray   
 ```
 ray.dir_x = player.dir_x + player.plane_x * ray.camera_p;   
@@ -216,7 +276,7 @@ ray.dir_y = player.dir_y + player.plane_y * ray.camera_p;
 <p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/1155958a-688a-4e74-b631-3b9c68810aa6"></p>
 
 
-#### map_x, map_y
+##### c. map_x, map_y
 Current coordinate of ray on the map   
 We initialize to player's coordinate on the map and will move during raycasting to check wall collision.
 ```
@@ -224,14 +284,24 @@ ray.map_x = (int)player.pos_x;
 ray.map_y = (int)player.pos_y;   
 ```
 
-#### step_x, step_y & sidedist_x, sidedist_y
-* step_x, step_y      
-Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
+##### d. delta_x, delta_y / sidedist_x, sidedist_y / step_x, step_y
    
+<p align="center"><img style="width: 50%;" alt="delta_x, delta_y / sidedist_x, sidedist_y" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/dea8f7a3-79a3-41e2-9d55-5c12a8ae8750">
+
+* delta_x, delta_y
+Distance to the next vertical or horizontal grid line that the ray intersects.  
+```
+ray.delta_x = fabs(1 / ray->dir_x);
+ray.delta_y = fabs(1 / ray->dir_y);
+```
+
 * sidedist_x, sidedist_y   
 Distance the ray travels on x-axis or y-axis.   
 Before starting raycasting loop, it is initially the distance from its start position to the first x-side and the first y-side.   
 It will be incremented until the ray hits to wall.
+
+* step_x, step_y      
+Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
 
 ```
 # For x-axis
@@ -258,16 +328,112 @@ else
 	ray->sidedist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_y;
 }
 ```   
+#### 2. Wall collision check
+```c
+void	check_wall_hit(t_cub3d *data, t_ray *ray)
+{
+	int		is_vertical_side;
 
-#### delta_x, delta_y
-Distance to the next vertical or horizontal grid line that the ray intersects.  
+	is_vertical_side = 0;
+	while (ray->hit == NOTHING)
+	{
+		if (data->map.map[ray->map_y][ray->map_x] == '1')
+			ray->hit = WALL;
+		else
+			next_step(ray, &is_vertical_side);
+	}
+	if (is_vertical_side)
+		ray->w_dist = ray->sidedist_y - ray->delta_y;
+	else
+		ray->w_dist = ray->sidedist_x - ray->delta_x;
+	if (ray->w_dist < 0.0001)
+		ray->w_dist = 0.0001;
+	ray->w_side = get_wall_side(ray, &data->player, is_vertical_side);
+	ray->wall_height = (int)(WIN_H / ray->w_dist);
+}
+
+static void	next_step(t_ray *ray, int *is_vertical_side)
+{
+	if (ray->sidedist_x < ray->sidedist_y)
+	{
+		ray->sidedist_x += ray->delta_x;
+		ray->map_x += ray->step_x;
+		*is_vertical_side = 0;
+	}
+	else
+	{
+		ray->sidedist_y += ray->delta_y;
+		ray->map_y += ray->step_y;
+		*is_vertical_side = 1;
+	}
+}
+
+static int	get_wall_side(t_ray *ray, t_player *player, int is_vertical_side)
+{
+	if (is_vertical_side == 1)
+	{
+		if (ray->map_y < player->pos_y)
+			return (NO);
+		return (SO);
+	}
+	if (ray->map_x < player->pos_x)
+		return (WE);
+	return (EA);
+}
 ```
-ray.delta_x = fabs(1 / ray->dir_x);
-ray.delta_y = fabs(1 / ray->dir_y);
-```   
 
-## Raycasting
+#### 3. Draw wall
+```c
+void	draw_wall(t_cub3d *data, int x, t_ray *r)
+{
+	t_line	line;
+	double	wall_x;
 
+	ft_memset(&line, 0, sizeof(line));
+	line.y_start = data->win_half_h - r->wall_height * 0.5 + data->player.pitch;
+	if (line.y_start < 0)
+		line.y_start = 0;
+	line.y_end = data->win_half_h + r->wall_height * 0.5 + data->player.pitch;
+	if (line.y_end > WIN_H)
+		line.y_end = WIN_H -1;
+	line.y = line.y_start;
+	wall_x = get_wall_x(data, r);
+	if (r->wall_height != 0)
+		line.span = (double)data->wall[r->w_side].h / r->wall_height;
+	line.tx_x = (int)(wall_x * (double)data->wall[r->w_side].w);
+	if (r->wall_height > WIN_H)
+		line.tx_start_y = (r->wall_height - WIN_H) * 0.5;
+	while (++line.y < line.y_end)
+	{
+		line.tx_y = (int)(((double)line.y - (double)line.y_start + line.tx_start_y) * line.span);
+		line.color = get_txcolor(&data->wall[r->w_side], line.tx_x, line.tx_y);
+		put_pxl_color(&data->img, x, line.y, line.color);
+	}
+}
+
+static double	get_wall_x(t_cub3d *data, t_ray *ray)
+{
+	double	wall_x;
+
+	if (ray->w_side == EA)
+		wall_x = data->wall[EA].w - (data->player.pos_y + ray->w_dist * ray->dir_y);
+	else if (ray->w_side == WE)
+		wall_x = data->player.pos_y + ray->w_dist * ray->dir_y;
+	else if (ray->w_side == SO)
+		wall_x = data->wall[SO].w - (data->player.pos_x + ray->w_dist * ray->dir_x);
+	else
+		wall_x = data->player.pos_x + ray->w_dist * ray->dir_x;
+	if (wall_x != floor(wall_x))
+		wall_x -= floor(wall_x);
+	else
+		wall_x = 1;
+	return (wall_x);
+}
+```
+
+### Player's movement
+
+### 
 
 ## References
 ### Tutorials
