@@ -16,11 +16,15 @@ int	create_minimap_img(t_cub3d *data, t_minimap *mmap)
 {
 	if (!BONUS)
 		return (0);
+	mmap->totalsize = MMAP_SCALE * MMAP_SIZE + MMAP_BORDER * MMAP_SIZE;
 	mmap->img.img = mlx_new_image(data->mlx_ptr,
-			(data->map.map_len_x - 1) * MMAP_SCALE,
-			data->map.map_len_y * MMAP_SCALE);
+			((MMAP_SCALE * MMAP_SIZE) + (MMAP_BORDER * MMAP_SIZE) + 1),
+			((MMAP_SCALE * MMAP_SIZE) + (MMAP_BORDER * MMAP_SIZE) + 1));
 	if (mmap->img.img == NULL)
-		return (free_all(data, 1));
+	{
+		free_all(data, 1);
+		exit(1);
+	}
 	mmap->img.addr = mlx_get_data_addr(mmap->img.img,
 			&mmap->img.bits_per_pxl, &mmap->img.line_len,
 			&mmap->img.endian);

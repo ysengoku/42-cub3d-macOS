@@ -17,13 +17,8 @@ void	close_window(t_cub3d *data)
 	int	i;
 
 	i = 0;
-	while (i < 5) // if not bonus, while (i < 4)
-	{
-		mlx_destroy_image(data->mlx_ptr, data->wall[i].img);
-		free(data->wall[i].path);
-		i++;
-	}
-	if (data->mmap.img.img)
+	clear_texture_img(data);
+	if (BONUS && data->mmap.img.img)
 		mlx_destroy_image(data->mlx_ptr, data->mmap.img.img);
 	mlx_destroy_image(data->mlx_ptr, data->img.img);
 	mlx_destroy_window(data->mlx_ptr, data->win_ptr);

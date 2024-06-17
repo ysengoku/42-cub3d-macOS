@@ -56,6 +56,9 @@ static char	*get_sprite_path(char *sprite, t_map *data_map)
 
 int	get_sprites_path(t_cub3d *data)
 {
+	int	i;
+
+	i = 0;
 	data->wall[NO].path = get_sprite_path("NO", &data->map);
 	data->wall[SO].path = get_sprite_path("SO", &data->map);
 	data->wall[WE].path = get_sprite_path("WE", &data->map);
@@ -63,17 +66,14 @@ int	get_sprites_path(t_cub3d *data)
 	if (!data->wall[NO].path || !data->wall[SO].path
 		|| !data->wall[WE].path || !data->wall[EA].path)
 	{
+		free_texture_paths(data->wall, 4);
 		exit_parsing(&data->map, "Error\nCub3D: invalid sprite");
 		return (EXIT_FAILURE);
 	}
-	/*=== Bonus =================================================*/
-	data->wall[DR].path = ft_strdup(DOOR_TEX);
-	if (!data->wall[DR].path)
+	if (BONUS)
 	{
-		free_texture_paths(data->wall, 4);
-		exit_parsing(&data->map, "Error\nCub3D: malloc failed");
-		return (EXIT_FAILURE);
+		if (get_door_and_treasure_texture_paths(data) == 1)
+			return (1);
 	}
-	/*=============================================================*/
 	return (EXIT_SUCCESS);
 }
