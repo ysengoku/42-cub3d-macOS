@@ -19,6 +19,7 @@ static int	check(int *player, int *i, int j, t_map *data_map)
 		|| data_map->dup_map[j][*i] == 'E'
 		|| data_map->dup_map[j][*i] == 'W')
 	{
+		data_map->map[j][*i] = 'P';
 		data_map->player = data_map->dup_map[j][*i];
 		data_map->pos_x = *i;
 		data_map->pos_y = j;
@@ -27,9 +28,10 @@ static int	check(int *player, int *i, int j, t_map *data_map)
 	}
 	else if (data_map->dup_map[j][*i] == '1'
 		|| data_map->dup_map[j][*i] == '0'
-		|| data_map->dup_map[j][*i] == 32
-		|| data_map->dup_map[j][*i] == '2'
-		|| data_map->dup_map[j][*i] == 'D')
+		|| data_map->dup_map[j][*i] == 32)
+		*i += 1;
+	else if (BONUS && (data_map->dup_map[j][*i] == 'D'
+		|| data_map->dup_map[j][*i] == 'T'))
 		*i += 1;
 	else
 	{

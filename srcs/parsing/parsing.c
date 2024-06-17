@@ -39,8 +39,10 @@ static void	display_data(t_cub3d *data)
 	printf("[sprite_SO] : %s\n", data->wall[SO].path);
 	printf("[sprite_EA] : %s\n", data->wall[WE].path);
 	printf("[sprite_WE] : %s\n", data->wall[EA].path);
-	printf("[F_RGB]     : [R]%d, [G]%d, [B]%d\n", data->map.f_rgb[0], data->map.f_rgb[1], data->map.f_rgb[2]);
-	printf("[C_RGB]     : [R]%d, [G]%d, [B]%d\n", data->map.c_rgb[0], data->map.c_rgb[1], data->map.c_rgb[2]);
+	printf("[F_RGB]     : [R]%d, [G]%d, [B]%d\n",
+		data->map.f_rgb[0], data->map.f_rgb[1], data->map.f_rgb[2]);
+	printf("[C_RGB]     : [R]%d, [G]%d, [B]%d\n",
+		data->map.c_rgb[0], data->map.c_rgb[1], data->map.c_rgb[2]);
 }
 
 int	parsing(char *file, t_cub3d *data)
@@ -54,6 +56,8 @@ int	parsing(char *file, t_cub3d *data)
 	get_data(data);
 	get_maps(&data->map);
 	check_map(&data->map);
+	if (BONUS)
+		store_sprite_coordinates(data);
 	display_data(data);
 	return (EXIT_SUCCESS);
 }

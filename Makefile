@@ -36,8 +36,8 @@ vpath %c $(SRCS_DIR) \
 		$(SRCS_DIR_B)	\
 		$(SRCS_DIR_B)minimap	\
 		$(SRCS_DIR_B)event_bonus	\
-		$(SRCS_DIR_B)sprite	\
 		$(SRCS_DIR_B)door_bonus	\
+		$(SRCS_DIR_B)treasure_bonus
 		
 FILES = main	\
 		parsing \
@@ -53,7 +53,7 @@ FILES = main	\
 		game_loop	\
 		draw	\
 		colors	\
-		raycasting	\
+		rendering	\
 		check_wall_hit	\
 		event_handler	\
 		move	\
@@ -63,11 +63,11 @@ FILES = main	\
 		ft_free	\
 		minimap_bonus	\
 		minimap_img_bonus	\
+		minimap_utils_bonus	\
 		mouse_move_bonus	\
-		sprite_bonus	\
-		set_sprite_data_bonus	\
 		door_bonus	\
-		door_parsing_bonus
+		treasure_bonus	\
+		set_treasure_data_bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/

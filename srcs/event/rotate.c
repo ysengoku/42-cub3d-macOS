@@ -14,16 +14,14 @@
 
 void	rotate_clockwise(t_cub3d *data)
 {
-	data->player.dir += ROTATE;
-	if (data->player.dir >= 360)
-		data->player.dir = 0;
-	data->player.moved = 1;
+	data->player.dir_degree += ROTATE;
+	if (data->player.dir_degree >= 360)
+		data->player.dir_degree = 0;
 }
 
 void	rotate_counterclockwise(t_cub3d *data)
 {
-	data->player.dir -= ROTATE;
-	if (data->player.dir < 0)
-		data->player.dir = 360 - ROTATE;
-	data->player.moved = 1;
+	data->player.dir_degree -= ROTATE;
+	if (data->player.dir_degree < 0)
+		data->player.dir_degree = 360 - ROTATE;
 }

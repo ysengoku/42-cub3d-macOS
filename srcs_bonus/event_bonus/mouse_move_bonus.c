@@ -22,19 +22,6 @@ int	mousemove(int x, int y, t_cub3d *data)
 		if (data->previous_mouse_x < x)
 			rotate_clockwise(data);
 	}
-	data->player.moved = 1;
 	data->previous_mouse_x = x;
-	return (0);
-}
-
-int	mousescroll(int event, int x, int y, t_cub3d *data)
-{
-	(void) x;
-	(void) y;
-	if (event == MOUSE_DOWN)
-		data->player.pitch += PITCH;
-	if (event == MOUSE_UP)
-		data->player.pitch -= PITCH;
-	data->player.moved = 1;
 	return (0);
 }

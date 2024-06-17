@@ -14,6 +14,7 @@
 
 void	ft_perror_exit(char *message, int code)
 {
+	ft_putstr_fd("[Error] ", 2);
 	perror(message);
 	exit(code);
 }

@@ -12,8 +12,6 @@
 
 #include "cub3d.h"
 
-#include "cub3d.h"
-
 static int	split_color_rgb(char *color_rgb, int index)
 {
 	char	**ar;
