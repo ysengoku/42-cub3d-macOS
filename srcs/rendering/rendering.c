@@ -36,6 +36,7 @@ int	display(t_cub3d *data)
 	if (BONUS)
 	{
 		draw_mmap_player_dir(data);
+		set_treasure_data(data, &data->treasure);
 		draw_treasure(data, &data->treasure);
 	}
 	return (0);
@@ -49,7 +50,7 @@ void	raycasting(t_cub3d *data, int x, t_xpm_img *door)
 	set_ray(data, &ray, x);
 	draw_ceiling(data, x, data->win_half_h, data->ceiling_color);
 	draw_floor(data, x, data->win_half_h, data->floor_color);
-	check_wall_hit(data, &ray);
+	check_wall_hit(data, &ray, x);
 	draw_wall(data, x, &ray);
 	if (BONUS)
 	{
@@ -59,7 +60,7 @@ void	raycasting(t_cub3d *data, int x, t_xpm_img *door)
 			draw_door(data, x, &ray, door);
 		if (data->keys.key_pressed_x == 1)
 			draw_ray_mmap(data, &ray);
-		set_treasure_data(data, &data->treasure);
+		//set_treasure_data(data, &data->treasure);
 	}
 }
 
