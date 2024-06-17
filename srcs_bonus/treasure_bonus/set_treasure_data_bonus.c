@@ -13,7 +13,7 @@
 #include "cub3d.h"
 
 static void	calculate_camera_coordinates(t_cub3d *data, t_treasure *treasure);
-static void	get_draw_range(t_treasure *treasure);
+static void	get_draw_range(t_cub3d *data, t_treasure *treasure);
 
 void	store_sprite_coordinates(t_cub3d *data)
 {
@@ -35,11 +35,6 @@ void	store_sprite_coordinates(t_cub3d *data)
 		}
 		y++;
 	}
-	// data->treasure.relative_pos.x = data->treasure.map.x - data->player.pos.x;
-	// data->treasure.relative_pos.y = data->treasure.map.y - data->player.pos.y;
-	printf("Treasure coordinates: x = %f, y = %f\n", data->treasure.map.x, data->treasure.map.y);
-	// printf("Player coordinates: x = %f, y = %f\n", data->player.pos.x, data->player.pos.y);
-	// printf("Relative pos: x = %f, y = %f\n", data->treasure.relative_pos.x, data->treasure.relative_pos.y);
 }
 
 void	set_treasure_data(t_cub3d *data, t_treasure *treasure)
@@ -48,7 +43,7 @@ void	set_treasure_data(t_cub3d *data, t_treasure *treasure)
 	if (treasure->camera.y > 0 && fabs(treasure->camera.x
 			/ treasure->camera.y) < data->player.plane_length)
 	{
-		get_draw_range(treasure);
+		get_draw_range(data, treasure);
 		treasure->visible = 1;
 	}
 }
@@ -59,24 +54,21 @@ static void	calculate_camera_coordinates(t_cub3d *data, t_treasure *treasure)
 		
 	inverse_matrix_factor = 1.0 / (data->player.plane.x * data->player.dir.y
 		- data->player.dir.x * data->player.plane.y);
-
-		treasure->relative_pos.x = treasure->map.x - data->player.pos.x;
-		treasure->relative_pos.y = treasure->map.y - data->player.pos.y;
-	// printf("Player coordinates: x = %f, y = %f\n", data->player.pos.x, data->player.pos.y);
-	// printf("Relative pos: x = %f, y = %f\n", data->treasure.relative_pos.x, data->treasure.relative_pos.y);
-		treasure->camera.x = inverse_matrix_factor
-			* (data->player.dir.y * treasure->relative_pos.x
-			- data->player.dir.x * treasure->relative_pos.y);
-		treasure->camera.y = inverse_matrix_factor
-			* (-data->player.plane.y * treasure->relative_pos.x
-			+ data->player.plane.x * treasure->relative_pos.y);
-		data->treasure.visible = 0;
+	treasure->relative_pos.x = treasure->map.x - data->player.pos.x;
+	treasure->relative_pos.y = treasure->map.y - data->player.pos.y;
+	treasure->camera.x = inverse_matrix_factor
+		* (data->player.dir.y * treasure->relative_pos.x
+		- data->player.dir.x * treasure->relative_pos.y);
+	treasure->camera.y = inverse_matrix_factor
+		* (-data->player.plane.y * treasure->relative_pos.x
+		+ data->player.plane.x * treasure->relative_pos.y);
+	data->treasure.visible = 0;
 }
 
-static void	get_draw_range(t_treasure *treasure)
+static void	get_draw_range(t_cub3d *data, t_treasure *treasure)
 {
-	treasure->screen_x = (int)((WIN_W / 2) * (1 + treasure->camera.y
-		/ treasure->camera.y));
+	treasure->screen_x = (int)(data->win_half_w 
+		* (1 + treasure->camera.x / treasure->camera.y));
 	treasure->draw_height = ft_abs((int)(WIN_H / treasure->camera.y));
 	treasure->start_y = -treasure->draw_height / 2 + WIN_H / 2;
 	if (treasure->start_y < 0)

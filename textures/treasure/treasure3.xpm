@@ -2,7 +2,7 @@
 static char *PngItem_11675151718637983[] = {
 /* columns rows colors chars-per-pixel */
 "1260 1106 256 2 ",
-"   c None",
+"   c black",
 ".  c #0F0807",
 "X  c #1C120D",
 "o  c #160E0A",

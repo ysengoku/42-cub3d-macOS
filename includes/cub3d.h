@@ -77,7 +77,8 @@
 # define DOOR_TEX5 "./textures/door/door5.xpm"
 # define DOOR_TEX_OPEN "./textures/door/door6.xpm"
 
-# define TREASURE_TEX "./textures/treasure/barrel.xpm"
+//# define TREASURE_TEX "./textures/treasure/treasure4.xpm"
+# define TREASURE_TEX "./textures/pikachu.xpm"
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 # ifndef BONUS
@@ -241,15 +242,8 @@ typedef struct s_keys
 
 typedef struct s_treasure
 {
-//	double	map_x;
-//	double	map_y;
 	t_vector	map;
-//	double	relative_x;
-//	double	relative_y;
 	t_vector	relative_pos;
-	double	inverse_matrix_factor;
-//	double	camera_x;
-//	double	camera_y;
 	t_vector	camera;
 	int			screen_x;
 	int			draw_height;
@@ -307,7 +301,8 @@ int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 /*----- Ray casting -----*/
 int				display(t_cub3d *data);
 void			raycasting(t_cub3d *data, int x, t_xpm_img *door);
-void			check_wall_hit(t_cub3d *data, t_ray *ray);
+void			check_wall_hit(t_cub3d *data, t_ray *ray, int x);
+void			check_door_hit(t_cub3d *data, t_ray *ray);
 
 /*----- Image rendering -----*/
 int				game_loop(t_cub3d *data);
