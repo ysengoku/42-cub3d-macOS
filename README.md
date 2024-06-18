@@ -347,24 +347,24 @@ The DDA algorithm steps through the map grid, moving the ray to the next grid li
 ```c
 void	check_wall_hit(t_cub3d *data, t_ray *ray)
 {
-	int		is_vertical_side;
+	int		is_y_axis;
 
-	is_vertical_side = 0;
+	is_y_axis = 0;
 	while (ray->hit == NOTHING)
 	{
 		// data->map.map[ray->map_y][ray->map_x] is current map coordinates of the ray
 		if (data->map.map[ray->map_y][ray->map_x] == '1')
 			ray->hit = WALL;
 		else
-			next_step(ray, &is_vertical_side);
+			next_step(ray, &is_y_axis);
 	}
-	if (is_vertical_side)
+	if (is_y_axis)
 		ray->w_dist = ray->sidedist_y - ray->delta_y;
 	else
 		ray->w_dist = ray->sidedist_x - ray->delta_x;
 	if (ray->w_dist < 0.0001)
 		ray->w_dist = 0.0001;
-	ray->w_side = get_wall_side(ray, &data->player, is_vertical_side);
+	ray->w_side = get_wall_side(ray, &data->player, is_y_axis);
 	ray->wall_height = (int)(WIN_H / ray->w_dist);
 }
 ```
@@ -374,19 +374,19 @@ If ray->sidedist.x is smaller, the ray moves one grid cell in the x direction, a
 If ray->sidedist.y is smaller, the ray moves one grid cell in the y direction, and the side distance is incremented by ray->delta.y. The is_vertical_side flag is set to 1, indicating a vertical wall hit will be checking at the next step.
 
 ```c
-static void	next_step(t_ray *ray, int *is_vertical_side)
+static void	next_step(t_ray *ray, int *is_y_axis)
 {
 	if (ray->sidedist_x < ray->sidedist_y)
 	{
 		ray->sidedist_x += ray->delta_x; //the side distance is incremented by ray->delta.x
 		ray->map_x += ray->step_x; //the ray moves one grid cell in the X-direction
-		*is_vertical_side = 0; //a horizontal wall hit will be checking
+		*is_y_axis = 0; // x-axis wall hit will be checking
 	}
 	else
 	{
 		ray->sidedist_y += ray->delta_y; //the side distance is incremented by ray->delta.y
 		ray->map_y += ray->step_y; //the ray moves one grid cell in the Y-direction
-		*is_vertical_side = 1; //a vertical wall hit will be checking
+		*is_y_axis = 1; // y-axis wall hit will be checking
 	}
 }
 ```
@@ -396,9 +396,9 @@ If the hit is on a vertical wall, it checks whether the ray's y-coordinate on th
 If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).
 
 ```c
-static int	get_wall_side(t_ray *ray, t_player *player, int is_vertical_side)
+static int	get_wall_side(t_ray *ray, t_player *player, int is_y_axis)
 {
-	if (is_vertical_side == 1)
+	if (is_y_axis == 1)
 	{
 		if (ray->map_y < player->pos_y) // ray's y-coordinate on the map is less than the player's y-coordinate
 			return (NO);
