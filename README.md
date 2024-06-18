@@ -288,12 +288,21 @@ ray.map_y = (int)player.pos_y;
    
 <p align="center"><img style="width: 50%;" alt="delta_x, delta_y / sidedist_x, sidedist_y" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/dea8f7a3-79a3-41e2-9d55-5c12a8ae8750">
 
-* delta_x, delta_y
+* delta_x, delta_y   
 Distance to the next vertical or horizontal grid line that the ray intersects.  
+   
+delta_x and delta_y can be calculated as following:   
 ```
-ray.delta_x = fabs(1 / ray->dir_x);
-ray.delta_y = fabs(1 / ray->dir_y);
+ray.delta.x = sqrt((ray.dir.x² + ray.dir.y²) / ray.dir.x²)   
+ray.delta.y = sqrt((ray.dir.x² + ray.dir.y²) / ray.dir.y²)
 ```
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/48f04ab1-c73f-41c2-a7b9-7d71541bcb6e"></p>
+
+Because the ray is cast in grid-based environment where each grid cell is of size 1x1 (ray always moves one unit in the X or Y direction), we can simplify them like:
+```
+ray.delta.x = fabs(1 / ray->dir_x)   
+ray.delta.y = fabs(1 / ray->dir_y)
+``` 
 
 * sidedist_x, sidedist_y   
 Distance the ray travels on x-axis or y-axis.   
