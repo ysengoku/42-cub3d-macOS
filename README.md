@@ -311,7 +311,7 @@ It will be incremented until the ray hits to wall.
 
 
 * step_x, step_y      
-Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
+`step_x` and `step_y` represent the direction of the ray in the x-axis and y-axis respectively. They are set to -1 or 1, indicating that the ray moves one grid unit in the x or y direction at each step.
 
 <p align="center"><img style="width: 30%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/78601747-bb24-43c8-a0aa-f0653acc0303"</p>
 
@@ -341,6 +341,9 @@ else
 }
 ```   
 #### 2. Wall collision check
+The ray continues until it hits a wall, using the DDA (Digital Differential Analyzer) algorithm.   
+The DDA algorithm steps through the map grid, moving the ray to the next grid line. When a wall is hit, the algorithm stops, and the distance to the hit is calculated. This distance is used to determine the height of the wall slice to be drawn, creating a 3D perspective from a 2D map.
+
 ```c
 void	check_wall_hit(t_cub3d *data, t_ray *ray)
 {
@@ -349,6 +352,7 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 	is_vertical_side = 0;
 	while (ray->hit == NOTHING)
 	{
+		// data->map.map[ray->map_y][ray->map_x] is current map coordinates of the ray
 		if (data->map.map[ray->map_y][ray->map_x] == '1')
 			ray->hit = WALL;
 		else
@@ -363,28 +367,40 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 	ray->w_side = get_wall_side(ray, &data->player, is_vertical_side);
 	ray->wall_height = (int)(WIN_H / ray->w_dist);
 }
+```
+   
+The `next_step` function determines the next grid cell the ray should move to.   
+If ray->sidedist.x is smaller, the ray moves one grid cell in the x direction, and the side distance is incremented by ray->delta.x. The is_vertical_side flag is set to 0, indicating a horizontal wall hit will be checking at the next step.   
+If ray->sidedist.y is smaller, the ray moves one grid cell in the y direction, and the side distance is incremented by ray->delta.y. The is_vertical_side flag is set to 1, indicating a vertical wall hit will be checking at the next step.
 
+```c
 static void	next_step(t_ray *ray, int *is_vertical_side)
 {
 	if (ray->sidedist_x < ray->sidedist_y)
 	{
-		ray->sidedist_x += ray->delta_x;
-		ray->map_x += ray->step_x;
-		*is_vertical_side = 0;
+		ray->sidedist_x += ray->delta_x; //the side distance is incremented by ray->delta.x
+		ray->map_x += ray->step_x; //the ray moves one grid cell in the X-direction
+		*is_vertical_side = 0; //a horizontal wall hit will be checking
 	}
 	else
 	{
-		ray->sidedist_y += ray->delta_y;
-		ray->map_y += ray->step_y;
-		*is_vertical_side = 1;
+		ray->sidedist_y += ray->delta_y; //the side distance is incremented by ray->delta.y
+		ray->map_y += ray->step_y; //the ray moves one grid cell in the Y-direction
+		*is_vertical_side = 1; //a vertical wall hit will be checking
 	}
 }
+```
 
+The `get_wall_side function` determines which side of a wall the ray has hit.   
+If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
+If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).
+
+```c
 static int	get_wall_side(t_ray *ray, t_player *player, int is_vertical_side)
 {
 	if (is_vertical_side == 1)
 	{
-		if (ray->map_y < player->pos_y)
+		if (ray->map_y < player->pos_y) // ray's y-coordinate on the map is less than the player's y-coordinate
 			return (NO);
 		return (SO);
 	}
