@@ -17,10 +17,10 @@ static void	init_cub3d_data(t_cub3d *data)
 	int	i;
 
 	i = -1;
-	data->win_half_w = WIN_W * 0.5;
-	data->win_half_h = WIN_H * 0.5;
+	data->win_half_w = WIN_W / 2;
+	data->win_half_h = WIN_H / 2;
 	data->player.fov = FOV * M_PI / 180;
-	data->player.plane_length = tan(data->player.fov * 0.5);
+	data->player.plane_length = tan(data->player.fov / 2);
 }
 
 static int	ft_init_mlx(t_cub3d *data)

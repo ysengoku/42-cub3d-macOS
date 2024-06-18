@@ -31,11 +31,11 @@ int	keypress(int keysym, t_cub3d *data)
 	if (BONUS)
 	{
 		if (keysym == XK_e)
-			switch_door_status(data);
-//		if (keysym == XK_x && data->keys.key_pressed_x == 0)
-//			data->keys.key_pressed_x = 1;
-//		else if (keysym == XK_x && data->keys.key_pressed_x == 1)
-//			data->keys.key_pressed_x = 0;
+			action_event(data);
+		if (keysym == XK_x && data->keys.key_pressed_x == 0)
+			data->keys.key_pressed_x = 1;
+		else if (keysym == XK_x && data->keys.key_pressed_x == 1)
+			data->keys.key_pressed_x = 0;
 	}
 	return (0);
 }

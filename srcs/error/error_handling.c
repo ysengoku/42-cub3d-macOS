@@ -14,13 +14,14 @@
 
 void	ft_perror_exit(char *message, int code)
 {
-	ft_putstr_fd("[Error] ", 2);
+	ft_putendl_fd("Error", 2);
 	perror(message);
 	exit(code);
 }
 
 void	ft_error_exit(char *message, int code)
 {
+	ft_putendl_fd("Error", 2);
 	ft_putendl_fd(message, 2);
 	exit(code);
 }

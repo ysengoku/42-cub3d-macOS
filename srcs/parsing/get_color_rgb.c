@@ -88,9 +88,6 @@ int	get_colors_rgb(t_map *data_map)
 	if (data_map->f_rgb[0] == -1 || data_map->f_rgb[1] == -1
 		|| data_map->f_rgb[2] == -1 || data_map->c_rgb[0] == -1
 		|| data_map->c_rgb[1] == -1 || data_map->c_rgb[2] == -1)
-	{
-		exit_parsing(data_map, "Error\nCub3D: invalid RGB");
 		return (EXIT_FAILURE);
-	}
 	return (EXIT_SUCCESS);
 }

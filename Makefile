@@ -64,7 +64,7 @@ FILES = main	\
 		minimap_bonus	\
 		minimap_img_bonus	\
 		minimap_utils_bonus	\
-		mouse_move_bonus	\
+		event_bonus	\
 		door_bonus	\
 		treasure_bonus	\
 		set_treasure_data_bonus

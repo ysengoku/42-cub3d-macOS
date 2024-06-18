@@ -52,7 +52,7 @@ void	clear_texture_img(t_cub3d *data)
 	i = 0;
 	if (BONUS)
 	{
-		while (i < 11)
+		while (i < 12)
 		{
 			if (data->wall[i].img)
 				mlx_destroy_image(data->mlx_ptr, data->wall[i].img);
