@@ -49,7 +49,7 @@
 #  define FOV 90
 # endif
 # define MOVE 0.1
-# define ROTATE 5
+# define ROTATE 2
 /*+++++ BONUS ++++++++++++++++++++++++++++++++++++++++++++++*/
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
@@ -94,6 +94,7 @@
 # define XK_s 1
 # define XK_w 13
 # define XK_e 14
+# define XK_x 7
 # define KeyPress 2
 # define KeyRelease 3
 # define KeyPressMask (1L<<0)
@@ -165,8 +166,19 @@ typedef struct 	s_xpm_img
 	char		*path;
 }				t_xpm_img;
 
+typedef struct s_check_map
+{
+	int		player;
+	int		treasure;
+	bool	catch_treasure;
+	bool	invalid_map;
+	char	old_char;
+	char	new_char;
+}	t_check_map;
+
 typedef struct s_map
 {
+	t_check_map			check;
 	char				**data_map;
 	char				**map;
 	char				**dup_map;
@@ -288,10 +300,10 @@ char			**get_file(char *file);
 int				get_data(t_cub3d *data);
 int				get_sprites_path(t_cub3d *map);
 int				get_colors_rgb(t_map *data_map);
-int				get_maps(t_map *data_map);
-int				check_map(t_map *data_map);
-int				algo_flood_fill(t_map *data_map);
-void			flood_fill(char **dup_map, int pos_x, int pos_y, bool *valid);
+int				get_maps(t_cub3d *data);
+int				check_map(t_cub3d *data);
+int				algo_flood_fill(t_cub3d *data);
+void			flood_fill(t_cub3d *data, char **dup_map, int pos_x, int pos_y);
 void			free_split(char **map);
 void			free_data_map(t_map *data_map);
 void			exit_parsing(t_map *data_map, char *message);
@@ -301,8 +313,8 @@ int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 /*----- Ray casting -----*/
 int				display(t_cub3d *data);
 void			raycasting(t_cub3d *data, int x, t_xpm_img *door);
-void			check_wall_hit(t_cub3d *data, t_ray *ray, int x);
-void			check_door_hit(t_cub3d *data, t_ray *ray);
+void			check_wall_hit(t_cub3d *data, t_ray *ray);
+void			check_door_hit(t_cub3d *data, t_ray *ray, int x);
 
 /*----- Image rendering -----*/
 int				game_loop(t_cub3d *data);
@@ -344,16 +356,15 @@ void			draw_ray_mmap(t_cub3d *data, t_ray *ray);
 void			draw_scales(t_cub3d *data, int *cam_x, int *cam_y);
 void			draw_player(t_cub3d *data, int xc, int yc, int r);
 
-/*----- Mouse move -----*/
+/*----- Event -----*/
 int				mousemove(int x, int y, t_cub3d *data);
+void			action_event(t_cub3d *data);
 
 /*----- Doors -----*/
-// int				get_door_texture_paths(t_cub3d *data);
 int				get_door_and_treasure_texture_paths(t_cub3d *data);
-void			switch_door_status(t_cub3d *data);
-void			check_door_hit(t_cub3d *data, t_ray *ray);
 void			draw_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex);
 void			animations(t_cub3d *data);
+void			anim_door(t_cub3d *data, int target_y, int target_x);
 
 /*----- Treasures -----*/
 void			store_sprite_coordinates(t_cub3d *data);

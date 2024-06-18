@@ -15,7 +15,7 @@
 static void	next_step(t_ray *ray, int *is_vertical_side);
 static int	get_wall_side(t_ray *ray, t_player *player, int is_vertical_side);
 
-void	check_wall_hit(t_cub3d *data, t_ray *ray, int x)
+void	check_wall_hit(t_cub3d *data, t_ray *ray)
 {
 	int		is_vertical_side;
 
@@ -33,13 +33,11 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray, int x)
 		ray->w_dist = ray->sidedist.x - ray->delta.x;
 	if (ray->w_dist < 0.0001)
 		ray->w_dist = 0.0001;
-	data->wall_zbuffer[x] = ray->w_dist;
-	//printf("wall_zbuffer[%d] = %f\n", x, data->wall_zbuffer[x]);
 	ray->w_side = get_wall_side(ray, &data->player, is_vertical_side);
 	ray->wall_height = (int)(WIN_H / ray->w_dist);
 }
 
-void	check_door_hit(t_cub3d *data, t_ray *ray)
+void	check_door_hit(t_cub3d *data, t_ray *ray, int x)
 {
 	int		is_vertical_side;
 
@@ -59,6 +57,7 @@ void	check_door_hit(t_cub3d *data, t_ray *ray)
 		ray->w_dist = ray->sidedist.x - ray->delta.x;
 	if (ray->w_dist < 0.0001)
 		ray->w_dist = 0.0001;
+	data->wall_zbuffer[x] = ray->w_dist;
 	ray->w_side = get_wall_side(ray, &data->player, is_vertical_side);
 	ray->wall_height = (int)(WIN_H / ray->w_dist);
 }

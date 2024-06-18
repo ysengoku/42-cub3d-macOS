@@ -50,12 +50,13 @@ int	parsing(char *file, t_cub3d *data)
 	if (!file)
 		return (EXIT_FAILURE);
 	ft_memset(&data->map, 0, sizeof(t_map));
+	ft_memset(&data->map.check, 0, sizeof(t_check_map));
 	data->map.data_map = get_file(file);
 	if (!data->map.data_map)
 		return (ft_perror_exit("Error\nCub3D", EXIT_FAILURE), EXIT_FAILURE);
 	get_data(data);
-	get_maps(&data->map);
-	check_map(&data->map);
+	get_maps(data);
+	check_map(data);
 	if (BONUS)
 		store_sprite_coordinates(data);
 	display_data(data);

@@ -15,6 +15,13 @@
 int	get_data(t_cub3d *data)
 {
 	get_sprites_path(data);
-	get_colors_rgb(&data->map);
+	if (get_colors_rgb(&data->map) == EXIT_FAILURE)
+	{
+		if (!BONUS)
+			free_texture_paths(data->wall, 4);
+		else
+			free_texture_paths(data->wall, 12);
+		exit_parsing(&data->map, "Error\nCub3D: invalid RGB");
+	}
 	return (EXIT_SUCCESS);
 }

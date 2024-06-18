@@ -12,44 +12,51 @@
 
 #include "cub3d.h"
 
-static void draw_line(t_cub3d *data, t_treasure *treasure, int x, int y);
+static void	draw_line(t_cub3d *data, t_treasure *treasure, int x);
 
 void	draw_treasure(t_cub3d *data, t_treasure *treasure)
 {
 	int	x;
-	int	y;
-	
+
 	if (!treasure->visible)
 		return ;
 	x = treasure->start_x;
 	if (treasure->camera.y >= data->wall_zbuffer[treasure->screen_x])
-        return ;
+		return ;
 	while (x < treasure->end_x)
 	{
-		draw_line(data, treasure, x, y);
+		draw_line(data, treasure, x);
 		x++;
 	}
 }
 
-static void draw_line(t_cub3d *data, t_treasure *treasure, int x, int y)
+static void	draw_line(t_cub3d *data, t_treasure *treasure, int x)
 {
 	int	tex_x;
 	int	tex_y;
 	int	color;
+	int	y;
 
-	tex_x = (int)(x - (-treasure->draw_width / 2 + treasure->screen_x))
-		* data->wall[TR].w / treasure->draw_width;
+	tex_x = (int)(x - (-treasure->draw_width / 2 + treasure->screen_x)) *\
+	data->wall[TR].w / treasure->draw_width;
 	if (treasure->camera.y < data->wall_zbuffer[x] && tex_x >= 0)
 	{
 		y = treasure->start_y;
 		while (y < treasure->end_y)
 		{
-			tex_y = (int)(y - (-treasure->draw_height / 2 + WIN_H / 2))
-				* data->wall[TR].h / treasure->draw_height;
+			tex_y = (int)(y - (-treasure->draw_height / 2 + data->win_half_h)) *\
+			data->wall[TR].h / treasure->draw_height;
 			color = get_txcolor(&data->wall[TR], tex_x, tex_y);
 			if (color && color != 0x000000)
 				put_pxl_color(&data->img, x, y, color);
 			y++;
 		}
 	}
+}
+
+void	finish_game(t_cub3d *data)
+{
+	printf("\033[1m\033[32mCONGRATULATION ! You won !\033[0m\n");
+	sleep(1);
+	close_window(data);
 }

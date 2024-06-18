@@ -34,4 +34,3 @@ int	game_loop(t_cub3d *data)
 		move_right(data, &data->player, &data->map);
 	return (0);
 }
-
