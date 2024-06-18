@@ -230,7 +230,7 @@ plane_length = tan(fov / 2) = 1.000000
 plane_x = -dir_y * plane_length = (-1 * -1) * 1.000000 = 1.000000
 plane_y = dir_x * plane_length = 0 * 1.000000 = 0
 ```
-<p align="center"><img style="width: 50%" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138"></p>
+<p align="center"><img style="width: 30%" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f9e691b5-c17e-4eed-a810-638977ff8138"></p>
 
 ### Ray casting & Drawing loop
 #### 1. Ray initialization
@@ -264,7 +264,7 @@ ray.camera_x = 2 * x / (double)WIN_W - 1
 // x is current x-coordinate on window ranging from 0 to window width - 1.  
 ``` 
 
-<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/72806dad-5230-4ad9-ba1e-1280c5f361da"></p>
+<p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/72806dad-5230-4ad9-ba1e-1280c5f361da"></p>
 
 ##### b. dir_x, dir_y
 Direction vector of ray   
@@ -272,9 +272,7 @@ Direction vector of ray
 ray.dir_x = player.dir_x + player.plane_x * ray.camera_p;   
 ray.dir_y = player.dir_y + player.plane_y * ray.camera_p;   
 ```
-
-<p align="center"><img style="width: 70%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/1155958a-688a-4e74-b631-3b9c68810aa6"></p>
-
+<p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/6a3fa421-fb03-46b6-8d52-36ab7d6145dd"</p>
 
 ##### c. map_x, map_y
 Current coordinate of ray on the map   
@@ -314,6 +312,8 @@ It will be incremented until the ray hits to wall.
 
 * step_x, step_y      
 Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
+
+<p align="center"><img style="width: 30%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/78601747-bb24-43c8-a0aa-f0653acc0303"</p>
 
 ```
 # For x-axis
@@ -467,5 +467,4 @@ static double	get_wall_x(t_cub3d *data, t_ray *ray)
 * [42Tokyo C言語で一人称視点のゲームを作った](https://qiita.com/susasaki/items/c74a228d7ddd48b818bd)
 
 ### Textures
-Treasure  
-<a href="https://www.freepik.com/free-vector/wooden-chest-realistic-set-with-images-opened-closed-empty-treasure-coffers-white_7497393.htm#query=treasure%20box&position=10&from_view=keyword&track=ais_user&uuid=aac9961d-90f6-43f3-aba7-2832a8b81de0">Image by macrovector</a> on Freepik
+Treasure texture credit: <a href="https://www.freepik.com/free-vector/wooden-chest-realistic-set-with-images-opened-closed-empty-treasure-coffers-white_7497393.htm#query=treasure%20box&position=10&from_view=keyword&track=ais_user&uuid=aac9961d-90f6-43f3-aba7-2832a8b81de0">macrovector</a> on Freepik
