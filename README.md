@@ -296,7 +296,7 @@ delta_x and delta_y can be calculated as following:
 ray.delta.x = sqrt((ray.dir.x² + ray.dir.y²) / ray.dir.x²)   
 ray.delta.y = sqrt((ray.dir.x² + ray.dir.y²) / ray.dir.y²)
 ```
-<img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/48f04ab1-c73f-41c2-a7b9-7d71541bcb6e">
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/48f04ab1-c73f-41c2-a7b9-7d71541bcb6e"></p>
 
 Because the ray is cast in grid-based environment where each grid cell is of size 1x1 (ray always moves one unit in the X or Y direction), we can simplify them like:
 ```
@@ -308,6 +308,9 @@ ray.delta.y = fabs(1 / ray->dir_y)
 Distance the ray travels on x-axis or y-axis.   
 Before starting raycasting loop, it is initially the distance from its start position to the first x-side and the first y-side.   
 It will be incremented until the ray hits to wall.
+
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/8d4b81a2-9700-4f3a-bf65-732647104ca8"></p>
+
 
 * step_x, step_y      
 Direction to which the ray goes in x-axis or y-axis. Defined to -1 or 1.
