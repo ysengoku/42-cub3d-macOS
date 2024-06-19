@@ -33,6 +33,24 @@ static void	finish_game(t_cub3d *data)
 	close_window(data);
 }
 
+static void	set_open_anim(t_cub3d *data)
+{
+	data->map.map[(int)round(data->player.dir.y)
+		+ (int)data->player.pos.y][(int)round(data->player.dir.x)
+		+ (int)data->player.pos.x] = 'd';
+	data->anim_open = true;
+	data->animation = 0;
+}
+
+static void	set_close_anim(t_cub3d *data)
+{
+	data->map.map[(int)round(data->player.dir.y)
+		+ (int)data->player.pos.y][(int)round(data->player.dir.x)
+		+ (int)data->player.pos.x] = 'o';
+	data->anim_close = true;
+	data->animation = 6;
+}
+
 void	action_event(t_cub3d *data)
 {
 	int		target_x;
@@ -49,18 +67,10 @@ void	action_event(t_cub3d *data)
 	else if (data->player.dir.y < 0)
 		target_y -= round(-data->player.dir.y);
 	if (data->map.map[target_y][target_x] == 'D' && data->anim_close == false)
-	{
-		data->anim_open = true;
-		data->animation = 0;
-	}
-	else if (data->map.map[target_y][target_x] == 'O' && data->anim_open == false)
-	{
-		data->map.map[(int)round(data->player.dir.y)
-			+ (int)data->player.pos.y][(int)round(data->player.dir.x)
-			+ (int)data->player.pos.x] = 'D';
-		data->animation = 6;
-		data->anim_close = true;
-	}
+		set_open_anim(data);
+	else if (data->map.map[target_y][target_x] == 'O'
+		&& data->anim_open == false)
+		set_close_anim(data);
 	if (data->map.map[target_y][target_x] == 'D'
 		|| data->map.map[target_y][target_x] == 'O')
 		anim_door(data, target_y, target_x);

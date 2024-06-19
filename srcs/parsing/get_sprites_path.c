@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   get_sprites_path.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:53:25 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/05 16:16:25 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:52:08 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "cub3d.h"
 
@@ -54,26 +53,55 @@ static char	*get_sprite_path(char *sprite, t_map *data_map)
 	return (path);
 }
 
+static int	treat_path(t_cub3d *data, char *str)
+{
+	int	index;
+
+	if (ft_strncmp(str, "NO", 3) == 0)
+		index = 0;
+	else if (ft_strncmp(str, "SO", 3) == 0)
+		index = 1;
+	else if (ft_strncmp(str, "WE", 3) == 0)
+		index = 2;
+	else if (ft_strncmp(str, "EA", 3) == 0)
+		index = 3;
+	else
+		return (EXIT_FAILURE);
+	if (data->wall[index].path)
+	{
+		free_texture_paths(data->wall, 4);
+		exit_parsing(&data->map, "Error\nCub3D: multiple data");
+		return (EXIT_FAILURE);
+	}
+	else
+		data->wall[index].path = get_sprite_path(str, &data->map);
+	return (EXIT_SUCCESS);
+}
+
 int	get_sprites_path(t_cub3d *data)
 {
 	int	i;
 
 	i = 0;
-	data->wall[NO].path = get_sprite_path("NO", &data->map);
-	data->wall[SO].path = get_sprite_path("SO", &data->map);
-	data->wall[WE].path = get_sprite_path("WE", &data->map);
-	data->wall[EA].path = get_sprite_path("EA", &data->map);
+	while (data->map.data_map[i])
+	{
+		if (ft_strncmp(data->map.data_map[i], "NO ", 3) == 0)
+			treat_path(data, "NO");
+		else if (ft_strncmp(data->map.data_map[i], "SO ", 3) == 0)
+			treat_path(data, "SO");
+		else if (ft_strncmp(data->map.data_map[i], "WE ", 3) == 0)
+			treat_path(data, "WE");
+		else if (ft_strncmp(data->map.data_map[i], "EA ", 3) == 0)
+			treat_path(data, "EA");
+		i++;
+	}
 	if (!data->wall[NO].path || !data->wall[SO].path
 		|| !data->wall[WE].path || !data->wall[EA].path)
 	{
 		free_texture_paths(data->wall, 4);
 		exit_parsing(&data->map, "Error\nCub3D: invalid sprite");
-		return (EXIT_FAILURE);
 	}
 	if (BONUS)
-	{
-		if (get_door_and_treasure_texture_paths(data) == 1)
-			return (1);
-	}
+		get_door_and_treasure_texture_paths(data);
 	return (EXIT_SUCCESS);
 }

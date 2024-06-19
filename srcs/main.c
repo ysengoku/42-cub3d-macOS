@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 08:09:57 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/05 16:08:16 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/19 15:12:13 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static void	init_cub3d_data(t_cub3d *data)
 	int	i;
 
 	i = -1;
-	data->win_half_w = WIN_W / 2;
-	data->win_half_h = WIN_H / 2;
+	data->win_half_w = WIN_W * 0.5;
+	data->win_half_h = WIN_H * 0.5;
 	data->player.fov = FOV * M_PI / 180;
-	data->player.plane_length = tan(data->player.fov / 2);
+	data->player.plane_length = tan(data->player.fov * 0.5);
 }
 
 static int	ft_init_mlx(t_cub3d *data)
@@ -60,7 +60,8 @@ int	main(int argc, char **argv)
 {
 	t_cub3d	data;
 
-	if (argc != 2 || ft_strnstr_r(argv[1], ".cub") != 0)
+	if (argc != 2 || ft_strnstr_r(argv[1], ".cub") != 0
+		|| !ft_strcmp(argv[1], ".cub"))
 		ft_error_exit("Usage: ./cub3D <path/map_name.cub>", 1);
 	ft_memset(&data, 0, sizeof(t_cub3d));
 	if (parsing(argv[1], &data) == EXIT_FAILURE)

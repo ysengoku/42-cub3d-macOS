@@ -47,6 +47,7 @@ FILES = main	\
 		get_color_rgb \
 		get_maps \
 		check_map \
+		check_file	\
 		algo_flood_fill \
 		handle_errors	\
 		set_data	\
@@ -54,7 +55,8 @@ FILES = main	\
 		draw	\
 		colors	\
 		rendering	\
-		check_wall_hit	\
+		raycasting	\
+		check_collision	\
 		event_handler	\
 		move	\
 		rotate	\
