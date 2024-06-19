@@ -254,17 +254,17 @@ typedef struct s_keys
 
 typedef struct s_treasure
 {
-	t_vector	map;
-	t_vector	relative_pos;
-	t_vector	camera;
-	int			screen_x;
-	int			draw_height;
-	int			draw_width;
-	int			start_x;
-	int			end_x;
-	int			start_y;
-	int			end_y;
-	int			visible;
+	t_vector	map; // sprite x and y coodinate on map
+	t_vector	relative_pos; // sprite x and y coodinate relative to playeryer
+	t_vector	camera; //X = whether the sprite is to the left or right of the player's viewpoint and by how much. / Y = distance of the sprite from player
+	int			screen_x; // sprite x-coodinate on screen
+	int			draw_height; // sprite height on screen
+	int			draw_width; // sprite width on screen
+	int			start_x; // start x-coodinate to draw sprite
+	int			end_x; // end x-coodinate to draw sprite
+	int			start_y; //	start y-coodinate to draw sprite
+	int			end_y; // end y-coodinate to draw sprite
+	int			visible; // whether the sprite is visible or not
 }				t_treasure;
 
 typedef struct s_cub3d
