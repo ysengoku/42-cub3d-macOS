@@ -390,6 +390,10 @@ static void	next_step(t_ray *ray, int *is_y_axis)
 	}
 }
 ```
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/54b67e9a-0a9c-4b9f-ac15-e15375d340a2"</p>
+
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02958f20-c40a-4d7d-a94c-c9bf464d2bbc"</p>
+
 
 The `get_wall_side function` determines which side of a wall the ray has hit.   
 If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
