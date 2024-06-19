@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:38:40 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/05 16:15:48 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/19 14:56:48 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,12 @@ char	**get_file(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
-		if (creat_file(file) == EXIT_FAILURE)
+		if (BONUS)
+		{
+			if (creat_file(file) == EXIT_FAILURE)
+				return (NULL);
+		}
+		else
 			return (NULL);
 	}
 	else

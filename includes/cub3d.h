@@ -133,9 +133,11 @@ enum	e_wallside
 
 enum	e_hit
 {
-	WALL = 1,
-	DOOR = 2,
-	NOTHING = 0
+	NOTHING,
+	WALL,
+	DOOR_OPEN,
+	DOOR_CLOSE,
+	DOOR_ANIM
 };
 
 /*===== structures ===========================================================*/
@@ -202,20 +204,31 @@ typedef struct s_player
 	t_vector			plane;
 }				t_player;
 
+typedef struct s_hit
+{
+	int				hit;
+	double			dist;
+	int				h;
+	enum e_wallside	side;
+	enum e_wallside	tex;
+}				t_hit;
+
 typedef struct s_ray
 {
-	enum e_hit		hit;
-	double			camera_p;
-	t_vector		dir;
-	int				map_x;
-	int				map_y;
-	int				step_x;
-	int				step_y;
-	t_vector		sidedist;
-	t_vector		delta;
-	double			w_dist;
-	int				wall_height;
-	enum e_wallside	w_side;
+	enum e_hit	hit;
+	double		camera_p;
+	t_vector	dir;
+	int			map_x;
+	int			map_y;
+	int			step_x;
+	int			step_y;
+	t_vector	sidedist;
+	t_vector	delta;
+	t_hit		wall;
+	t_hit		closed_d;
+	t_hit		open_d;
+	t_hit		anim_d;
+	double		nearest_sprite_dist;
 }			t_ray;
 
 typedef struct s_line
@@ -299,9 +312,10 @@ int				parsing(char *file, t_cub3d *map);
 char			**get_file(char *file);
 int				get_data(t_cub3d *data);
 int				get_sprites_path(t_cub3d *map);
-int				get_colors_rgb(t_map *data_map);
+int				get_colors_rgb(t_cub3d *data);
 int				get_maps(t_cub3d *data);
 int				check_map(t_cub3d *data);
+int				check_file(t_cub3d *data);
 int				algo_flood_fill(t_cub3d *data);
 void			flood_fill(t_cub3d *data, char **dup_map, int pos_x, int pos_y);
 void			free_split(char **map);
@@ -313,14 +327,13 @@ int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 /*----- Ray casting -----*/
 int				display(t_cub3d *data);
 void			raycasting(t_cub3d *data, int x, t_xpm_img *door);
-void			check_wall_hit(t_cub3d *data, t_ray *ray);
-void			check_door_hit(t_cub3d *data, t_ray *ray, int x);
+void			check_hit(t_cub3d *data, t_ray *ray);
+void			check_door_hit(t_cub3d *data, t_ray *ray, int x, char c);
 
 /*----- Image rendering -----*/
 int				game_loop(t_cub3d *data);
 void			draw_wall(t_cub3d *data, int x, t_ray *ray);
-void			draw_ceiling(t_cub3d *data, int x, int end, int ceiling_color);
-void			draw_floor(t_cub3d *data, int start, int end, int floor_color);
+void			draw_ceiling_and_floor(t_cub3d *data, int x);
 void			draw_minimap(t_cub3d *data);
 void			draw_minimap_zone(t_cub3d *data, int size);
 int				convert_color(int rgb[3]);
@@ -361,8 +374,9 @@ int				mousemove(int x, int y, t_cub3d *data);
 void			action_event(t_cub3d *data);
 
 /*----- Doors -----*/
-int				get_door_and_treasure_texture_paths(t_cub3d *data);
-void			draw_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex);
+void			get_door_and_treasure_texture_paths(t_cub3d *data);
+void			draw_door(t_cub3d *data, int x, t_ray *r, t_hit *door);
+void			draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex);
 void			animations(t_cub3d *data);
 void			anim_door(t_cub3d *data, int target_y, int target_x);
 

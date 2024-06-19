@@ -12,13 +12,13 @@
 
 #include "cub3d.h"
 
-int	get_door_and_treasure_texture_paths(t_cub3d *data)
+void	get_door_and_treasure_texture_paths(t_cub3d *data)
 {
 	int	i;
 
 	i = 4;
 	if (!BONUS)
-		return (0);
+		return ;
 	data->wall[DR_C].path = ft_strdup(DOOR_TEX_CLOSE);
 	data->wall[DR1].path = ft_strdup(DOOR_TEX1);
 	data->wall[DR2].path = ft_strdup(DOOR_TEX2);
@@ -36,7 +36,7 @@ int	get_door_and_treasure_texture_paths(t_cub3d *data)
 		}
 		i++;
 	}
-	return (0);
+	return ;
 }
 
 static void	animation_open(t_cub3d *data)
@@ -72,6 +72,9 @@ static void	animation_close(t_cub3d *data)
 		while (j < 90000000)
 			j++;
 		data->anim_close = false;
+		data->map.map[(int)round(data->player.dir.y)
+			+ (int)data->player.pos.y][(int)round(data->player.dir.x)
+			+ (int)data->player.pos.x] = 'D';
 	}
 	else
 	{
@@ -93,6 +96,9 @@ void	anim_door(t_cub3d *data, int target_y, int target_x)
 {
 	if (data->map.map[target_y][target_x] == 'D' && data->anim_close == false)
 	{
+		data->map.map[(int)round(data->player.dir.y)
+			+ (int)data->player.pos.y][(int)round(data->player.dir.x)
+			+ (int)data->player.pos.x] = 'd';
 		data->anim_open = true;
 		data->animation = 0;
 	}
@@ -101,8 +107,8 @@ void	anim_door(t_cub3d *data, int target_y, int target_x)
 	{
 		data->map.map[(int)round(data->player.dir.y)
 			+ (int)data->player.pos.y][(int)round(data->player.dir.x)
-			+ (int)data->player.pos.x] = 'D';
-		data->animation = 6;
+			+ (int)data->player.pos.x] = 'o';
 		data->anim_close = true;
+		data->animation = 6;
 	}
 }

@@ -17,6 +17,8 @@ void	move_forward(t_cub3d *data, t_player *player, t_map *map)
 	int		dest_x;
 	int		dest_y;
 
+	if (data->anim_close == true || data->anim_open == true)
+		return ;
 	dest_x = player->pos.x + (player->dir.x * MOVE);
 	dest_y = player->pos.y + (player->dir.y * MOVE);
 	if (map->map[(int)player->pos.y][dest_x] != '1'
@@ -40,6 +42,8 @@ void	move_backward(t_cub3d *data, t_player *player, t_map *map)
 	int		dest_x;
 	int		dest_y;
 
+	if (data->anim_close == true || data->anim_open == true)
+		return ;
 	dest_x = player->pos.x + (player->dir.x * -1 * MOVE);
 	dest_y = player->pos.y + (player->dir.y * -1 * MOVE);
 	if (map->map[(int)player->pos.y][dest_x] != '1'
@@ -63,6 +67,8 @@ void	move_left(t_cub3d *data, t_player *player, t_map *map)
 	int		dest_x;
 	int		dest_y;
 
+	if (data->anim_close == true || data->anim_open == true)
+		return ;
 	dest_x = player->pos.x + (player->dir.y * MOVE);
 	dest_y = player->pos.y + (player->dir.x * -1 * MOVE);
 	if (map->map[(int)player->pos.y][dest_x] != '1'
@@ -86,6 +92,8 @@ void	move_right(t_cub3d *data, t_player *player, t_map *map)
 	int		dest_x;
 	int		dest_y;
 
+	if (data->anim_close == true || data->anim_open == true)
+		return ;
 	dest_x = player->pos.x + (player->dir.y * -1 * MOVE);
 	dest_y = player->pos.y + (player->dir.x * MOVE);
 	if (map->map[(int)player->pos.y][dest_x] != '1'

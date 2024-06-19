@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 14:30:34 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/05 16:17:21 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/19 15:17:50 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	set_data(t_cub3d *data, t_player *player, t_map *map)
 {
-	player->pos.x = map->pos_x;
-	player->pos.y = map->pos_y;
+	player->pos.x = map->pos_x + 0.5;
+	player->pos.y = map->pos_y + 0.5;
 	player->dir_degree = (double)map->p_dir;
 	data->ceiling_color = convert_color(data->map.c_rgb);
 	data->floor_color = convert_color(data->map.f_rgb);

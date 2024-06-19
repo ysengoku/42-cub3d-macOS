@@ -3,47 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   algo_flood_fill.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 17:19:54 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/05 16:14:30 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/19 11:47:15 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static void	set_valid_to_true(t_cub3d *data)
+{
+	data->map.check.invalid_map = true;
+	return ;
+}
 
 static void	recursive(t_cub3d *data, char **dup_map, int pos_x, int pos_y)
 {
 	if (pos_x + 1 < (int)ft_strlen(dup_map[pos_y]) && dup_map[pos_y][pos_x + 1])
 		flood_fill(data, dup_map, pos_x + 1, pos_y);
 	else
-	{
-		data->map.check.invalid_map = true;
-		return ;
-	}
+		set_valid_to_true(data);
 	if (pos_x - 1 >= 0 && dup_map[pos_y][pos_x - 1])
 		flood_fill(data, dup_map, pos_x - 1, pos_y);
 	else
-	{
-		data->map.check.invalid_map = true;
-		return ;
-	}
+		set_valid_to_true(data);
 	if (pos_y + 1 < data->map.map_len_y && dup_map[pos_y + 1]
 		&& ((int)ft_strlen(dup_map[pos_y + 1]) >= pos_x))
 		flood_fill(data, dup_map, pos_x, pos_y + 1);
 	else
-	{
-		data->map.check.invalid_map = true;
-		return ;
-	}
+		set_valid_to_true(data);
 	if (pos_y - 1 >= 0 && dup_map[pos_y - 1]
 		&& ((int)ft_strlen(dup_map[pos_y - 1]) >= pos_x))
 		flood_fill(data, dup_map, pos_x, pos_y - 1);
 	else
-	{
-		data->map.check.invalid_map = true;
-		return ;
-	}
+		set_valid_to_true(data);
 }
 
 void	flood_fill(t_cub3d *data, char **dup_map, int pos_x, int pos_y)
