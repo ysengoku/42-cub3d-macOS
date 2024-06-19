@@ -22,6 +22,7 @@ int	display(t_cub3d *data)
 	init_camera(data);
 	if (BONUS)
 	{
+		set_treasure_data(data, &data->treasure);
 		draw_minimap_zone(data, (data->mmap.totalsize));
 		draw_minimap(data);
 		animations(data);
@@ -32,11 +33,7 @@ int	display(t_cub3d *data)
 		x++;
 	}
 	if (BONUS)
-	{
 		draw_mmap_player_dir(data);
-		set_treasure_data(data, &data->treasure);
-		draw_treasure(data, &data->treasure);
-	}
 	return (0);
 }
 

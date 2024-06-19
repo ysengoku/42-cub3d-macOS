@@ -14,20 +14,14 @@
 
 static void	draw_line(t_cub3d *data, t_treasure *treasure, int x);
 
-void	draw_treasure(t_cub3d *data, t_treasure *treasure)
+void	draw_treasure(t_cub3d *data, t_treasure *treasure, int x)
 {
-	int	x;
-
 	if (!treasure->visible)
 		return ;
-	x = treasure->start_x;
 	if (treasure->camera.y >= data->wall_zbuffer[treasure->screen_x])
 		return ;
-	while (x < treasure->end_x)
-	{
+	if (x >= treasure->start_x && x < treasure->end_x)
 		draw_line(data, treasure, x);
-		x++;
-	}
 }
 
 static void	draw_line(t_cub3d *data, t_treasure *treasure, int x)

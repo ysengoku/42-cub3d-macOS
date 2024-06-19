@@ -328,7 +328,7 @@ int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 int				display(t_cub3d *data);
 void			raycasting(t_cub3d *data, int x, t_xpm_img *door);
 void			check_hit(t_cub3d *data, t_ray *ray);
-void			check_door_hit(t_cub3d *data, t_ray *ray, int x, char c);
+//void			check_door_hit(t_cub3d *data, t_ray *ray, int x, char c);
 
 /*----- Image rendering -----*/
 int				game_loop(t_cub3d *data);
@@ -383,6 +383,7 @@ void			anim_door(t_cub3d *data, int target_y, int target_x);
 /*----- Treasures -----*/
 void			store_sprite_coordinates(t_cub3d *data);
 void			set_treasure_data(t_cub3d *data, t_treasure *treasures);
-void			draw_treasure(t_cub3d *data, t_treasure *treasure);
+//void			draw_treasure(t_cub3d *data, t_treasure *treasure);
+void			draw_treasure(t_cub3d *data, t_treasure *treasure, int x);
 
 #endif
