@@ -18,10 +18,10 @@ Raycasting is used to create a 3D effect by casting rays from the player's posit
 We will cast rays from the player's current position in the direction ranging from (player.dir - plane) to (player.dir + plane). The interval at which rays are cast depends on the screen's width in pixels (we cast the same number of rays as the screen's width).
 
 ### Raycasting steps:   
-1. Ray Initialization
+1. Ray Initialization   
 Start from the player's position and determine the direction the ray is cast based on the player's view.   
    
-2. Grid Traversal:
+2. Grid Traversal:   
 When casting rays, randomly casting them won't determine which wall they hit.   
 Therefore, we use a method called DDA (Digital Differential Analysis) to advance the ray incrementally through the grid, one cell at a time, in both x and y directions.   
 
@@ -409,10 +409,12 @@ static void	check_door_hit(t_cub3d *data, t_ray *ray, int is_y_axis)
 		if (ray->nearest_sprite_dist == 0)
 			ray->nearest_sprite_dist = ray->closed_d.dist;
 	}
+
 	// Check if current map coordinates of the ray is an open door ('O')
 	if (data->map.map[ray->map_y][ray->map_x] == 'O'
 		&& !ray->open_d.hit)
 		set_hit_data(data, ray, &ray->open_d, is_y_axis);
+
 	// Check if current map coordinates of the ray is an opening or closing door ('d' or 'o')
 	if ((data->map.map[ray->map_y][ray->map_x] == 'd'
 		|| data->map.map[ray->map_y][ray->map_x] == 'o'))
@@ -441,22 +443,27 @@ static void	next_step(t_ray *ray, int *is_y_axis)
 	}
 }
 ```
-<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/54b67e9a-0a9c-4b9f-ac15-e15375d340a2"</p>
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/54b67e9a-0a9c-4b9f-ac15-e15375d340a2"></p>
 
-<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02958f20-c40a-4d7d-a94c-c9bf464d2bbc"</p>
+<p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02958f20-c40a-4d7d-a94c-c9bf464d2bbc"></p>
 
 If the ray hits a sprite (wall, closed door, open door or animated door), we stock the hit side and distance and calculate the height of the line to draw on screen.   
 
 ```c
 static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
 {
+	// set 'hit' to 1(true)
 	sprite->hit = 1;
+
+	// Calculate the perpendicular distance from camera plane to the sprite
 	if (y_axis)
 		sprite->dist = ray->sidedist.y - ray->delta.y;
 	else
 		sprite->dist = ray->sidedist.x - ray->delta.x;
 	if (sprite->dist < 0.0001)
 		sprite->dist = 0.0001;
+
+	// Determines which side of a wall the ray has hit 
 	if (y_axis && ray->map_y < data->player.pos.y)
 		sprite->side = SO;
 	else if (y_axis && ray->map_y > data->player.pos.y)
@@ -465,6 +472,8 @@ static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
 		sprite->side = EA;
 	else
 		sprite->side = WE;
+
+	// Calculate the height of line to draw on screen
 	sprite->h = (int)(WIN_H / sprite->dist);
 }
 ```
@@ -491,39 +500,49 @@ void	draw_wall(t_cub3d *data, int x, t_ray *r)
 	double	wall_x;
 
 	ft_memset(&line, 0, sizeof(line));
-	line.y_start = data->win_half_h - r->wall_height * 0.5 + data->player.pitch;
+	line.y_start = data->win_half_h - r->wall.h * 0.5;
 	if (line.y_start < 0)
 		line.y_start = 0;
-	line.y_end = data->win_half_h + r->wall_height * 0.5 + data->player.pitch;
+	line.y_end = data->win_half_h + r->wall.h * 0.5;
 	if (line.y_end > WIN_H)
 		line.y_end = WIN_H -1;
 	line.y = line.y_start;
-	wall_x = get_wall_x(data, r);
-	if (r->wall_height != 0)
-		line.span = (double)data->wall[r->w_side].h / r->wall_height;
-	line.tx_x = (int)(wall_x * (double)data->wall[r->w_side].w);
-	if (r->wall_height > WIN_H)
-		line.tx_start_y = (r->wall_height - WIN_H) * 0.5;
+
+	// Get the exact horizontal position of a wall hit by a ray
+	wall_x = get_wall_x(data, r, &r->wall);
+
+	if (r->wall.h != 0)
+		line.span = (double)data->wall[r->wall.side].h / r->wall.h;
+	line.tx_x = (int)(wall_x * (double)data->wall[r->wall.side].w);
+	if (r->wall.h > WIN_H)
+		line.tx_start_y = (r->wall.h - WIN_H) * 0.5;
 	while (++line.y < line.y_end)
 	{
-		line.tx_y = (int)(((double)line.y - (double)line.y_start + line.tx_start_y) * line.span);
-		line.color = get_txcolor(&data->wall[r->w_side], line.tx_x, line.tx_y);
+		line.tx_y = (int)(((double)line.y - (double)line.y_start
+					+ line.tx_start_y) * line.span);
+		line.color = get_txcolor(&data->wall[r->wall.side],
+				line.tx_x, line.tx_y);
 		put_pxl_color(&data->img, x, line.y, line.color);
 	}
 }
+```
+#### wall_x
+// The `wall_x` value represents the exact position where a ray hits a wall block.
+//This is used to determine which part of the texture to display for that wall slice.
 
-static double	get_wall_x(t_cub3d *data, t_ray *ray)
+```c
+static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)
 {
 	double	wall_x;
 
-	if (ray->w_side == EA)
-		wall_x = data->wall[EA].w - (data->player.pos_y + ray->w_dist * ray->dir_y);
-	else if (ray->w_side == WE)
-		wall_x = data->player.pos_y + ray->w_dist * ray->dir_y;
-	else if (ray->w_side == SO)
-		wall_x = data->wall[SO].w - (data->player.pos_x + ray->w_dist * ray->dir_x);
+	if (sprite->side == WE)
+		wall_x = data->player.pos.y + sprite->dist * ray->dir.y;
+	else if (sprite->side == EA)
+		wall_x = data->wall[WE].w - (data->player.pos.y + sprite->dist * ray->dir.y);
+	else if (sprite->side == SO)
+		wall_x = data->player.pos.x + sprite->dist * ray->dir.x;
 	else
-		wall_x = data->player.pos_x + ray->w_dist * ray->dir_x;
+		wall_x = data->wall[SO].w - (data->player.pos.x + sprite->dist * ray->dir.x);
 	if (wall_x != floor(wall_x))
 		wall_x -= floor(wall_x);
 	else
@@ -531,6 +550,19 @@ static double	get_wall_x(t_cub3d *data, t_ray *ray)
 	return (wall_x);
 }
 ```
+* The wall hit is on the west (`WE`) or east (`EA`)
+`wall_x` is calculated using the player's y position, the distance to the wall (`sprite->dist`), and the y direction of the ray (`ray->dir.y`). 
+If the wall is on the east, the calculation is inverted by subtracting it from the width of the west wall.
+
+* The wall hit is on the south (`SO`) or north ('NO')
+`wall_x` is calculated using the player's x position, the distance to the wall, and the x direction of the ray. 
+If the wall is on the north, the calculation is inverted by subtracting it from the width of the south wall.
+   
+The fractional part is kept by subtracting the floor of `wall_x` from `wall_x`. 
+If the fractional part is zero, it is set to 1 to avoid a division by zero error later in the texture mapping process.   
+
+<p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/03aebd3c-dd90-4f07-beaf-e3e2023c0f59"></p>
+
 
 ### Player's movement
 
