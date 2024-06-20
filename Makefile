@@ -20,7 +20,8 @@ WHITE = \033[37m
 NAME = cub3D
 INCLUDE = includes
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror -fsanitize=address
+CCFLAGS = -Wextra -Wall -Werror 
+#-fsanitize=address
 MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
 RM = rm -f
 
