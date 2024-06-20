@@ -83,26 +83,25 @@ void	draw_door(t_cub3d *data, int x, t_ray *r, t_hit *door)
 	}
 }
 
-/*
 void	draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex)
 {
 	t_line	line;
 	double	wall_x;
 
 	ft_memset(&line, 0, sizeof(line));
-	line.y_start = data->win_half_h - r->wall.h * 0.5;
+	line.y_start = data->win_half_h - r->anim_d.h * 0.5;
 	if (line.y_start < 0)
 		line.y_start = 0;
-	line.y_end = data->win_half_h + r->wall.h * 0.5;
+	line.y_end = data->win_half_h + r->anim_d.h * 0.5;
 	if (line.y_end > WIN_H)
 		line.y_end = WIN_H -1;
 	line.y = line.y_start;
-	wall_x = get_wall_x(data, r, &r->wall);
-	if (r->wall.h != 0)
-		line.span = (double)data->wall[r->wall.side].h / r->wall.h;
-	line.tx_x = (int)(wall_x * (double)data->wall[r->wall.side].w);
-	if (r->wall.h > WIN_H)
-		line.tx_start_y = (r->wall.h - WIN_H) * 0.5;
+	wall_x = get_wall_x(data, r, &r->anim_d);
+	if (r->anim_d.h != 0)
+		line.span = (double)data->wall[r->anim_d.side].h / r->anim_d.h;
+	line.tx_x = (int)(wall_x * (double)data->wall[r->anim_d.side].w);
+	if (r->anim_d.h > WIN_H)
+		line.tx_start_y = (r->anim_d.h - WIN_H) * 0.5;
 	while (++line.y < line.y_end)
 	{
 		line.tx_y = (int)(((double)line.y - (double)line.y_start
@@ -111,36 +110,6 @@ void	draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex)
 		if (line.color && line.color != 0x000000)
 			put_pxl_color(&data->img, x, line.y, line.color);
 	}
-}
-*/
-
-void	draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex)
-{
-    t_line	line;
-    double	wall_x;
-
-    ft_memset(&line, 0, sizeof(line));
-    line.y_start = data->win_half_h - r->anim_d.h * 0.5;
-    if (line.y_start < 0)
-        line.y_start = 0;
-    line.y_end = data->win_half_h + r->anim_d.h * 0.5;
-    if (line.y_end > WIN_H)
-        line.y_end = WIN_H -1;
-    line.y = line.y_start;
-    wall_x = get_wall_x(data, r, &r->anim_d);
-    if (r->anim_d.h != 0)
-        line.span = (double)data->wall[r->anim_d.side].h / r->anim_d.h;
-    line.tx_x = (int)(wall_x * (double)data->wall[r->anim_d.side].w);
-    if (r->anim_d.h > WIN_H)
-        line.tx_start_y = (r->anim_d.h - WIN_H) * 0.5;
-    while (++line.y < line.y_end)
-    {
-        line.tx_y = (int)(((double)line.y - (double)line.y_start
-                    + line.tx_start_y) * line.span);
-        line.color = get_txcolor(tex, line.tx_x, line.tx_y);
-        if (line.color && line.color != 0x000000)
-            put_pxl_color(&data->img, x, line.y, line.color);
-    }
 }
 
 static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)

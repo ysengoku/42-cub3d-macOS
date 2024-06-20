@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 10:25:16 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/19 18:02:33 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/20 14:29:51 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	raycasting(t_cub3d *data, int x, t_xpm_img *door)
 	draw_ceiling_and_floor(data, x);
 	check_hit(data, &ray);
 	data->wall_zbuffer[x] = ray.nearest_sprite_dist;
-	draw_wall(data, x, &ray);
+	if (ray.wall.hit)
+		draw_wall(data, x, &ray);
 	if (BONUS)
 	{
 		if (ray.closed_d.hit)
@@ -43,9 +44,11 @@ static void	set_ray(t_cub3d *data, t_ray *ray, int x)
 {
 	ray->closed_d.tex = DR_C;
 	ray->open_d.tex = DR_O;
-	ray->camera_p = 2 * x / (double)WIN_W - 1;
-	ray->dir.x = data->player.dir.x + data->player.plane.x * ray->camera_p;
-	ray->dir.y = data->player.dir.y + data->player.plane.y * ray->camera_p;
+	ray->current_camera_x = 2 * x / (double)WIN_W - 1;
+	ray->dir.x = data->player.dir.x
+		+ data->player.plane.x * ray->current_camera_x;
+	ray->dir.y = data->player.dir.y
+		+ data->player.plane.y * ray->current_camera_x;
 	ray->map_x = (int)data->player.pos.x;
 	ray->map_y = (int)data->player.pos.y;
 	ray->delta.x = fabs(1 / ray->dir.x);

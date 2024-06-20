@@ -39,6 +39,7 @@
 # ifndef M_PI
 #  define M_PI 3.14159265358979323846
 # endif
+# define TWO_PI 6.28318530717958647692
 
 /*===== macro definition =====================================================*/
 # define WINNAME "cub3D"
@@ -49,7 +50,7 @@
 #  define FOV 90
 # endif
 # define MOVE 0.1
-# define ROTATE 2
+# define ROTATE 0.03
 /*+++++ BONUS ++++++++++++++++++++++++++++++++++++++++++++++*/
 # define MINI_MAP_W 100
 # define MINI_MAP_H 100
@@ -77,7 +78,6 @@
 # define DOOR_TEX5 "./textures/door/door5.xpm"
 # define DOOR_TEX_OPEN "./textures/door/door6.xpm"
 
-//# define TREASURE_TEX "./textures/treasure/treasure4.xpm"
 # define TREASURE_TEX "./textures/pikachu.xpm"
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
@@ -129,15 +129,6 @@ enum	e_wallside
 	DR5,
 	DR_O,
 	TR
-};
-
-enum	e_hit
-{
-	NOTHING,
-	WALL,
-	DOOR_OPEN,
-	DOOR_CLOSE,
-	DOOR_ANIM
 };
 
 /*===== structures ===========================================================*/
@@ -198,7 +189,8 @@ typedef struct s_player
 {
 	double				fov;
 	t_vector			pos;
-	double				dir_degree;
+	t_vector			start_pos;	
+	double				dir_rad;
 	t_vector			dir;
 	double				plane_length;
 	t_vector			plane;
@@ -215,8 +207,7 @@ typedef struct s_hit
 
 typedef struct s_ray
 {
-	enum e_hit	hit;
-	double		camera_p;
+	double		current_camera_x;
 	t_vector	dir;
 	int			map_x;
 	int			map_y;
@@ -328,7 +319,6 @@ int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 int				display(t_cub3d *data);
 void			raycasting(t_cub3d *data, int x, t_xpm_img *door);
 void			check_hit(t_cub3d *data, t_ray *ray);
-//void			check_door_hit(t_cub3d *data, t_ray *ray, int x, char c);
 
 /*----- Image rendering -----*/
 int				game_loop(t_cub3d *data);
@@ -383,7 +373,6 @@ void			anim_door(t_cub3d *data, int target_y, int target_x);
 /*----- Treasures -----*/
 void			store_sprite_coordinates(t_cub3d *data);
 void			set_treasure_data(t_cub3d *data, t_treasure *treasures);
-//void			draw_treasure(t_cub3d *data, t_treasure *treasure);
 void			draw_treasure(t_cub3d *data, t_treasure *treasure, int x);
 
 #endif
