@@ -374,34 +374,11 @@ else
 	ray->sidedist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_y;
 }
 ```   
-#### 2. Wall collision check
-The ray continues until it hits a wall, using the DDA (Digital Differential Analyzer) algorithm.   
-The DDA algorithm steps through the map grid, moving the ray to the next grid line. When a wall is hit, the algorithm stops, and the distance to the hit is calculated. This distance is used to determine the height of the wall slice to be drawn, creating a 3D perspective from a 2D map.
+#### 2. Wall (& door for bonus) hit check
+The ray continues until it hits a wall (or a closed door), using the DDA (Digital Differential Analyzer) algorithm.   
+The DDA algorithm steps through the map grid, moving the ray to the next grid line. When a wall (or a closed door) is hit, the algorithm stops, and the distance to the hit is calculated. This distance is used to determine the height of the wall (or the closed door) slice to be drawn, creating a 3D perspective from a 2D map.
 
 ```c
-void	check_wall_hit(t_cub3d *data, t_ray *ray)
-{
-	int		is_y_axis;
-
-	is_y_axis = 0;
-	while (ray->hit == NOTHING)
-	{
-		// data->map.map[ray->map_y][ray->map_x] is current map coordinates of the ray
-		if (data->map.map[ray->map_y][ray->map_x] == '1')
-			ray->hit = WALL;
-		else
-			next_step(ray, &is_y_axis);
-	}
-	if (is_y_axis)
-		ray->w_dist = ray->sidedist_y - ray->delta_y;
-	else
-		ray->w_dist = ray->sidedist_x - ray->delta_x;
-	if (ray->w_dist < 0.0001)
-		ray->w_dist = 0.0001;
-	ray->w_side = get_wall_side(ray, &data->player, is_y_axis);
-	ray->wall_height = (int)(WIN_H / ray->w_dist);
-}
-
 void	check_hit(t_cub3d *data, t_ray *ray)
 {
 	int		is_y_axis;
@@ -409,7 +386,7 @@ void	check_hit(t_cub3d *data, t_ray *ray)
 	is_y_axis = 0;
 	while (!ray->wall.hit && !ray->closed_d.hit)
 	{
-		// Check if current map coordinates of the ray(data->map.map[ray->map_y][ray->map_x]) is wall ('1')
+		// Check if current map coordinates of the ray(data->map.map[ray->map_y][ray->map_x]) is a wall ('1')
 		if (data->map.map[ray->map_y][ray->map_x] == '1')
 		{
 			set_hit_data(data, ray, &ray->wall, is_y_axis);
@@ -424,6 +401,7 @@ void	check_hit(t_cub3d *data, t_ray *ray)
 
 static void	check_door_hit(t_cub3d *data, t_ray *ray, int is_y_axis)
 {
+	// Check if current map coordinates of the ray is a closed door ('D')
 	if (data->map.map[ray->map_y][ray->map_x] == 'D'
 		&& !ray->closed_d.hit)
 	{
@@ -431,9 +409,11 @@ static void	check_door_hit(t_cub3d *data, t_ray *ray, int is_y_axis)
 		if (ray->nearest_sprite_dist == 0)
 			ray->nearest_sprite_dist = ray->closed_d.dist;
 	}
+	// Check if current map coordinates of the ray is an open door ('O')
 	if (data->map.map[ray->map_y][ray->map_x] == 'O'
 		&& !ray->open_d.hit)
 		set_hit_data(data, ray, &ray->open_d, is_y_axis);
+	// Check if current map coordinates of the ray is an opening or closing door ('d' or 'o')
 	if ((data->map.map[ray->map_y][ray->map_x] == 'd'
 		|| data->map.map[ray->map_y][ray->map_x] == 'o'))
 		set_anim_door_hit_data(data, ray, is_y_axis);
@@ -465,23 +445,36 @@ static void	next_step(t_ray *ray, int *is_y_axis)
 
 <p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02958f20-c40a-4d7d-a94c-c9bf464d2bbc"</p>
 
+If the ray hits a sprite (wall, closed door, open door or animated door), we stock the hit side and distance.   
+   
+##### Calculate the perpendicular distance from camera plane to the sprite
+The `ray->sidedist.x` and `ray->sidedist.y` values represent the distance the ray has to travel along the x and y axes, respectively, to hit a sprite.   
+If the ray has hit on Y-axis grid line, the distance from the player to the sprite is calculated as `ray->sidedist.y - ray->delta.y`.   
+If the ray has hit on X-axis grid line, the distance from the player to the wall is calculated as `ray->sidedist.x - ray->delta.x`.
 
-The `get_wall_side function` determines which side of a wall the ray has hit.   
+##### Determines which side of a wall the ray has hit   
 If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
 If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).
 
 ```c
-static int	get_wall_side(t_ray *ray, t_player *player, int is_y_axis)
+static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
 {
-	if (is_y_axis == 1)
-	{
-		if (ray->map_y < player->pos_y) // ray's y-coordinate on the map is less than the player's y-coordinate
-			return (NO);
-		return (SO);
-	}
-	if (ray->map_x < player->pos_x)
-		return (WE);
-	return (EA);
+	sprite->hit = 1;
+	if (y_axis)
+		sprite->dist = ray->sidedist.y - ray->delta.y;
+	else
+		sprite->dist = ray->sidedist.x - ray->delta.x;
+	if (sprite->dist < 0.0001)
+		sprite->dist = 0.0001;
+	if (y_axis && ray->map_y < data->player.pos.y)
+		sprite->side = SO;
+	else if (y_axis && ray->map_y > data->player.pos.y)
+		sprite->side = NO;
+	else if (!y_axis && ray->map_x < data->player.pos.x)
+		sprite->side = EA;
+	else
+		sprite->side = WE;
+	sprite->h = (int)(WIN_H / sprite->dist);
 }
 ```
 
