@@ -595,6 +595,32 @@ If the fractional part is zero, it is set to 1 to avoid a division by zero error
 
 <p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/03aebd3c-dd90-4f07-beaf-e3e2023c0f59"></p>
 
+##### Retrieve the color of the pixel from the texture
+```c
+typedef struct s_xpm_img
+{
+	void		*img;
+	char		*addr; // memory address of the texture image
+	int		bpp; // number of bytes per pixel
+	int		line_len; // length of each line of pixels
+	int		endian;
+	int		w;
+	int		h;
+	char		*path;
+}				t_xpm_img;
+
+unsigned int	get_txcolor(t_xpm_img *texture, int x, int y)
+{
+	char	*pxl; // pointer to the color data of the specified pixel
+
+	pxl = texture->addr + (y * texture->line_len + x * (texture->bpp / 8));
+	return (*(unsigned int *)pxl);
+}
+```
+The `pxl` variable is a pointer to the color data of the specified pixel. It's calculated by adding the offset of the pixel to the start address of the texture. The offset is calculated as `y * texture->line_len + x * (texture->bpp / 8)`, which gives the number of bytes from the start of the texture to the pixel.   
+
+The function returns the color of the pixel as an `unsigned int`. This is done by dereferencing the `pxl` pointer with `(unsigned int *)pxl`. This casts the `pxl` pointer to an `unsigned int` pointer, and then dereferences it to get the `unsigned int` value that it points to, which is the color of the pixel.   
+
 
 ### Player's movement
 
