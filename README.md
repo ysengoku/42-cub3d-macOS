@@ -51,24 +51,41 @@ After rendering all walls, render additional elements like sprites.
 
 ### < Data >
 ```c
+typedef struct s_keys
+{
+	int			key_pressed_left;
+	int			key_pressed_right;
+	int			key_pressed_w;
+	int			key_pressed_s;
+	int			key_pressed_a;
+	int			key_pressed_d;
+	int			key_pressed_m;
+	int			key_pressed_x;
+}	t_keys;
+
 typedef struct s_cub3d
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
-	t_imgdata	img;
+	int		win_half_w; // half width of window
+	int		win_half_h; // half height of window
+	t_imgdata	img; // main image
 	t_map		map;
 	t_player	player;
 	int		ceiling_color;
 	int		floor_color;
-	t_xpm_img	wall[8]; // 4 wall textures & 4 door textures
-	int		key_pressed_left; // flag for key event (press & release)
-	int		key_pressed_right; // flag for key event (press & release)
-	int		key_pressed_w; // flag for key event (press & release)
-	int		key_pressed_s; // flag for key event (press & release)
-	int		key_pressed_a; // flag for key event (press & release)
-	int		key_pressed_d; // flag for key event (press & release)
-	int		previous_mouse_x; // x-coordinate of mouse pointer (to handle mouse move)
+	t_xpm_img	wall[12]; // array of wall & door texture
+	t_keys		keys; // flags for key event
+	/*++++++ Bonus +++++++++++++++++++*/
+	int			previous_mouse_x;
 	t_minimap	mmap;
+	bool		anim_open;
+	bool		anim_close;
+	bool		anim;
+	int			animation;
+	t_treasure	treasure;
+	double		wall_zbuffer[WIN_W];
+	/*+++++++++++++++++++++++++++++++++*/
 }				t_cub3d;
 ```
 
@@ -109,52 +126,69 @@ typedef struct s_map
 #define FOV 90
 #define M_PI 3.14159265358979323846
 
-ypedef struct s_player
+typedef struct s_vector
 {
-	double	fov; // FOV in radians (FOV° * M_PI / 180.0)
-	double	pos_x; // player's X-coordinate on the map
-	double	pos_y; // player's Y-coordinate on the map
-	double	dir; // direction in degree
-	double	dir_x; // direction vector of player
-	double	dir_y; // direction vector of player
-	double	plane_length;
-	double	plane_x;
-	double	plane_y;
-	int	moved; // Flag to signal player's movement
-	int	pitch; // Used for look up/down with mouse scroll
-}		t_player;
+	double	x;
+	double	y;
+}				t_vector;
+
+typedef struct s_player
+{
+	double				fov; // FOV in radians (FOV° * M_PI / 180.0)
+	t_vector			pos; // player's coordinate on the map
+	t_vector			start_pos; // player's coordinate on the map at game start
+	double				dir_rad; // player's direction in radians
+	t_vector			dir; // player's direction vector
+	double				plane_length;
+	t_vector			plane;
+}				t_player;
+
 ```
-
-
 
 ### < Ray >
 In raycasting, each vertical stripe on the screen corresponds to a ray cast.   
 ```c
 enum	e_wallside
 {
-	NO = 0,
-	SO = 1,
-	WE = 2,
-	EA = 3
+	NO,
+	SO,
+	WE,
+	EA,
+	DR_C, // closed door
+	DR1, // opening/closing door frame 1
+	DR2, // opening/closing door frame 2
+	DR3, // opening/closing door frame 3
+	DR4, // opening/closing door frame 4
+	DR5, // opening/closing door frame 5
+	DR_O, // open door
+	TR
 };
+
+typedef struct s_hit
+{
+	int		hit; // if the rays hit the sprite or not
+	double		dist; // distance from player to the sprite
+	int		h; // height of the sprite
+	enum e_wallside	side; // side to which the ray hits (the player sees): North, South, East or West
+	enum e_wallside	tex; // texture index of sprite
+}				t_hit;
 
 typedef struct s_ray
 {
-	double		camera_p; // current X coordinate in camera space
-	double		dir_x; // direction vector of ray
-	double		dir_y; // direction vector of ray
+	double		current_camera_x; // current X coordinate in camera space
+	t_vector	dir; // direction vector of ray
 	int		map_x; // current X coordinate of the ray on the map
 	int		map_y; // current Y coordinate of the ray on the map
 	int		step_x; // direction to go in x-axis (-1 or 1)
 	int		step_y; // direction to go in y-axis (-1 or 1)
-	double		sidedist_x; // distance the ray travels on x-axis
-	double		sidedist_y; // distance the ray travels on y-axis
-	double		delta_x; // distance the ray has to travel to go from a x-side to the next one
-	double		delta_y; // distance the ray has to travel to go from a y-side to the next one
-	double		distance; // distance from the player position to wall
-	int		wall_height; // will be calculated from 'distance'
-	enum e_wallside	wall_side; // wall side to which the ray hits (the player sees)
-}	t_ray;
+	t_vector	sidedist; // distance the ray travels on x-axis or y-axis
+	t_vector	delta; // distance the ray has to travel to go from a x-side or y-side to the next one
+	t_hit		wall; // wall hit data structure
+	t_hit		closed_d; // closed door hit data structure
+	t_hit		open_d; // open door hit data structure
+	t_hit		anim_d; // animated door (opening or closing) hit data structure
+	double		nearest_sprite_dist; // distance from player to the nearest sprite (wall or closed door)
+}			t_ray;
 ```
 
 ## Detailed explanation 
@@ -366,6 +400,43 @@ void	check_wall_hit(t_cub3d *data, t_ray *ray)
 		ray->w_dist = 0.0001;
 	ray->w_side = get_wall_side(ray, &data->player, is_y_axis);
 	ray->wall_height = (int)(WIN_H / ray->w_dist);
+}
+
+void	check_hit(t_cub3d *data, t_ray *ray)
+{
+	int		is_y_axis;
+
+	is_y_axis = 0;
+	while (!ray->wall.hit && !ray->closed_d.hit)
+	{
+		// Check if current map coordinates of the ray(data->map.map[ray->map_y][ray->map_x]) is wall ('1')
+		if (data->map.map[ray->map_y][ray->map_x] == '1')
+		{
+			set_hit_data(data, ray, &ray->wall, is_y_axis);
+			if (ray->nearest_sprite_dist == 0)
+				ray->nearest_sprite_dist = ray->wall.dist;
+		}
+		if (BONUS)
+			check_door_hit(data, ray, is_y_axis);
+		next_step(ray, &is_y_axis);
+	}
+}
+
+static void	check_door_hit(t_cub3d *data, t_ray *ray, int is_y_axis)
+{
+	if (data->map.map[ray->map_y][ray->map_x] == 'D'
+		&& !ray->closed_d.hit)
+	{
+		set_hit_data(data, ray, &ray->closed_d, is_y_axis);
+		if (ray->nearest_sprite_dist == 0)
+			ray->nearest_sprite_dist = ray->closed_d.dist;
+	}
+	if (data->map.map[ray->map_y][ray->map_x] == 'O'
+		&& !ray->open_d.hit)
+		set_hit_data(data, ray, &ray->open_d, is_y_axis);
+	if ((data->map.map[ray->map_y][ray->map_x] == 'd'
+		|| data->map.map[ray->map_y][ray->map_x] == 'o'))
+		set_anim_door_hit_data(data, ray, is_y_axis);
 }
 ```
    
