@@ -493,12 +493,15 @@ The height of the line on the screen is inversely proportional to the distance t
 
 
 #### 3. Draw wall
+The function `draw_wall` draws a vertical slice of a wall on the screen. We have same type of functions for closed/open door and animated door.
+
 ```c
 void	draw_wall(t_cub3d *data, int x, t_ray *r)
 {
 	t_line	line;
 	double	wall_x;
 
+	// Initialize a line structure
 	ft_memset(&line, 0, sizeof(line));
 	line.y_start = data->win_half_h - r->wall.h * 0.5;
 	if (line.y_start < 0)
@@ -511,11 +514,18 @@ void	draw_wall(t_cub3d *data, int x, t_ray *r)
 	// Get the exact horizontal position of a wall hit by a ray
 	wall_x = get_wall_x(data, r, &r->wall);
 
+	// Calculate span
 	if (r->wall.h != 0)
 		line.span = (double)data->wall[r->wall.side].h / r->wall.h;
+
+	// Calculate the horizontal position in the texture corresponding to wall_x
 	line.tx_x = (int)(wall_x * (double)data->wall[r->wall.side].w);
+
+	// Recalculate the vertical offset in the texture if wall height is grater than window height
 	if (r->wall.h > WIN_H)
 		line.tx_start_y = (r->wall.h - WIN_H) * 0.5;
+
+	// Draw each pixel in the wall slice
 	while (++line.y < line.y_end)
 	{
 		line.tx_y = (int)(((double)line.y - (double)line.y_start
@@ -526,9 +536,31 @@ void	draw_wall(t_cub3d *data, int x, t_ray *r)
 	}
 }
 ```
-#### wall_x
-// The `wall_x` value represents the exact position where a ray hits a wall block.
-//This is used to determine which part of the texture to display for that wall slice.
+
+1. Initializes a `line` structure, which represents the vertical line to be drawn on the screen.
+The `y_start` and `y_end` values are calculated based on the height of the wall (`r->wall.h`) and the vertical midpoint of the window (`data->win_half_h`).   
+These values are clamped to be within the window's height (`WIN_H`).   
+
+2. Get `wall_x` value   
+It is calculated by calling the `get_wall_x` function. This value represents the exact horizontal position where a ray hits a wall block, which is used for texture mapping.   
+
+3. Calculate the `span` value is calculated as the ratio of the texture height to the wall height.   
+This is used to correctly map the texture to the wall slice.   
+
+4. Calculate the `tx_x` value   
+It is the horizontal position in the texture that corresponds to the `wall_x` value.   
+This is used to get the correct color from the texture for each pixel in the wall slice.   
+
+5. Recalculate the `tx_start_y` value if the wall height is greater than the window height.   
+This is the vertical offset in the texture that corresponds to the top of the wall slice.   
+
+6. Loop to draw each pixel in the wall slice.   
+For each pixel, the `tx_y` value is calculated as the vertical position in the texture that corresponds to the current pixel.   
+The color of the pixel is then retrieved from the texture using the `get_txcolor` function, and the pixel is drawn on the screen.   
+   
+##### wall_x
+The `wall_x` value represents the exact position where a ray hits a wall block.
+This is used to determine which part of the texture to display for that wall slice.
 
 ```c
 static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)
