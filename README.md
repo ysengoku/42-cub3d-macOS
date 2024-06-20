@@ -445,16 +445,7 @@ static void	next_step(t_ray *ray, int *is_y_axis)
 
 <p align="center"><img style="width: 80%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/02958f20-c40a-4d7d-a94c-c9bf464d2bbc"</p>
 
-If the ray hits a sprite (wall, closed door, open door or animated door), we stock the hit side and distance.   
-   
-##### Calculate the perpendicular distance from camera plane to the sprite
-The `ray->sidedist.x` and `ray->sidedist.y` values represent the distance the ray has to travel along the x and y axes, respectively, to hit a sprite.   
-If the ray has hit on Y-axis grid line, the distance from the player to the sprite is calculated as `ray->sidedist.y - ray->delta.y`.   
-If the ray has hit on X-axis grid line, the distance from the player to the wall is calculated as `ray->sidedist.x - ray->delta.x`.
-
-##### Determines which side of a wall the ray has hit   
-If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
-If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).
+If the ray hits a sprite (wall, closed door, open door or animated door), we stock the hit side and distance and calculate the height of the line to draw on screen.   
 
 ```c
 static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
@@ -477,6 +468,20 @@ static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
 	sprite->h = (int)(WIN_H / sprite->dist);
 }
 ```
+
+##### Calculate the perpendicular distance from camera plane to the sprite
+The `ray->sidedist.x` and `ray->sidedist.y` values represent the distance the ray has to travel along the x and y axes, respectively, to hit a sprite.   
+If the ray has hit on Y-axis grid line, the distance from the player to the sprite is calculated as `ray->sidedist.y - ray->delta.y`.   
+If the ray has hit on X-axis grid line, the distance from the player to the wall is calculated as `ray->sidedist.x - ray->delta.x`.   
+(Due to how deltaDist and sideDist were scaled by a factor of |rayDir|, the length of sideDist already almost equals perpWallDist.)   
+
+##### Determines which side of a wall the ray has hit   
+If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
+If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).   
+
+##### Calculate the height of line to draw on screen
+The height of the line on the screen is inversely proportional to the distance to the sprite. This means that as the distance to the sprite increases, the height of the line on the screen decreases. Therefore, we calculate the height of the line by dividing the height of the window by the distance to the sprite. This can be represented as `Height of line = Window height / Distance to the sprite`. It ensures that distant sprites appear smaller on the screen, providing a sense of depth and perspective in the game.
+
 
 #### 3. Draw wall
 ```c
