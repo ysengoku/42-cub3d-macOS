@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 08:30:08 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/19 10:27:48 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/20 13:31:10 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,8 @@ int	display(t_cub3d *data)
 
 static void	init_camera(t_cub3d *data)
 {
-	double	direction_rad;
-
-	direction_rad = data->player.dir_degree * M_PI / 180;
-	data->player.dir.x = cos(direction_rad);
-	data->player.dir.y = sin(direction_rad);
+	data->player.dir.x = cos(data->player.dir_rad);
+	data->player.dir.y = sin(data->player.dir_rad);
 	data->player.plane.x = -data->player.dir.y * data->player.plane_length;
 	data->player.plane.y = data->player.dir.x * data->player.plane_length;
 }

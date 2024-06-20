@@ -6,108 +6,97 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 09:59:51 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/05 16:12:57 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/20 10:58:53 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+static void	update_player_position(t_cub3d *data, t_player *player, \
+double dest_x, double dest_y);
+
 void	move_forward(t_cub3d *data, t_player *player, t_map *map)
 {
-	int		dest_x;
-	int		dest_y;
+	double	dest_x;
+	double	dest_y;
 
 	if (data->anim_close == true || data->anim_open == true)
 		return ;
 	dest_x = player->pos.x + (player->dir.x * MOVE);
 	dest_y = player->pos.y + (player->dir.y * MOVE);
-	if (map->map[(int)player->pos.y][dest_x] != '1'
-		&& map->map[(int)player->pos.y][dest_x] != 'D'
-		&& map->map[(int)player->pos.y][dest_x] != 'T')
-	{
-		player->pos.x += player->dir.x * MOVE;
-		data->map.pos_x = player->pos.x;
-	}
-	if (map->map[dest_y][(int)player->pos.x] != '1'
-		&& map->map[dest_y][(int)player->pos.x] != 'D'
-		&& map->map[dest_y][(int)player->pos.x] != 'T')
-	{
-		player->pos.y += player->dir.y * MOVE;
-		data->map.pos_y = player->pos.y;
-	}
+	update_player_position(data, player, dest_x, dest_y);
+	map->pos_x = player->pos.x;
+	map->pos_y = player->pos.y;
 }
 
 void	move_backward(t_cub3d *data, t_player *player, t_map *map)
 {
-	int		dest_x;
-	int		dest_y;
+	double	dest_x;
+	double	dest_y;
 
 	if (data->anim_close == true || data->anim_open == true)
 		return ;
 	dest_x = player->pos.x + (player->dir.x * -1 * MOVE);
 	dest_y = player->pos.y + (player->dir.y * -1 * MOVE);
-	if (map->map[(int)player->pos.y][dest_x] != '1'
-		&& map->map[(int)player->pos.y][dest_x] != 'D'
-		&& map->map[(int)player->pos.y][dest_x] != 'T')
-	{
-		player->pos.x += player->dir.x * -1 * MOVE;
-		data->map.pos_x = player->pos.x;
-	}
-	if (map->map[dest_y][(int)player->pos.x] != '1'
-		&& map->map[dest_y][(int)player->pos.x] != 'D'
-		&& map->map[dest_y][(int)player->pos.x] != 'T')
-	{
-		player->pos.y += player->dir.y * -1 * MOVE;
-		data->map.pos_y = player->pos.y;
-	}
+	update_player_position(data, player, dest_x, dest_y);
+	map->pos_x = player->pos.x;
+	map->pos_y = player->pos.y;
 }
 
 void	move_left(t_cub3d *data, t_player *player, t_map *map)
 {
-	int		dest_x;
-	int		dest_y;
+	double	dest_x;
+	double	dest_y;
 
 	if (data->anim_close == true || data->anim_open == true)
 		return ;
 	dest_x = player->pos.x + (player->dir.y * MOVE);
 	dest_y = player->pos.y + (player->dir.x * -1 * MOVE);
-	if (map->map[(int)player->pos.y][dest_x] != '1'
-		&& map->map[(int)player->pos.y][dest_x] != 'D'
-		&& map->map[(int)player->pos.y][dest_x] != 'T')
-	{
-		player->pos.x += player->dir.y * MOVE;
-		data->map.pos_x = player->pos.x;
-	}
-	if (map->map[dest_y][(int)player->pos.x] != '1'
-		&& map->map[dest_y][(int)player->pos.x] != 'D'
-		&& map->map[dest_y][(int)player->pos.x] != 'T')
-	{
-		player->pos.y += player->dir.x * -1 * MOVE;
-		data->map.pos_y = player->pos.y;
-	}
+	update_player_position(data, player, dest_x, dest_y);
+	map->pos_x = player->pos.x;
+	map->pos_y = player->pos.y;
 }
 
 void	move_right(t_cub3d *data, t_player *player, t_map *map)
 {
-	int		dest_x;
-	int		dest_y;
+	double	dest_x;
+	double	dest_y;
 
 	if (data->anim_close == true || data->anim_open == true)
 		return ;
 	dest_x = player->pos.x + (player->dir.y * -1 * MOVE);
 	dest_y = player->pos.y + (player->dir.x * MOVE);
-	if (map->map[(int)player->pos.y][dest_x] != '1'
-		&& map->map[(int)player->pos.y][dest_x] != 'D'
-		&& map->map[(int)player->pos.y][dest_x] != 'T')
+	update_player_position(data, player, dest_x, dest_y);
+	map->pos_x = player->pos.x;
+	map->pos_y = player->pos.y;
+}
+
+static void	update_player_position(t_cub3d *data, t_player *player, \
+double dest_x, double dest_y)
+{
+	if (!BONUS)
 	{
-		player->pos.x += player->dir.y * -1 * MOVE;
-		data->map.pos_y = player->pos.y;
+		if (data->map.map[(int)player->pos.y][(int)dest_x] 
+			&& data->map.map[(int)player->pos.y][(int)dest_x] != ' '
+			&& dest_x > 0.1)
+			player->pos.x = dest_x;
+		else
+			player->pos.x = player->start_pos.x;
+		if (data->map.map[(int)dest_y][(int)player->pos.x]
+			&& data->map.map[(int)dest_y][(int)player->pos.x] != ' '
+			&& dest_y > 0.1 && dest_y < data->map.map_len_y - 1
+			&& data->map.map[(int)dest_y][0])
+				player->pos.y = dest_y;
+		else
+			player->pos.y = player->start_pos.y;
+		return ;
 	}
-	if (map->map[dest_y][(int)player->pos.x] != '1'
-		&& map->map[dest_y][(int)player->pos.x] != 'D'
-		&& map->map[dest_y][(int)player->pos.x] != 'T')
-	{
-		player->pos.y += player->dir.x * MOVE;
-		data->map.pos_y = player->pos.y;
-	}
+	if (data->map.map[(int)player->pos.y][(int)dest_x] != '1'
+		&& data->map.map[(int)player->pos.y][(int)dest_x] != 'D'
+		&& data->map.map[(int)player->pos.y][(int)dest_x] != 'T')
+		player->pos.x = dest_x;
+	if (data->map.map[(int)dest_y][(int)player->pos.x] != '1'
+		&& data->map.map[(int)dest_y][(int)player->pos.x] != 'D'
+		&& data->map.map[(int)dest_y][(int)player->pos.x] != 'T')
+		player->pos.y = dest_y;
 }

@@ -20,8 +20,7 @@ WHITE = \033[37m
 NAME = cub3D
 INCLUDE = includes
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror
-#-fsanitize=address
+CCFLAGS = -Wextra -Wall -Werror -fsanitize=address
 MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
 RM = rm -f
 
@@ -56,7 +55,7 @@ FILES = main	\
 		colors	\
 		rendering	\
 		raycasting	\
-		check_collision	\
+		check_hit	\
 		event_handler	\
 		move	\
 		rotate	\
