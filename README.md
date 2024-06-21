@@ -622,9 +622,20 @@ The `pxl` variable is a pointer to the color data of the specified pixel. It's c
 The function returns the color of the pixel as an `unsigned int`. This is done by dereferencing the `pxl` pointer with `(unsigned int *)pxl`. This casts the `pxl` pointer to an `unsigned int` pointer, and then dereferences it to get the `unsigned int` value that it points to, which is the color of the pixel.   
 
 
-### Player's movement
+### Sprite draw (perspective projection transformation)
+We use another method to draw sprites  (like objects or characters).   
+Instead of using Ray casting, it involves calculating the position and size of the 2D image based on the the relative position of the sprite to the player. This determines where and how large the sprite should appear on the screen. Technically, this method is known as perspective projection transformation.
+   
+1. During the Raycasting loop, we store the perpendicular distance to the wall or closed door (which is for each ray in an array called `wall_zbuffer`.
+2. The Euclidean distance to each sprite is calculated, and the sprites are sorted in order from farthest to nearest.
 
-### 
+The coordinates of the sprites are converted from their map coordinates to coordinates relative to the player.
+
+By applying the inverse of the camera matrix, the x-coordinate on the screen and the depth of the sprite (Z-axis in 3D space) from the player are determined.
+
+Based on the x-coordinate on the screen and the sprite's depth, the width and height for rendering the sprite are calculated.
+
+For each x-coordinate from the left edge to the right edge of the sprite on the screen, the sprite is drawn. During this process, if the zBuffer[x] value is greater than the sprite's depth (indicating the sprite is closer to the player than the wall), the sprite is rendered.
 
 ## References
 ### Tutorials
@@ -644,6 +655,7 @@ The function returns the color of the pixel as an `unsigned int`. This is done b
 
 ### Turorial in Japanese
 * [42Tokyo C言語で一人称視点のゲームを作った](https://qiita.com/susasaki/items/c74a228d7ddd48b818bd)
+* [C言語で3Dゲームを作った](https://jun-networks.hatenablog.com/entry/2021/03/04/130629)
 
 ### Textures
 Treasure texture credit: <a href="https://www.freepik.com/free-vector/wooden-chest-realistic-set-with-images-opened-closed-empty-treasure-coffers-white_7497393.htm#query=treasure%20box&position=10&from_view=keyword&track=ais_user&uuid=aac9961d-90f6-43f3-aba7-2832a8b81de0">macrovector</a> on Freepik
