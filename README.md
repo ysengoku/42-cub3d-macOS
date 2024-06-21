@@ -671,16 +671,17 @@ static void	calculate_camera_coordinates(t_cub3d *data, t_treasure *treasure)
 {
 	double	inverse_matrix_factor;
 
-	// This is a value used to scale these positions based on the player's direction and field of view.
-	// The `1.0 /` part is calculating the inverse (or reciprocal) of the value.
-	inverse_matrix_factor = 1.0 / (data->player.plane.x * data->player.dir.y - data->player.dir.x * data->player.plane.y);
 
 	// Calculate relative position of sprite to player
 	treasure->relative_pos.x = treasure->map.x - data->player.pos.x;
 	treasure->relative_pos.y = treasure->map.y - data->player.pos.y;
 
+	// Value used to scale these positions based on the player's direction and field of view
+	// The '1.0 /' part is calculating the inverse (or reciprocal) of the value.
+	inverse_matrix_factor = 1.0 / (data->player.plane.x * data->player.dir.y - data->player.dir.x * data->player.plane.y);
+
 	// Transform the treasure's position from map world coordinates to camera coordinates.
-	//`camera.x` and `camera.y` represent how far the sprite is from the center of the player's field of view, both horizontally and vertically. 
+	// 'camera.x' and 'camera.y' represent how far the sprite is from the center of the player's field of view, both horizontally and vertically. 
 	treasure->camera.x = inverse_matrix_factor * (data->player.dir.y * treasure->relative_pos.x - data->player.dir.x * treasure->relative_pos.y);
 	treasure->camera.y = inverse_matrix_factor * (-data->player.plane.y * treasure->relative_pos.x + data->player.plane.x * treasure->relative_pos.y);
 }
