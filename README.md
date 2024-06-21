@@ -740,6 +740,7 @@ static void	get_draw_range(t_cub3d *data, t_treasure *treasure)
 ### Turorial in Japanese
 * [42Tokyo C言語で一人称視点のゲームを作った](https://qiita.com/susasaki/items/c74a228d7ddd48b818bd)
 * [C言語で3Dゲームを作った](https://jun-networks.hatenablog.com/entry/2021/03/04/130629)
+* [3Dゲームを作る課題の振り返り](https://rio-1.hatenablog.com/entry/2022/02/16/114122)
 
 ### Textures
 Treasure texture credit: <a href="https://www.freepik.com/free-vector/wooden-chest-realistic-set-with-images-opened-closed-empty-treasure-coffers-white_7497393.htm#query=treasure%20box&position=10&from_view=keyword&track=ais_user&uuid=aac9961d-90f6-43f3-aba7-2832a8b81de0">macrovector</a> on Freepik
