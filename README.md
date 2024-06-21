@@ -625,17 +625,62 @@ The function returns the color of the pixel as an `unsigned int`. This is done b
 ### Sprite draw (perspective projection transformation)
 We use another method to draw sprites  (like objects or characters).   
 Instead of using Ray casting, it involves calculating the position and size of the 2D image based on the the relative position of the sprite to the player. This determines where and how large the sprite should appear on the screen. Technically, this method is known as perspective projection transformation.
-   
+
+#### Overview
 1. During the Raycasting loop, we store the perpendicular distance to the wall or closed door (which is for each ray in an array called `wall_zbuffer`.
-2. The Euclidean distance to each sprite is calculated, and the sprites are sorted in order from farthest to nearest.
+2. Calculate the Euclidean distance from player position to the sprite. (If there is more than one sprite, we create an array to stock the coordinates of all sprites, then sort in order of distance from player)
+3. Convert the coordinates of the sprites from the map coordinates to coordinates relative to the player.
+4. By applying the inverse of the camera matrix, we determine the x-coordinate on the screen and the depth of the sprite (Z-axis in 3D space) from the player.
+5. Calculate the width and height for rendering the sprite based on the x-coordinate on the screen and the sprite's depth. 
+6. For each x-coordinate from the left edge to the right edge of the sprite on the screen, the sprite is drawn. During this process, if the wall_zbuffer[x] value is greater than the sprite's depth (indicating the sprite is closer to the player than the wall), the sprite is rendered.
 
-The coordinates of the sprites are converted from their map coordinates to coordinates relative to the player.
+```c
+void	set_treasure_data(t_cub3d *data, t_treasure *treasure)
+{
+	treasure->visible = 0;
+	calculate_camera_coordinates(data, treasure);
+	if (treasure->camera.y > 0 && fabs(treasure->camera.x / treasure->camera.y) < data->player.plane_length)
+	{
+		get_draw_range(data, treasure);
+		treasure->visible = 1;
+	}
+}
 
-By applying the inverse of the camera matrix, the x-coordinate on the screen and the depth of the sprite (Z-axis in 3D space) from the player are determined.
+static void	calculate_camera_coordinates(t_cub3d *data, t_treasure *treasure)
+{
+	double	inverse_matrix_factor;
 
-Based on the x-coordinate on the screen and the sprite's depth, the width and height for rendering the sprite are calculated.
+	inverse_matrix_factor = 1.0 / (data->player.plane.x * data->player.dir.y - data->player.dir.x * data->player.plane.y);
 
-For each x-coordinate from the left edge to the right edge of the sprite on the screen, the sprite is drawn. During this process, if the zBuffer[x] value is greater than the sprite's depth (indicating the sprite is closer to the player than the wall), the sprite is rendered.
+	// Calculate relative position of sprite to player
+	treasure->relative_pos.x = treasure->map.x - data->player.pos.x;
+	treasure->relative_pos.y = treasure->map.y - data->player.pos.y;
+
+	// Transform the treasure's position from map world coordinates to camera coordinates.
+	//`camera.x` and `camera.y` represent how far the sprite is from the center of the player's field of view, both horizontally and vertically. 
+	treasure->camera.x = inverse_matrix_factor * (data->player.dir.y * treasure->relative_pos.x - data->player.dir.x * treasure->relative_pos.y);
+	treasure->camera.y = inverse_matrix_factor * (-data->player.plane.y * treasure->relative_pos.x + data->player.plane.x * treasure->relative_pos.y);
+}
+
+static void	get_draw_range(t_cub3d *data, t_treasure *treasure)
+{
+	treasure->screen_x = (int)(data->win_half_w * (1 + treasure->camera.x / treasure->camera.y));
+	treasure->draw_height = ft_abs((int)(WIN_H / treasure->camera.y));
+	treasure->start_y = -treasure->draw_height / 2 + data->win_half_h;
+	if (treasure->start_y < 0)
+		treasure->start_y = 0;
+	treasure->end_y = treasure->draw_height / 2 + data->win_half_h;
+	if (treasure->end_y >= WIN_H)
+		treasure->end_y = WIN_H - 1;
+	treasure->draw_width = treasure->draw_height;
+	treasure->start_x = -treasure->draw_width / 2 + treasure->screen_x;
+	if (treasure->start_x < 0)
+		treasure->start_x = 0;
+	treasure->end_x = treasure->draw_width / 2 + treasure->screen_x;
+	if (treasure->end_x >= WIN_W)
+		treasure->end_x = WIN_W - 1;
+}
+```
 
 ## References
 ### Tutorials
