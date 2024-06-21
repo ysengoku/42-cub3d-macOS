@@ -635,6 +635,21 @@ Instead of using Ray casting, it involves calculating the position and size of t
 6. For each x-coordinate from the left edge to the right edge of the sprite on the screen, the sprite is drawn. During this process, if the wall_zbuffer[x] value is greater than the sprite's depth (indicating the sprite is closer to the player than the wall), the sprite is rendered.
 
 ```c
+typedef struct s_treasure
+{
+	t_vector	map; // sprite x and y coodinate on map
+	t_vector	relative_pos; // sprite x and y coodinate relative to playeryer
+	t_vector	camera; //X = whether the sprite is to the left or right of the player's viewpoint and by how much. / Y = distance of the sprite from player
+	int		screen_x; // sprite x-coodinate on screen
+	int		draw_height; // sprite height on screen
+	int		draw_width; // sprite width on screen
+	int		start_x; // start x-coodinate to draw sprite
+	int		end_x; // end x-coodinate to draw sprite
+	int		start_y; //	start y-coodinate to draw sprite
+	int		end_y; // end y-coodinate to draw sprite
+	int		visible; // whether the sprite is visible or not
+}		t_treasure;
+
 void	set_treasure_data(t_cub3d *data, t_treasure *treasure)
 {
 	treasure->visible = 0;
