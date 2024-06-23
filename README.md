@@ -482,7 +482,9 @@ static void	set_hit_data(t_cub3d *data, t_ray *ray, t_hit *sprite, int y_axis)
 The `ray->sidedist.x` and `ray->sidedist.y` values represent the distance the ray has to travel along the x and y axes, respectively, to hit a sprite.   
 If the ray has hit on Y-axis grid line, the distance from the player to the sprite is calculated as `ray->sidedist.y - ray->delta.y`.   
 If the ray has hit on X-axis grid line, the distance from the player to the wall is calculated as `ray->sidedist.x - ray->delta.x`.   
-(Due to how deltaDist and sideDist were scaled by a factor of |rayDir|, the length of sideDist already almost equals perpWallDist.)   
+
+<img width="100%" alt="perpenduclar_dist" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/9319549b-f68a-4ebe-81f6-882e6cb85fc7">
+
 
 ##### Determines which side of a wall the ray has hit   
 If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
