@@ -551,7 +551,9 @@ This is used to correctly map the texture to the wall slice.
 
 4. Calculate the `tx_x` value   
 It is the horizontal position in the texture that corresponds to the `wall_x` value.   
-This is used to get the correct color from the texture for each pixel in the wall slice.   
+This is used to get the correct color from the texture for each pixel in the wall slice.
+
+<p align="center"><img width="50%" alt="tex_x" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/17053af7-d475-4d70-ae7d-c72aac442932"></p>
 
 5. Recalculate the `tx_start_y` value if the wall height is greater than the window height.   
 This is the vertical offset in the texture that corresponds to the top of the wall slice.   
@@ -577,10 +579,7 @@ static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)
 		wall_x = data->player.pos.x + sprite->dist * ray->dir.x;
 	else
 		wall_x = data->wall[SO].w - (data->player.pos.x + sprite->dist * ray->dir.x);
-	if (wall_x != floor(wall_x))
-		wall_x -= floor(wall_x);
-	else
-		wall_x = 1;
+	wall_x -= floor(wall_x);
 	return (wall_x);
 }
 ```
