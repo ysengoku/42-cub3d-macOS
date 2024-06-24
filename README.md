@@ -485,7 +485,6 @@ If the ray has hit on X-axis grid line, the distance from the player to the wall
 
 <img width="100%" alt="perpenduclar_dist" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/9319549b-f68a-4ebe-81f6-882e6cb85fc7">
 
-
 ##### Determines which side of a wall the ray has hit   
 If the hit is on a vertical wall, it checks whether the ray's y-coordinate on the map is less than the player's y-coordinate. If it is, the function returns NO (North), otherwise it returns SO (South).   
 If the hit is not on a vertical wall, it checks whether the ray's x-coordinate on the map is less than the player's x-coordinate. If it is, the function returns WE (West), otherwise it returns EA (East).   
@@ -595,6 +594,10 @@ The fractional part is kept by subtracting the floor of `wall_x` from `wall_x`.
 If the fractional part is zero, it is set to 1 to avoid a division by zero error later in the texture mapping process.   
 
 <p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/03aebd3c-dd90-4f07-beaf-e3e2023c0f59"></p>
+
+If wall hit side is North or East, we need to reverse the wall_x value as shown below.
+
+<p align="center"><img style="width: 50%;" src="https://github.com/ysengoku/42-cub3d-macOS/assets/130462445/f4ba6345-75a1-436f-b7d1-b19e5380355b"></p>
 
 ##### Retrieve the color of the pixel from the texture
 ```c
