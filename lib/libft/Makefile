@@ -68,6 +68,7 @@ FILES = ft_abs	\
 		ft_strcat	\
 		ft_strcmp	\
 		ft_strstr	\
+		ft_free_all	\
 		ft_printf	\
 		ft_printf_char	\
 		ft_printf_str	\
