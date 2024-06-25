@@ -6,65 +6,63 @@
 /*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 10:22:44 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/19 11:52:18 by jmougel          ###   ########.fr       */
+/*   Updated: 2024/06/24 11:39:27 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static int	is_player(char c)
-{
-	char	*player;
-	int		i;
-
-	i = 0;
-	player = "SNWE";
-	while (player[i])
-	{
-		if (c == player[i])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static int	is_bonus(char c)
-{
-	char	*door;
-	int		i;
-
-	i = 0;
-	door = "DdOoT";
-	while (door[i])
-	{
-		if (c == door[i])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-static int	line_is_map(char *line)
+int	line_is_map(char *line, char c)
 {
 	int	i;
 
 	i = 0;
-	while (line[i])
+	if (!c)
+		c = ' ';
+	if (!BONUS)
 	{
-		if (line[i] == ' ')
+		while (line[i] == ' ' || line[i] == '1' || line[i] == '0'
+			|| line[i] == 'S' || line[i] == 'N' || line[i] == 'E'
+			|| line[i] == 'W' || line[i] == c)
 			i++;
-		else if (line[i] == '1')
-			i++;
-		else if (line[i] == '0')
-			i++;
-		else if (i != 0 && is_player(line[i]))
-			i++;
-		else if (BONUS && i != 0 && is_bonus(line[i]))
-			i++;
-		else
-			return (0);
 	}
-	return (1);
+	else
+	{
+		while (line[i] == ' ' || line[i] == '1' || line[i] == '0'
+			|| line[i] == 'S' || line[i] == 'N' || line[i] == 'E'
+			|| line[i] == 'W' || line[i] == 'D' || line[i] == 'T'
+			|| line[i] == c)
+			i++;
+	}
+	if (line[i] == '\0')
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
+}
+
+int	line_is_space(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] == ' ')
+	{
+		i++;
+	}
+	if (line[i] == '\0')
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
+}
+
+int	line_is_data(char *line)
+{
+	if (ft_strncmp(line, "F ", 2) == 0
+		|| ft_strncmp(line, "C ", 2) == 0
+		|| ft_strncmp(line, "NO ", 3) == 0
+		|| ft_strncmp(line, "SO ", 3) == 0
+		|| ft_strncmp(line, "WE ", 3) == 0
+		|| ft_strncmp(line, "EA ", 3) == 0)
+		return (EXIT_SUCCESS);
+	return (EXIT_FAILURE);
 }
 
 int	check_file(t_cub3d *data)
@@ -72,22 +70,26 @@ int	check_file(t_cub3d *data)
 	int	i;
 
 	i = 0;
+	data->map.check.nbr_data = 0;
 	while (data->map.data_map[i])
 	{
-		if (ft_strncmp(data->map.data_map[i], "F ", 2) == 0
-			|| ft_strncmp(data->map.data_map[i], "C ", 2) == 0
-			|| ft_strncmp(data->map.data_map[i], "NO ", 3) == 0
-			|| ft_strncmp(data->map.data_map[i], "SO ", 3) == 0
-			|| ft_strncmp(data->map.data_map[i], "WE ", 3) == 0
-			|| ft_strncmp(data->map.data_map[i], "EA ", 3) == 0
-			|| line_is_map(data->map.data_map[i]))
-			i++;
-		else
-		{
-			free_texture_paths(data->wall, 4);
-			exit_parsing(&data->map, "Error\nCub3D: bad data detected");
-			return (EXIT_FAILURE);
-		}
+		if (line_is_map(data->map.data_map[i], 0) == EXIT_SUCCESS
+			&& line_is_space(data->map.data_map[i]) == EXIT_FAILURE)
+			break ;
+		else if (line_is_map(data->map.data_map[i], 0) == EXIT_FAILURE
+			&& line_is_data(data->map.data_map[i]) == EXIT_SUCCESS)
+			data->map.check.nbr_data++;
+		else if (line_is_map(data->map.data_map[i], 0) == EXIT_FAILURE
+			&& line_is_data(data->map.data_map[i]) == EXIT_FAILURE)
+			return (exit_parsing(data, "bad data detected", false));
+		else if (line_is_space(data->map.data_map[i]) == EXIT_SUCCESS
+			&& data->map.check.nbr_data < 6)
+			return (exit_parsing(data, "line with space detected", false));
+		i++;
 	}
+	if (data->map.check.nbr_data < 6)
+		return (exit_parsing(data, "missing data", false));
+	else if (data->map.check.nbr_data > 6)
+		return (exit_parsing(data, "duplicate data detected", false));
 	return (EXIT_SUCCESS);
 }

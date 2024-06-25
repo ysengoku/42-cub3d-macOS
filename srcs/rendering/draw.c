@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   draw.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/28 08:57:21 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/19 18:04:34 by yusengok         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   draw.c											 :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: yusengok <yusengok@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2024/05/28 08:57:21 by yusengok		  #+#	#+#			 */
+/*   Updated: 2024/06/20 08:10:58 by yusengok		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "cub3d.h"
@@ -126,9 +126,6 @@ static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)
 	else
 		wall_x = data->wall[SO].w
 			- (data->player.pos.x + sprite->dist * ray->dir.x);
-	if (wall_x != floor(wall_x))
-		wall_x -= floor(wall_x);
-	else
-		wall_x = 1;
+	wall_x -= floor(wall_x);
 	return (wall_x);
 }

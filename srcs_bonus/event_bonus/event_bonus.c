@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mouse_move_bonus.c                                 :+:      :+:    :+:   */
+/*   event_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 12:35:23 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/06 16:32:53 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/21 08:38:00 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ int	mousemove(int x, int y, t_cub3d *data)
 
 static void	finish_game(t_cub3d *data)
 {
+	system("afplay ../sound/congrat.wav 2> /dev/null");
 	printf("\033[1m\033[32mCONGRATULATION ! You won !\033[0m\n");
-	sleep(1);
+	sleep(2);
 	close_window(data);
 }
 

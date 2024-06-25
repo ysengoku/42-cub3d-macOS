@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 16:31:39 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/20 08:52:05 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/21 08:19:50 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,4 @@ static void	draw_line(t_cub3d *data, t_treasure *treasure, int x)
 			y++;
 		}
 	}
-}
-
-void	finish_game(t_cub3d *data)
-{
-	printf("\033[1m\033[32mCONGRATULATION ! You won !\033[0m\n");
-	sleep(1);
-	close_window(data);
 }
