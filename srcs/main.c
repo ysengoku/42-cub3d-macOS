@@ -6,7 +6,7 @@
 /*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 08:09:57 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/19 15:12:13 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/24 11:50:39 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ static int	create_main_image(t_cub3d *data)
 	}
 	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pxl,
 			&data->img.line_len, &data->img.endian);
+	if (data->img.addr == NULL)
+	{
+		mlx_destroy_image(data->mlx_ptr, data->img.img);
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+		free(data->mlx_ptr);
+		free_data_map(&data->map);
+		ft_perror_exit("MLX", 1);
+	}
 	return (0);
 }
 

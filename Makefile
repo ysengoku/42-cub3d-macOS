@@ -15,15 +15,10 @@ RESET = \033[0m
 LIGHT_GREEN = \033[32m
 BLUE = \033[34m
 CYAN = \033[36m
-WHITE = \033[37m
 
 NAME = cub3D
-INCLUDE = includes
-CC = cc
-CCFLAGS = -Wextra -Wall -Werror 
-#-fsanitize=address
-MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
-RM = rm -f
+NAME_B = cub3D_bonus
+
 
 SRCS_DIR = srcs/
 SRCS_DIR_B = srcs_bonus/
@@ -48,7 +43,9 @@ FILES = main	\
 		get_maps \
 		check_map \
 		check_file	\
-		algo_flood_fill \
+		apply_flood_fill	\
+		fl_iteratif	\
+		fl_recursive	\
 		handle_errors	\
 		set_data	\
 		game_loop	\
@@ -69,32 +66,58 @@ FILES = main	\
 		event_bonus	\
 		door_bonus	\
 		treasure_bonus	\
-		set_treasure_data_bonus
+		set_treasure_data_bonus	\
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/
 OBJS = $(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILES)))
+OBJS_DIR_B = .objs_bonus/
+OBJS_B = $(addprefix $(OBJS_DIR_B), $(addsuffix .o, $(FILES)))
 
-LIB_DIR = lib/
-LIBFT_DIR = $(LIB_DIR)libft/
-LIBMLX_DIR = $(LIB_DIR)mlx_macos/
+INCLUDE = includes
+HEADERS_DIR = includes/
+HEADER_FILES = cub3d.h
+HEADERS = $(addprefix $(HEADERS_DIR), $(HEADER_FILES))
 
-BONUS = 0
+LIB_DIR = ./lib
+LIBFT_DIR = $(LIB_DIR)/libft
+LIBFT = $(LIBFT_DIR)/libft.a
+LIBMLX_DIR = $(LIB_DIR)/mlx_macos
+LIBMLX = $(LIBMLX_DIR)/libmlx.a
 
-all: $(NAME)
+CC = cc
+CCFLAGS = -Wextra -Wall -Werror 
+#-fsanitize=address
+INCLUDE = -I$(HEADERS_DIR) -I$(LIBFT_DIR) -I$(LIBMLX_DIR)
+MLXFLAGS = -lft -lmlx -framework OpenGL -framework AppKit
+RM = rm -f
+
+all: lib
+	@$(MAKE) $(NAME)
 
 $(NAME): $(OBJS)
-	@printf "$(CYAN)Compiling Minilibx...\n$(RESET)"
-	@$(MAKE) -C $(LIBMLX_DIR)
-	@printf "$(CYAN)Compiling Libft...\n$(RESET)"
-	@$(MAKE) -C $(LIBFT_DIR)
 	@printf "$(CYAN)Building cub3D...\n$(RESET)"
-	$(CC) $(CCFLAGS) -DBONUS=$(BONUS) $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME)
+	$(CC) $(CCFLAGS) -DBONUS=0 $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME)
 	@printf "$(LIGHT_GREEN)$(BOLD)cub3D is ready to launch\n$(RESET)"
 
-$(OBJS_DIR)%.o: %.c Makefile
+$(OBJS_DIR)%.o: %.c $(HEADERS) $(LIBFT) Makefile
 	@mkdir -p $(OBJS_DIR)
-	$(CC) $(CFLAGS) -DBONUS=$(BONUS) -I$(LIBFT_DIR) -I$(LIBMLX_DIR) -I$(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -DBONUS=0
+
+$(NAME_B): $(OBJS_B) $(HEADER) $(LIBFT) $(LIBMLX)
+	@printf "$(CYAN)$(BOLD)Building cub3D_bonus...\n$(RESET)"
+	$(CC) $(CCFLAGS) -DBONUS=1 $^ -L$(LIBMLX_DIR) -L$(LIBFT_DIR) $(MLXFLAGS) -o $(NAME_B)
+	@printf "$(LIGHT_GREEN)$(BOLD)cub3D_bonus is ready to launch\n$(RESET)"
+
+$(OBJS_DIR_B)%.o: %.c $(HEADERS) $(LIBFT) Makefile
+	@mkdir -p $(OBJS_DIR_B)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -DBONUS=1
+
+lib: $(FORCE)
+	@printf "$(BLUE)$(BOLD)Compiling Libft...\n$(RESET)"
+	@$(MAKE) -s -C $(LIBFT_DIR)
+	@printf "$(BLUE)$(BOLD)Compiling Minilibx...\n$(RESET)"
+	@$(MAKE) -s -C $(LIBMLX_DIR)
 
 clean:
 	@printf "$(WHITE)Cleaning Minilibx...\n$(RESET)"
@@ -108,16 +131,13 @@ fclean: clean
 	@$(MAKE) fclean -C $(LIBMLX_DIR)
 	@$(MAKE) -s -C $(LIBFT_DIR) fclean
 	@$(RM) $(NAME)
-
-bonus: lib
-	@$(RM) -r $(OBJS_DIR)
-	@$(RM) $(NAME)
-	$(MAKE) all BONUS=1
-
-lib:
-	@$(MAKE) -s -C $(LIBMLX_DIR)
-	@$(MAKE) -s -C $(LIBFT_DIR)
+	@$(RM) $(NAME_B)
 
 re: fclean all
 
-.PHONY: all clean fclean bonus lib re
+bonus: lib $(NAME_B)
+	$(MAKE) $(NAME_B)
+
+FORCE:
+
+.PHONY: all lib clean fclean re bonus FORCE

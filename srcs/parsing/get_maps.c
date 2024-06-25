@@ -6,7 +6,7 @@
 /*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:57:09 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/19 11:21:38 by jmougel          ###   ########.fr       */
+/*   Updated: 2024/06/24 09:20:36 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static int	get_length(t_map *data_map)
 	}
 	data_map->map_len_y = j;
 	data_map->map_len_x = map_len_x + 1;
+	if (map_len_x == 0 || j == 0)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -62,27 +64,27 @@ static int	get_start_map(char **data_map)
 	return (-1);
 }
 
-static char	**get_map(t_map *data_map)
+static char	**get_map(t_cub3d *data)
 {
 	char	**map;
 	int		index_start_map;
 	int		i;
 
-	index_start_map = get_start_map(data_map->data_map);
+	index_start_map = get_start_map(data->map.data_map);
 	if (index_start_map == -1)
-		return (exit_parsing(data_map, "Error\nCub3D: map not found"), NULL);
+		return (NULL);
 	i = index_start_map;
-	while (data_map->data_map[i])
+	while (data->map.data_map[i])
 		i++;
 	map = ft_calloc(i + 1, sizeof(char *));
 	if (!map)
-		return (NULL);
+		return (exit_parsing(data, "malloc", true), NULL);
 	i = 0;
-	while (data_map->data_map[index_start_map])
+	while (data->map.data_map[index_start_map])
 	{
-		map[i] = ft_strdup(data_map->data_map[index_start_map++]);
-		if (!map)
-			return (free_split(map), NULL);
+		map[i] = ft_strdup(data->map.data_map[index_start_map++]);
+		if (!map[i])
+			return (free_split(map), exit_parsing(data, "malloc", true), NULL);
 		i++;
 	}
 	map[i] = NULL;
@@ -91,12 +93,11 @@ static char	**get_map(t_map *data_map)
 
 int	get_maps(t_cub3d *data)
 {
-	data->map.map = get_map(&data->map);
-	if (!data->map.map)
-		return (exit_parsing(&data->map, "Error\nCub3D"), EXIT_FAILURE);
-	data->map.dup_map = get_map(&data->map);
-	if (!data->map.dup_map)
-		return (exit_parsing(&data->map, "Error\nCub3D"), EXIT_FAILURE);
-	get_length(&data->map);
+	data->map.map = get_map(data);
+	data->map.dup_map = get_map(data);
+	if (!data->map.map || !data->map.dup_map)
+		return (exit_parsing(data, "map not found", false), EXIT_FAILURE);
+	if (get_length(&data->map) == EXIT_FAILURE)
+		return (exit_parsing(data, "issue with the map", false), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

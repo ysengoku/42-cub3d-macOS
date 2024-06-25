@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   door_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 09:14:18 by yusengok          #+#    #+#             */
-/*   Updated: 2024/06/12 14:54:35 by yusengok         ###   ########.fr       */
+/*   Updated: 2024/06/24 10:34:19 by jmougel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	get_door_and_treasure_texture_paths(t_cub3d *data)
+int	get_door_and_treasure_texture_paths(t_cub3d *data)
 {
 	int	i;
 
 	i = 4;
 	if (!BONUS)
-		return ;
+		return (EXIT_SUCCESS);
 	data->wall[DR_C].path = ft_strdup(DOOR_TEX_CLOSE);
 	data->wall[DR1].path = ft_strdup(DOOR_TEX1);
 	data->wall[DR2].path = ft_strdup(DOOR_TEX2);
@@ -30,13 +30,10 @@ void	get_door_and_treasure_texture_paths(t_cub3d *data)
 	while (i < 12)
 	{
 		if (!data->wall[i].path)
-		{
-			free_texture_paths(data->wall, 12);
-			exit_parsing(&data->map, "Error\nCub3D: malloc failed");
-		}
+			return (exit_parsing(data, "malloc", true));
 		i++;
 	}
-	return ;
+	return (EXIT_SUCCESS);
 }
 
 static void	animation_open(t_cub3d *data)

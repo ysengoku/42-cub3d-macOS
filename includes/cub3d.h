@@ -147,26 +147,35 @@ typedef struct s_imgdata
 	int		endian;
 }				t_imgdata;
 
-typedef struct 	s_xpm_img
+typedef struct s_xpm_img
 {
 	void		*img;
 	char		*addr;
 	int			bpp;
 	int			line_len;
 	int			endian;
-    int			w;
-    int			h;
+	int			w;
+	int			h;
 	char		*path;
 }				t_xpm_img;
 
 typedef struct s_check_map
 {
-	int		player;
-	int		treasure;
-	bool	catch_treasure;
-	bool	invalid_map;
-	char	old_char;
-	char	new_char;
+	int						limit_recursiv;
+	int						x;
+	int						y;
+	int						nbr_data;
+	int						player;
+	int						treasure;
+	bool					catch_treasure;
+	bool					invalid_map;
+	bool					in_map;
+	bool					so;
+	bool					no;
+	bool					we;
+	bool					ea;
+	bool					f;
+	bool					c;
 }	t_check_map;
 
 typedef struct s_map
@@ -258,17 +267,17 @@ typedef struct s_keys
 
 typedef struct s_treasure
 {
-	t_vector	map; // sprite x and y coodinate on map
-	t_vector	relative_pos; // sprite x and y coodinate relative to playeryer
-	t_vector	camera; //X = whether the sprite is to the left or right of the player's viewpoint and by how much. / Y = distance of the sprite from player
-	int			screen_x; // sprite x-coodinate on screen
-	int			draw_height; // sprite height on screen
-	int			draw_width; // sprite width on screen
-	int			start_x; // start x-coodinate to draw sprite
-	int			end_x; // end x-coodinate to draw sprite
-	int			start_y; //	start y-coodinate to draw sprite
-	int			end_y; // end y-coodinate to draw sprite
-	int			visible; // whether the sprite is visible or not
+	t_vector	map;
+	t_vector	relative_pos;
+	t_vector	camera;
+	int			screen_x;
+	int			draw_height;
+	int			draw_width;
+	int			start_x;
+	int			end_x;
+	int			start_y;
+	int			end_y;
+	int			visible;
 }				t_treasure;
 
 typedef struct s_cub3d
@@ -300,18 +309,23 @@ typedef struct s_cub3d
 
 /*----- Parsing -----*/
 int				parsing(char *file, t_cub3d *map);
-char			**get_file(char *file);
+char			**get_file(t_cub3d *data, char *file);
 int				get_data(t_cub3d *data);
 int				get_sprites_path(t_cub3d *map);
 int				get_colors_rgb(t_cub3d *data);
 int				get_maps(t_cub3d *data);
 int				check_map(t_cub3d *data);
 int				check_file(t_cub3d *data);
-int				algo_flood_fill(t_cub3d *data);
-void			flood_fill(t_cub3d *data, char **dup_map, int pos_x, int pos_y);
+int				line_is_map(char *line, char c);
+int				line_is_data(char *line);
+int				line_is_space(char *line);
+int				apply_flood_fill(t_cub3d *data);
+void			flood_fill_rec(t_cub3d *data, char **dup_map, int pos_x,
+					int pos_y);
+void			flood_fill_iter(t_cub3d *data, char **dup_map);
 void			free_split(char **map);
 void			free_data_map(t_map *data_map);
-void			exit_parsing(t_map *data_map, char *message);
+int				exit_parsing(t_cub3d *data, char *message, bool perror_msg);
 void			set_data(t_cub3d *data, t_player *player, t_map *map);
 int				set_wall_texture(t_cub3d *data, t_xpm_img *wall);
 
@@ -364,14 +378,13 @@ int				mousemove(int x, int y, t_cub3d *data);
 void			action_event(t_cub3d *data);
 
 /*----- Doors -----*/
-void			get_door_and_treasure_texture_paths(t_cub3d *data);
+int				get_door_and_treasure_texture_paths(t_cub3d *data);
 void			draw_door(t_cub3d *data, int x, t_ray *r, t_hit *door);
 void			draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex);
 void			animations(t_cub3d *data);
 void			anim_door(t_cub3d *data, int target_y, int target_x);
 
 /*----- Treasures -----*/
-void			store_sprite_coordinates(t_cub3d *data);
 void			set_treasure_data(t_cub3d *data, t_treasure *treasures);
 void			draw_treasure(t_cub3d *data, t_treasure *treasure, int x);
 

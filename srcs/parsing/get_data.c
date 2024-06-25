@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_data.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmougel <jmougel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yusengok <yusengok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 16:40:20 by jmougel           #+#    #+#             */
-/*   Updated: 2024/06/19 09:48:51 by jmougel          ###   ########.fr       */
+/*   Updated: 2024/06/24 12:38:59 by yusengok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,9 @@
 
 int	get_data(t_cub3d *data)
 {
-	get_sprites_path(data);
+	if (get_sprites_path(data) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	if (get_colors_rgb(data) == EXIT_FAILURE)
-	{
-		if (!BONUS)
-			free_texture_paths(data->wall, 4);
-		else
-			free_texture_paths(data->wall, 12);
-		exit_parsing(&data->map, "Error\nCub3D: invalid RGB");
-	}
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
