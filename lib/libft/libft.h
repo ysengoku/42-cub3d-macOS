@@ -104,6 +104,7 @@ char			*ft_strnstr_r(char *big, char *little);
 long			ft_atol(const char *s);
 long long		ft_atoll(const char *s);
 unsigned int	ft_abs(int n);
+int				ft_free_all(int nb_elem, ...);
 
 /* ----- ft_printf ----- */
 int				ft_printf(const char *format, ...);
