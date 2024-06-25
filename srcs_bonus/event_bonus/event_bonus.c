@@ -28,9 +28,9 @@ int	mousemove(int x, int y, t_cub3d *data)
 
 static void	finish_game(t_cub3d *data)
 {
-	system("afplay ../sound/congrat.wav 2> /dev/null");
+	system("afplay ./assets/sound/congrat.wav");
 	printf("\033[1m\033[32mCONGRATULATION ! You won !\033[0m\n");
-	sleep(2);
+	sleep(1);
 	close_window(data);
 }
 
