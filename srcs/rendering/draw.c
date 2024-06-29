@@ -69,8 +69,8 @@ void	draw_door(t_cub3d *data, int x, t_ray *r, t_hit *door)
 	line.y = line.y_start;
 	wall_x = get_wall_x(data, r, door);
 	if (door->h != 0)
-		line.span = (double)data->wall[door->side].h / door->h;
-	line.tx_x = (int)(wall_x * (double)data->wall[door->side].w);
+		line.span = (double)data->wall[door->tex].h / door->h;
+	line.tx_x = (int)(wall_x * (double)data->wall[door->tex].w);
 	if (door->h > WIN_H)
 		line.tx_start_y = (door->h - WIN_H) * 0.5;
 	while (++line.y < line.y_end)
@@ -98,8 +98,8 @@ void	draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex)
 	line.y = line.y_start;
 	wall_x = get_wall_x(data, r, &r->anim_d);
 	if (r->anim_d.h != 0)
-		line.span = (double)data->wall[r->anim_d.side].h / r->anim_d.h;
-	line.tx_x = (int)(wall_x * (double)data->wall[r->anim_d.side].w);
+		line.span = (double)data->wall[DR1].h / r->anim_d.h;
+	line.tx_x = (int)(wall_x * (double)data->wall[DR1].w);
 	if (r->anim_d.h > WIN_H)
 		line.tx_start_y = (r->anim_d.h - WIN_H) * 0.5;
 	while (++line.y < line.y_end)
@@ -119,12 +119,12 @@ static double	get_wall_x(t_cub3d *data, t_ray *ray, t_hit *sprite)
 	if (sprite->side == WE)
 		wall_x = data->player.pos.y + sprite->dist * ray->dir.y;
 	else if (sprite->side == EA)
-		wall_x = data->wall[WE].w
+		wall_x = data->wall[sprite->tex].w
 			- (data->player.pos.y + sprite->dist * ray->dir.y);
 	else if (sprite->side == SO)
 		wall_x = data->player.pos.x + sprite->dist * ray->dir.x;
 	else
-		wall_x = data->wall[SO].w
+		wall_x = data->wall[sprite->tex].w
 			- (data->player.pos.x + sprite->dist * ray->dir.x);
 	wall_x -= floor(wall_x);
 	return (wall_x);

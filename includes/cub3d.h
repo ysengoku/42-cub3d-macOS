@@ -70,15 +70,15 @@
 # define MMAP_SPACE 11977418
 # define MMAP_DOOR 9868950
 
-# define DOOR_TEX_CLOSE "./textures/door/door.xpm"
-# define DOOR_TEX1 "./textures/door/door1.xpm"
-# define DOOR_TEX2 "./textures/door/door2.xpm"
-# define DOOR_TEX3 "./textures/door/door3.xpm"
-# define DOOR_TEX4 "./textures/door/door4.xpm"
-# define DOOR_TEX5 "./textures/door/door5.xpm"
-# define DOOR_TEX_OPEN "./textures/door/door6.xpm"
+# define DOOR_TEX_CLOSE "./assets/texture/door/door.xpm"
+# define DOOR_TEX1 "./assets/texture/door/door1.xpm"
+# define DOOR_TEX2 "./assets/texture/door/door2.xpm"
+# define DOOR_TEX3 "./assets/texture/door/door3.xpm"
+# define DOOR_TEX4 "./assets/texture/door/door4.xpm"
+# define DOOR_TEX5 "./assets/texture/door/door5.xpm"
+# define DOOR_TEX_OPEN "./assets/texture/door/door6.xpm"
 
-# define TREASURE_TEX "./textures/pikachu.xpm"
+# define TREASURE_TEX "./assets/texture/pikachu.xpm"
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 # ifndef BONUS
