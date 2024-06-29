@@ -1,7 +1,7 @@
-NO ./textures/walls/brick.xpm
-SO ./textures/walls/stone.xpm
-WE ./textures/walls/brown.xpm
-EA ./textures/walls/wood.xpm
+NO ./assets/texture/walls/brick.xpm
+SO ./assets/texture/walls/stone.xpm
+WE ./assets/texture/walls/brown.xpm
+EA ./assets/texture/walls/wood.xpm
 
 F 112,112,112
 C 56,56,56
