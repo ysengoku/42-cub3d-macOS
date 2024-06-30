@@ -98,8 +98,8 @@ void	draw_anim_door(t_cub3d *data, int x, t_ray *r, t_xpm_img *tex)
 	line.y = line.y_start;
 	wall_x = get_wall_x(data, r, &r->anim_d);
 	if (r->anim_d.h != 0)
-		line.span = (double)data->wall[DR1].h / r->anim_d.h;
-	line.tx_x = (int)(wall_x * (double)data->wall[DR1].w);
+		line.span = (double)tex->h / r->anim_d.h;
+	line.tx_x = (int)(wall_x * (double)tex->w);
 	if (r->anim_d.h > WIN_H)
 		line.tx_start_y = (r->anim_d.h - WIN_H) * 0.5;
 	while (++line.y < line.y_end)

@@ -32,7 +32,8 @@ vpath %c $(SRCS_DIR) \
 		$(SRCS_DIR_B)minimap	\
 		$(SRCS_DIR_B)event_bonus	\
 		$(SRCS_DIR_B)door_bonus	\
-		$(SRCS_DIR_B)treasure_bonus
+		$(SRCS_DIR_B)treasure_bonus	\
+		$(SRCS_DIR_B)draw_bonus	\
 		
 FILES = main	\
 		parsing \
@@ -67,6 +68,7 @@ FILES = main	\
 		door_bonus	\
 		treasure_bonus	\
 		set_treasure_data_bonus	\
+		draw_cf_bonus
 
 SRCS = $(addsuffix .c, $(FILES))
 OBJS_DIR = .objs/

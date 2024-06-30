@@ -22,6 +22,7 @@ int	display(t_cub3d *data)
 	init_camera(data);
 	if (BONUS)
 	{
+		draw_ceiling_and_floor_bonus(data);
 		set_treasure_data(data, &data->treasure);
 		draw_minimap_zone(data, (data->mmap.totalsize));
 		draw_minimap(data);
