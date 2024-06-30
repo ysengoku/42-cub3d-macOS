@@ -27,7 +27,9 @@ int	get_door_and_treasure_texture_paths(t_cub3d *data)
 	data->wall[DR5].path = ft_strdup(DOOR_TEX5);
 	data->wall[DR_O].path = ft_strdup(DOOR_TEX_OPEN);
 	data->wall[TR].path = ft_strdup(TREASURE_TEX);
-	while (i < 12)
+	data->wall[CE].path = ft_strdup(CEILING);
+	data->wall[FL].path = ft_strdup(FLOOR);
+	while (i < 14)
 	{
 		if (!data->wall[i].path)
 			return (exit_parsing(data, "malloc", true));

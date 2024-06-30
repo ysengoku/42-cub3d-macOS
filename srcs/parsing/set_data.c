@@ -35,7 +35,7 @@ int	set_wall_texture(t_cub3d *data, t_xpm_img *wall)
 	if (!BONUS)
 		n = 4;
 	else
-		n = 12;
+		n = 14;
 	while (++i < n)
 		create_wall_teture_img(data, wall, n, i);
 	return (0);

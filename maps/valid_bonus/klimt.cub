@@ -1,7 +1,7 @@
-NO ./assets/texture/gogh/starry_night.xpm
-SO ./assets/texture/gogh/rhone.xpm
-WE ./assets/texture/gogh/portrait.xpm
-EA ./assets/texture/gogh/cafeterrace.xpm
+NO ./assets/texture/klimt/adele.xpm
+SO ./assets/texture/klimt/judith.xpm
+WE ./assets/texture/klimt/kiss.xpm
+EA ./assets/texture/klimt/lady.xpm
 
 F 3,3,30
 C 0,0,55

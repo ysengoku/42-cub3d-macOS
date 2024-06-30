@@ -47,7 +47,7 @@
 # define WIN_H 720
 
 # ifndef FOV
-#  define FOV 90
+#  define FOV 66
 # endif
 # define MOVE 0.1
 # define ROTATE 0.03
@@ -70,15 +70,17 @@
 # define MMAP_SPACE 11977418
 # define MMAP_DOOR 9868950
 
-# define DOOR_TEX_CLOSE "./assets/texture/door/door.xpm"
-# define DOOR_TEX1 "./assets/texture/door/door1.xpm"
-# define DOOR_TEX2 "./assets/texture/door/door2.xpm"
-# define DOOR_TEX3 "./assets/texture/door/door3.xpm"
-# define DOOR_TEX4 "./assets/texture/door/door4.xpm"
-# define DOOR_TEX5 "./assets/texture/door/door5.xpm"
-# define DOOR_TEX_OPEN "./assets/texture/door/door6.xpm"
+# define DOOR_TEX_CLOSE "./assets/texture/door2/door.xpm"
+# define DOOR_TEX1 "./assets/texture/door2/door1.xpm"
+# define DOOR_TEX2 "./assets/texture/door2/door2.xpm"
+# define DOOR_TEX3 "./assets/texture/door2/door3.xpm"
+# define DOOR_TEX4 "./assets/texture/door2/door4.xpm"
+# define DOOR_TEX5 "./assets/texture/door2/door5.xpm"
+# define DOOR_TEX_OPEN "./assets/texture/door2/door6.xpm"
 
-# define TREASURE_TEX "./assets/texture/pikachu.xpm"
+# define TREASURE_TEX "./assets/texture/treasure/pikachu.xpm"
+# define CEILING "./assets/texture/floor_ceiling/starry_sky.xpm"
+# define FLOOR "./assets/texture/floor_ceiling/floor.xpm"
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 # ifndef BONUS
@@ -128,7 +130,9 @@ enum	e_wallside
 	DR4,
 	DR5,
 	DR_O,
-	TR
+	TR,
+	CE,
+	FL
 };
 
 /*===== structures ===========================================================*/
@@ -291,7 +295,7 @@ typedef struct s_cub3d
 	t_player	player;
 	int			ceiling_color;
 	int			floor_color;
-	t_xpm_img	wall[12];
+	t_xpm_img	wall[14];
 	t_keys		keys;
 	/*++++++ Bonus +++++++++++++++++++*/
 	int			previous_mouse_x;
@@ -338,6 +342,7 @@ void			check_hit(t_cub3d *data, t_ray *ray);
 int				game_loop(t_cub3d *data);
 void			draw_wall(t_cub3d *data, int x, t_ray *ray);
 void			draw_ceiling_and_floor(t_cub3d *data, int x);
+void			draw_ceiling_and_floor_bonus(t_cub3d *data);
 void			draw_minimap(t_cub3d *data);
 void			draw_minimap_zone(t_cub3d *data, int size);
 int				convert_color(int rgb[3]);
