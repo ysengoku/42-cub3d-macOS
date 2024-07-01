@@ -23,6 +23,8 @@ void	raycasting(t_cub3d *data, int x, t_xpm_img *door)
 	set_ray(data, &ray, x);
 	if (!BONUS)
 		draw_ceiling_and_floor(data, x);
+	else
+		draw_ceiling_and_floor_bonus(data, x, &ray);
 	check_hit(data, &ray);
 	data->wall_zbuffer[x] = ray.nearest_sprite_dist;
 	if (ray.wall.hit)
