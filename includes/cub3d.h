@@ -342,7 +342,7 @@ void			check_hit(t_cub3d *data, t_ray *ray);
 int				game_loop(t_cub3d *data);
 void			draw_wall(t_cub3d *data, int x, t_ray *ray);
 void			draw_ceiling_and_floor(t_cub3d *data, int x);
-void			draw_ceiling_and_floor_bonus(t_cub3d *data);
+void 			draw_ceiling_and_floor_bonus(t_cub3d *data, int x, t_ray *ray);
 void			draw_minimap(t_cub3d *data);
 void			draw_minimap_zone(t_cub3d *data, int size);
 int				convert_color(int rgb[3]);
